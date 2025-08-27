@@ -114,11 +114,17 @@
 
     const brandLinkStyle = "color:#111111; text-decoration:underline;"; // 링크도 진한 검정(요청사항)으로 설정
 
+    function getHeaderImageSrc(){
+      try { return new URL('assets/process.png', window.location.href).href; } catch(e) { return 'assets/process.png'; }
+    }
+
     function wrapEmail(contentHtml){
+      const header = '<div style="margin:0 0 16px 0; text-align:center;"><img src="' + getHeaderImageSrc() + '" width="715" height="67" alt="Featuring Recruit" style="display:block;margin:0 auto;width:715px;height:67px;border:0;"/></div>';
       return (
         '<div style="font-family:Arial, Helvetica, \"Apple SD Gothic Neo\", \"Noto Sans KR\", \"Malgun Gothic\", sans-serif; font-size:14px; color:#111111; line-height:1.7;">' +
+          header +
           '<div style="padding:8px 0 16px 0">' + contentHtml + '</div>' +
-          '</div>'
+        '</div>'
       );
     }
 
