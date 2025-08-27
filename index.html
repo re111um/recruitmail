@@ -185,11 +185,12 @@ function escapeHtml(s){
         <p style="margin:0;">감사합니다.<br />featuring 채용팀 드림</p>
       `),
 
-       finalNotice: (v) => wrapEmail(`
+     finalNotice: (v) => wrapEmail(`
         <p style="margin:0 0 14px 0;">안녕하세요, <strong>${escapeHtml(v.name)}</strong>님.</p>
         <p style="margin:0 0 14px 0;"><strong>최종 안내</strong> 관련 문구가 여기에 표시됩니다. (세부 문안은 추후 교체)</p>
         <p style="margin:0;">감사합니다.<br />featuring 채용팀 드림</p>
       `)
+};
 
     const nameEl = document.getElementById('name');
     const positionEl = document.getElementById('position');
