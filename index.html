@@ -47,6 +47,7 @@
       transition:all .15s ease; box-shadow:0 2px 0 rgba(17,17,17,.04);
     }
     .btn:hover{transform:translateY(-1px); box-shadow:0 6px 14px rgba(17,17,17,.06)}
+    $1
     .btn.black{background:#111111; color:#ffffff; border-color:#111111}
     .btn[disabled]{opacity:.55; cursor:not-allowed; transform:none; box-shadow:none}
 
@@ -136,6 +137,7 @@
       );
     }
 
+    $1
       return s.replace(/[&<>\"]/g, function(tag){
         const chars = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' };
         return chars[tag] || tag;
@@ -176,7 +178,7 @@
         <p style="margin:0;">감사합니다.<br />featuring 채용팀 드림</p>
       `),
 
-      reject: (v) => wrapEmailNoHeader(`
+      $1reject: (v) => wrapEmailNoHeader(`
         <p style="margin:0 0 14px 0;">안녕하세요, <strong>${escapeHtml(v.name)}</strong>님.</p>
         <p style="margin:0 0 14px 0;">아쉽게도 이번 <strong>${escapeHtml(v.position)}</strong> 포지션 채용 전형에서는 함께하지 못하게 되었습니다. 소중한 시간 내어 지원해 주셔서 진심으로 감사드립니다.</p>
         <p style="margin:0;">감사합니다.<br />featuring 채용팀 드림</p>
@@ -219,15 +221,24 @@
       setTimeout(()=> toast.classList.remove('show'), 1700);
     }
 
-    document.querySelectorAll('.js-template').forEach(btn =>{
-      btn.addEventListener('click', ()=>{
-        const key = btn.getAttribute('data-key');
-        const vars = buildVars();
-        const builder = templates[key];
-        if(!builder){ return; }
-        const html = builder(vars);
+    function renderTemplateByKey(key){
+      const builder = templates[key];
+      if(!builder){
+        showPreview('<p style="margin:0">선택한 서식이 아직 준비되지 않았습니다.</p>');
+        return;
+      }
+      try{
+        const html = builder(buildVars());
         showPreview(html);
-      });
+      }catch(err){
+        console.error('[템플릿 렌더 오류]', err);
+        showPreview('<p style="margin:0;color:#b91c1c">서식을 표시하는 중 오류가 발생했습니다.</p>');
+      }
+    }
+
+    document.querySelectorAll('.js-template').forEach(btn =>{
+      btn.addEventListener('click', ()=> renderTemplateByKey(btn.dataset.key));
+    });
     });
 
     async function copyHtml(){
