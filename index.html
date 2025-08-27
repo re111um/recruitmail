@@ -47,6 +47,7 @@
       transition:all .15s ease; box-shadow:0 2px 0 rgba(17,17,17,.04);
     }
     .btn:hover{transform:translateY(-1px); box-shadow:0 6px 14px rgba(17,17,17,.06)}
+    .btn.primary{background:var(--accent); color:var(--accent-ink); border-color:transparent} /* ★ 복구 */
     .btn.black{background:#111111; color:#ffffff; border-color:#111111}
     .btn[disabled]{opacity:.55; cursor:not-allowed; transform:none; box-shadow:none}
 
@@ -129,18 +130,20 @@
     }
 
     function wrapEmailNoHeader(contentHtml){
-      return (
-        '<div style="font-family:Arial, Helvetica, \"Apple SD Gothic Neo\", \"Noto Sans KR\", \"Malgun Gothic\", sans-serif; font-size:14px; color:#111111; line-height:1.7;">' +
-          '<div style="padding:8px 0 16px 0">' + contentHtml + '</div>' +
-        '</div>'
-      );
-    }
+  return (
+    '<div style="font-family:Arial, Helvetica, \"Apple SD Gothic Neo\", \"Noto Sans KR\", \"Malgun Gothic\", sans-serif; font-size:14px; color:#111111; line-height:1.7;">' +
+      '<div style="padding:8px 0 16px 0">' + contentHtml + '</div>' +
+    '</div>'
+  );
+}
 
-      return s.replace(/[&<>\"]/g, function(tag){
-        const chars = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' };
-        return chars[tag] || tag;
-      });
-    }
+// ★ 선언 누락 복구
+function escapeHtml(s){
+  return s.replace(/[&<>"]/g, function(tag){
+    const chars = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' };
+    return chars[tag] || tag;
+  });
+}
 
     // 기본 플레이스홀더 템플릿: 실제 문안은 이후 제공되는 내용으로 손쉽게 바꿀 수 있게 함수 분리
     const templates = {
@@ -182,12 +185,11 @@
         <p style="margin:0;">감사합니다.<br />featuring 채용팀 드림</p>
       `),
 
-      (v) => wrapEmail(`
-        <p style="margin:0 0 14px 0;">안녕하세요, <strong>${escapeHtml(v.name)}</strong>님.</p>
-        <p style="margin:0 0 14px 0;"><strong>최종 안내</strong> 관련 문구가 여기에 표시됩니다. (세부 문안은 추후 교체)</p>
-        <p style="margin:0;">감사합니다.<br />featuring 채용팀 드림</p>
+  finalNotice: (v) => wrapEmail(`
+    <p style="margin:0 0 14px 0;">안녕하세요, <strong>${escapeHtml(v.name)}</strong>님.</p>
+    <p style="margin:0 0 14px 0;"><strong>최종 안내</strong> 관련 문구가 여기에 표시됩니다. (세부 문안은 추후 교체)</p>
+    <p style="margin:0;">감사합니다.<br />featuring 채용팀 드림</p>
       `)
-    };
 
     // ---------- 동작 로직 ----------
     const nameEl = document.getElementById('name');
@@ -236,7 +238,6 @@
 
     document.querySelectorAll('.js-template').forEach(btn =>{
       btn.addEventListener('click', ()=> renderTemplateByKey(btn.dataset.key));
-    });
     });
 
     async function copyHtml(){
