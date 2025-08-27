@@ -177,13 +177,13 @@
         <p style="margin:0;">감사합니다.<br />featuring 채용팀 드림</p>
       `),
 
-      $1reject: (v) => wrapEmailNoHeader(`
+      reject: (v) => wrapEmailNoHeader(`
         <p style="margin:0 0 14px 0;">안녕하세요, <strong>${escapeHtml(v.name)}</strong>님.</p>
         <p style="margin:0 0 14px 0;">아쉽게도 이번 <strong>${escapeHtml(v.position)}</strong> 포지션 채용 전형에서는 함께하지 못하게 되었습니다. 소중한 시간 내어 지원해 주셔서 진심으로 감사드립니다.</p>
         <p style="margin:0;">감사합니다.<br />featuring 채용팀 드림</p>
       `),
 
-      $2 (v) => wrapEmail(`
+      (v) => wrapEmail(`
         <p style="margin:0 0 14px 0;">안녕하세요, <strong>${escapeHtml(v.name)}</strong>님.</p>
         <p style="margin:0 0 14px 0;"><strong>최종 안내</strong> 관련 문구가 여기에 표시됩니다. (세부 문안은 추후 교체)</p>
         <p style="margin:0;">감사합니다.<br />featuring 채용팀 드림</p>
