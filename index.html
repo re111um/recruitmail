@@ -129,7 +129,7 @@
       );
     }
 
-    function wrapEmailNoHeader(contentHtml){
+function wrapEmailNoHeader(contentHtml){
   return (
     '<div style="font-family:Arial, Helvetica, \"Apple SD Gothic Neo\", \"Noto Sans KR\", \"Malgun Gothic\", sans-serif; font-size:14px; color:#111111; line-height:1.7;">' +
       '<div style="padding:8px 0 16px 0">' + contentHtml + '</div>' +
@@ -137,7 +137,7 @@
   );
 }
 
-// ★ 선언 누락 복구
+// ★ 선언 복구
 function escapeHtml(s){
   return s.replace(/[&<>"]/g, function(tag){
     const chars = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' };
@@ -185,10 +185,10 @@ function escapeHtml(s){
         <p style="margin:0;">감사합니다.<br />featuring 채용팀 드림</p>
       `),
 
-  finalNotice: (v) => wrapEmail(`
-    <p style="margin:0 0 14px 0;">안녕하세요, <strong>${escapeHtml(v.name)}</strong>님.</p>
-    <p style="margin:0 0 14px 0;"><strong>최종 안내</strong> 관련 문구가 여기에 표시됩니다. (세부 문안은 추후 교체)</p>
-    <p style="margin:0;">감사합니다.<br />featuring 채용팀 드림</p>
+       finalNotice: (v) => wrapEmail(`
+        <p style="margin:0 0 14px 0;">안녕하세요, <strong>${escapeHtml(v.name)}</strong>님.</p>
+        <p style="margin:0 0 14px 0;"><strong>최종 안내</strong> 관련 문구가 여기에 표시됩니다. (세부 문안은 추후 교체)</p>
+        <p style="margin:0;">감사합니다.<br />featuring 채용팀 드림</p>
       `)
 
     // ---------- 동작 로직 ----------
