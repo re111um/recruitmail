@@ -98,7 +98,8 @@
 
     <div class="actions">
       <button id="copyBtn" class="btn primary" disabled>서식 복사</button>
-      <span class="hint">버튼을 눌러 미리보기를 만든 뒤 복사하세요.</span>
+      <button id="copySubjectBtn" class="btn" disabled>제목 복사</button>
+      <span id="subjectPreview" class="hint" aria-live="polite"></span>
     </div>
 
     <div class="preview">
@@ -146,15 +147,42 @@ function escapeHtml(s){
 }
 
     // 기본 플레이스홀더 템플릿: 실제 문안은 이후 제공되는 내용으로 손쉽게 바꿀 수 있게 함수 분리
+
     const templates = {
       task: (v) => wrapEmail(`
-        <p style="margin:0 0 14px 0;">안녕하세요, <strong>${escapeHtml(v.name)}</strong>님.</p>
-        <p style="margin:0 0 14px 0;">Featuring의 <strong>${escapeHtml(v.position)}</strong> 포지션 <strong>과제 전형</strong>을 안내드립니다.</p>
-        ${v.taskurl ? `<p style="margin:0 0 14px 0;">과제 안내 링크: <a href="${v.taskurl}" style="${brandLinkStyle}">${v.taskurl}</a></p>` : ''}
-        <p style="margin:0 0 14px 0;">세부 내용은 추후 확정된 문구로 교체 예정입니다. 문구를 보내주시면 즉시 반영하겠습니다.</p>
-        <p style="margin:0;">감사합니다.<br />featuring 채용팀 드림</p>
-      `),
+        <p style="margin:0 0 6px 0;"><strong>[Featuring]</strong></p>
+        <p style="margin:0 0 14px 0;">안녕하세요. ${escapeHtml(v.name)}님. :)</p>
+        <p style="margin:0 0 14px 0;">피처링 채용팀입니다.</p>
 
+        <p style="margin:0 0 14px 0;">먼저 당사와 ${escapeHtml(v.position)} 포지션에 관심 가져주시고 지원해주셔서 감사합니다.</p>
+        <p style="margin:0 0 14px 0;">과제는 실제 업무와 유사한 상황을 기반으로 구성되어 있습니다. 목표는 아키텍처 설계 및 기술적 의사결정 능력을 평가하기 위함입니다.</p>
+
+        <p style="margin:0 6px 6px 0;">✅ <strong>과제 주제</strong> : 소셜 미디어 데이터 파이프라인 시스템 설계</p>
+        ${v.taskurl ? `<p style="margin:0 6px 6px 0;">✅ <strong>과제 링크</strong> : <a href="${v.taskurl}" style="${brandLinkStyle}">URL</a></p>` : ''}
+
+        <p style="margin:10px 0 6px 0;">✅ <strong>제출 형식</strong> :</p>
+        <ul style="margin:0 0 14px 18px; padding:0;">
+        <li>구성을 한눈에 볼 수 있는 도식(Flowchart, Architecture Diagram 등)을 포함해주세요.</li>
+        <li>데이터 관리부터 비즈니스 로직 구현 단계까지, 각 과정에서 고려해야 할 요소(성능, 확장성, 보안, 비용 효율성, 모니터링 등)에 대해 파이프라인을 기술해주시기 바랍니다.</li>
+        <li>문서 형식은 PPT, PDF, Markdown 등 자유롭게 선택하시면 됩니다.</li>
+  </ul>
+
+        <p style="margin:10px 0 6px 0;">✅ <strong>마감 기한</strong> :</p>
+        <ul style="margin:0 0 14px 18px; padding:0;">
+        <li>금일 자정(yyyy-mm-dd 11:59)전 까지 회신 부탁드립니다.</li>
+        <li>해당 메일에 [전체 답장] 또는 recruit@featuring.in으로 제출해주시면 됩니다.</li>
+  </ul>
+
+        <p style="margin:0 0 14px 0;">제출하신 과제는 내부 기술 리드 및 개발팀과 함께 검토할 예정이며, 결과는 제출일로부터 영업일 기준 3일 전까지 안내 드리겠습니다.</p>
+
+        <p style="margin:0 0 14px 0;">과제 진행 중 궁금하신 사항이 있거나 제출 기한에 어려움이 있으실 경우, 언제든 편하게 해당 메일로 연락 부탁드립니다. :)</p>
+
+        <p style="margin:0 0 14px 0; color:#b91c1c; font-style:italic; font-size:12px;">
+        (*해당 과제는 피처링의 자산이므로 외부 및 제3자 유출 시 채용 과정이 취소되며, 별도의 조치 될 수 있음을 사전에 안내드립니다.)
+        </p>
+
+        <p style="margin:0;">감사합니다.<br />피처링 채용팀 드림.</p>
+`),
       interview1: (v) => wrapEmail(`
         <p style="margin:0 0 14px 0;">안녕하세요, <strong>${escapeHtml(v.name)}</strong>님.</p>
         <p style="margin:0 0 14px 0;"><strong>1차 인터뷰</strong> 관련 안내 드립니다. (세부 문안은 추후 교체)</p>
@@ -191,6 +219,17 @@ function escapeHtml(s){
         <p style="margin:0;">감사합니다.<br />featuring 채용팀 드림</p>
       `)
 };
+    
+    const subjectTemplates = {
+      task: (v) => `[Featuring] ${v.position} 과제 전형 진행 안내드립니다`,
+      interview1: (v) => `[Featuring] ${v.position} 1차 인터뷰 안내`,
+      interviewFinal: (v) => `[Featuring] ${v.position} 최종 인터뷰 안내`,
+      scheduleConfirm: (v) => `[Featuring] ${v.position} 일정 확정 안내`,
+      reference: (v) => `[Featuring] ${v.position} 레퍼런스 체크 안내`,
+      offer: (v) => `[Featuring] ${v.position} 처우협의 및 오퍼레터 안내`,
+      finalNotice: (v) => `[Featuring] ${v.position} 최종 안내`,
+      reject: (v) => `[Featuring] ${v.position} 채용 전형 결과 안내`
+};
 
     const nameEl = document.getElementById('name');
     const positionEl = document.getElementById('position');
@@ -198,8 +237,11 @@ function escapeHtml(s){
     const previewEl = document.getElementById('preview');
     const copyBtn = document.getElementById('copyBtn');
     const toast = document.getElementById('toast');
+    const copySubjectBtn = document.getElementById('copySubjectBtn');     // ★ 추가
+    const subjectPreviewEl = document.getElementById('subjectPreview');   // ★ 추가
 
     let currentHtml = '';
+    let currentSubject = ''; // ★ 추가
 
     function buildVars(){
       return {
@@ -221,20 +263,34 @@ function escapeHtml(s){
       setTimeout(()=> toast.classList.remove('show'), 1700);
     }
 
-    function renderTemplateByKey(key){
-      const builder = templates[key];
-      if(!builder){
-        showPreview('<p style="margin:0">선택한 서식이 아직 준비되지 않았습니다.</p>');
-        return;
-      }
-      try{
-        const html = builder(buildVars());
-        showPreview(html);
-      }catch(err){
-        console.error('[템플릿 렌더 오류]', err);
-        showPreview('<p style="margin:0;color:#b91c1c">서식을 표시하는 중 오류가 발생했습니다.</p>');
-      }
-    }
+   unction renderTemplateByKey(key){
+  const builder = templates[key];
+  if(!builder){
+    showPreview('<p style="margin:0">선택한 서식이 아직 준비되지 않았습니다.</p>');
+    currentSubject = '';
+    copySubjectBtn.disabled = true;
+    subjectPreviewEl.textContent = '';
+    return;
+  }
+  try{
+    const vars = buildVars();
+    const html = builder(vars);
+    showPreview(html);
+
+    // ★ 제목 계산 및 미리보기/버튼 상태 갱신
+    const sb = subjectTemplates[key];
+    currentSubject = sb ? sb(vars) : `[Featuring] ${vars.position}`;
+    subjectPreviewEl.textContent = currentSubject;
+    copySubjectBtn.disabled = !currentSubject;
+
+  }catch(err){
+    console.error('[템플릿 렌더 오류]', err);
+    showPreview('<p style="margin:0;color:#b91c1c">서식을 표시하는 중 오류가 발생했습니다.</p>');
+    currentSubject = '';
+    copySubjectBtn.disabled = true;
+    subjectPreviewEl.textContent = '';
+  }
+}
 
     document.querySelectorAll('.js-template').forEach(btn =>{
       btn.addEventListener('click', ()=> renderTemplateByKey(btn.dataset.key));
@@ -258,6 +314,21 @@ function escapeHtml(s){
     }
 
     copyBtn.addEventListener('click', copyHtml);
+    async function copySubject(){
+  if(!currentSubject) return;
+  try{
+    await navigator.clipboard.writeText(currentSubject);
+    showToast('제목을 복사했습니다. 메일 제목 입력란에 붙여넣기(Ctrl/⌘+V) 하세요.');
+  }catch(err){
+    // 권한 이슈 시 폴백
+    const ta = document.createElement('textarea');
+    ta.value = currentSubject; document.body.appendChild(ta); ta.select();
+    try{ document.execCommand('copy'); showToast('제목을 텍스트로 복사했습니다.'); }
+    catch(e){ alert('제목 복사에 실패했습니다.'); }
+    finally{ document.body.removeChild(ta); }
+  }
+}
+copySubjectBtn.addEventListener('click', copySubject);
   </script>
 </body>
 </html>
