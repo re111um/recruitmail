@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Featuring Recruit 메일 서식</title>
+  <style>
+    :root{
+      --bg:#fafafa;
+      --card:#ffffff;
+      --ink:#111111;           /* 가장 진한 검정 */
+      --muted:#6b7280;         /* 설명 텍스트 */
+      --line:#e5e7eb;          /* 경계선 */
+      --accent:#6d28d9;        /* 포인트 컬러 (스크린샷 계열) */
+      --accent-ink:#ffffff;
+      --radius:16px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; padding:24px; background:var(--bg); color:var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, Helvetica, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+      line-height:1.5;
+    }
+    .container{
+      max-width:1100px; margin:0 auto; background:var(--card);
+      border:1px solid var(--line); border-radius:24px; padding:28px 28px 32px;
+      box-shadow:0 10px 30px rgba(0,0,0,.03);
+    }
+    h1{margin:0 0 6px; font-size:32px; letter-spacing:-.02em}
+    .sub{margin:0 0 20px; color:var(--muted)}
+
+    .grid{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:14px}
+    @media (max-width:900px){ .grid{grid-template-columns:1fr 1fr} }
+    @media (max-width:640px){ .grid{grid-template-columns:1fr} }
+
+    label{display:block; font-weight:600; margin:0 0 6px}
+    .field input{
+      width:100%; padding:14px 12px; border:1px solid var(--line); border-radius:12px;
+      outline:none; background:#fff; font-size:15px; color:var(--ink);
+    }
+    .field input:focus{border-color:var(--accent); box-shadow:0 0 0 4px rgba(109,40,217,.12)}
+
+    .btn-row{display:flex; gap:10px; flex-wrap:wrap; margin:16px 0 8px}
+    .btn{appearance:none; border:1px solid var(--line); background:#fff; color:var(--ink);
+      padding:12px 14px; border-radius:999px; cursor:pointer; font-weight:600; font-size:14px;
+      transition:all .15s ease; box-shadow:0 2px 0 rgba(17,17,17,.04);
+    }
+    .btn:hover{transform:translateY(-1px); box-shadow:0 6px 14px rgba(17,17,17,.06)}
+    .btn.primary{background:var(--accent); color:var(--accent-ink); border-color:transparent}
+    .btn[disabled]{opacity:.55; cursor:not-allowed; transform:none; box-shadow:none}
+
+    .actions{display:flex; gap:10px; align-items:center; margin:10px 0 8px}
+    .hint{color:var(--muted); font-size:13px}
+
+    .preview{
+      margin-top:8px; padding:18px; border-radius:16px; background:#fff;
+      border:2px dashed var(--line);
+    }
+    .preview h3{margin:0 0 10px; font-size:16px}
+    .preview .frame{background:#fff; border:1px solid var(--line); border-radius:12px; padding:18px}
+
+    .toast{position:fixed; right:16px; bottom:16px; background:#111; color:#fff; border-radius:12px; padding:12px 14px; opacity:0; transform:translateY(8px); transition:all .2s ease}
+    .toast.show{opacity:1; transform:translateY(0)}
+
+    .hr{height:1px; background:var(--line); margin:18px 0}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Featuring Recruit 메일 서식</h1>
+    <p class="sub">아래 3가지만 입력한 뒤, 원하는 단계 버튼을 누르세요. 하단 미리보기에서 <strong>서식 복사</strong>를 클릭하면 Gmail 본문(HTML)으로 그대로 붙여넣을 수 있습니다.</p>
+
+    <div class="grid">
+      <div class="field">
+        <label for="name">지원자명</label>
+        <input id="name" type="text" placeholder="예: 홍길동" />
+      </div>
+      <div class="field">
+        <label for="position">포지션명</label>
+        <input id="position" type="text" placeholder="예: HR Manager" />
+      </div>
+      <div class="field">
+        <label for="taskurl">과제 URL (선택)</label>
+        <input id="taskurl" type="url" placeholder="예: https://..." />
+      </div>
+    </div>
+
+    <div class="btn-row" aria-label="단계 버튼">
+      <button class="btn js-template" data-key="task">과제전형</button>
+      <button class="btn js-template" data-key="interview1">1차 인터뷰</button>
+      <button class="btn js-template" data-key="interviewFinal">최종 인터뷰</button>
+      <button class="btn js-template" data-key="reference">레퍼런스 체크</button>
+      <button class="btn js-template" data-key="offer">처우협의 및 오퍼레터</button>
+      <button class="btn js-template" data-key="finalNotice">최종 안내</button>
+    </div>
+
+    <div class="actions">
+      <button id="copyBtn" class="btn primary" disabled>서식 복사</button>
+      <span class="hint">버튼을 눌러 미리보기를 만든 뒤 복사하세요.</span>
+    </div>
+
+    <div class="preview">
+      <h3>미리보기</h3>
+      <div id="preview" class="frame" aria-live="polite">아직 선택된 서식이 없습니다.</div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite">클립보드에 복사했습니다.</div>
+
+  <script>
+    // ---------- 템플릿 구성 ----------
+    // 실제 본문은 Gmail에서 안전하게 보이도록 모든 스타일을 인라인으로 구성합니다.
+
+    const brandLinkStyle = "color:#111111; text-decoration:underline;"; // 링크도 진한 검정(요청사항)으로 설정
+
+    function wrapEmail(contentHtml){
+      return (
+        '<div style="font-family:Arial, Helvetica, \"Apple SD Gothic Neo\", \"Noto Sans KR\", \"Malgun Gothic\", sans-serif; font-size:14px; color:#111111; line-height:1.7;">' +
+          '<div style="padding:8px 0 16px 0">' + contentHtml + '</div>' +
+          '</div>'
+      );
+    }
+
+    function escapeHtml(s){
+      return s.replace(/[&<>\"]/g, function(tag){
+        const chars = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' };
+        return chars[tag] || tag;
+      });
+    }
+
+    // 기본 플레이스홀더 템플릿: 실제 문안은 이후 제공되는 내용으로 손쉽게 바꿀 수 있게 함수 분리
+    const templates = {
+      task: (v) => wrapEmail(`
+        <p style="margin:0 0 14px 0;">안녕하세요, <strong>${escapeHtml(v.name)}</strong>님.</p>
+        <p style="margin:0 0 14px 0;">Featuring의 <strong>${escapeHtml(v.position)}</strong> 포지션 <strong>과제 전형</strong>을 안내드립니다.</p>
+        ${v.taskurl ? `<p style="margin:0 0 14px 0;">과제 안내 링크: <a href="${v.taskurl}" style="${brandLinkStyle}">${v.taskurl}</a></p>` : ''}
+        <p style="margin:0 0 14px 0;">세부 내용은 추후 확정된 문구로 교체 예정입니다. 문구를 보내주시면 즉시 반영하겠습니다.</p>
+        <p style="margin:0;">감사합니다.<br />featuring 채용팀 드림</p>
+      `),
+
+      interview1: (v) => wrapEmail(`
+        <p style="margin:0 0 14px 0;">안녕하세요, <strong>${escapeHtml(v.name)}</strong>님.</p>
+        <p style="margin:0 0 14px 0;"><strong>1차 인터뷰</strong> 관련 안내 드립니다. (세부 문안은 추후 교체)</p>
+        <p style="margin:0;">감사합니다.<br />featuring 채용팀 드림</p>
+      `),
+
+      interviewFinal: (v) => wrapEmail(`
+        <p style="margin:0 0 14px 0;">안녕하세요, <strong>${escapeHtml(v.name)}</strong>님.</p>
+        <p style="margin:0 0 14px 0;"><strong>최종 인터뷰</strong> 관련 안내 드립니다. (세부 문안은 추후 교체)</p>
+        <p style="margin:0;">감사합니다.<br />featuring 채용팀 드림</p>
+      `),
+
+      reference: (v) => wrapEmail(`
+        <p style="margin:0 0 14px 0;">안녕하세요, <strong>${escapeHtml(v.name)}</strong>님.</p>
+        <p style="margin:0 0 14px 0;"><strong>레퍼런스 체크</strong> 단계 안내 드립니다. (세부 문안은 추후 교체)</p>
+        <p style="margin:0;">감사합니다.<br />featuring 채용팀 드림</p>
+      `),
+
+      offer: (v) => wrapEmail(`
+        <p style="margin:0 0 14px 0;">안녕하세요, <strong>${escapeHtml(v.name)}</strong>님.</p>
+        <p style="margin:0 0 14px 0;"><strong>처우협의 및 오퍼레터</strong> 관련 안내 드립니다. (세부 문안은 추후 교체)</p>
+        <p style="margin:0;">감사합니다.<br />featuring 채용팀 드림</p>
+      `),
+
+      finalNotice: (v) => wrapEmail(`
+        <p style="margin:0 0 14px 0;">안녕하세요, <strong>${escapeHtml(v.name)}</strong>님.</p>
+        <p style="margin:0 0 14px 0;"><strong>최종 안내</strong> 관련 문구가 여기에 표시됩니다. (세부 문안은 추후 교체)</p>
+        <p style="margin:0;">감사합니다.<br />featuring 채용팀 드림</p>
+      `)
+    };
+
+    // ---------- 동작 로직 ----------
+    const nameEl = document.getElementById('name');
+    const positionEl = document.getElementById('position');
+    const taskurlEl = document.getElementById('taskurl');
+    const previewEl = document.getElementById('preview');
+    const copyBtn = document.getElementById('copyBtn');
+    const toast = document.getElementById('toast');
+
+    let currentHtml = '';
+
+    function buildVars(){
+      return {
+        name: (nameEl.value || '').trim() || '지원자',
+        position: (positionEl.value || '').trim() || '포지션',
+        taskurl: (taskurlEl.value || '').trim()
+      };
+    }
+
+    function showPreview(html){
+      currentHtml = html;
+      previewEl.innerHTML = html;
+      copyBtn.disabled = !html;
+    }
+
+    function showToast(msg){
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(()=> toast.classList.remove('show'), 1700);
+    }
+
+    document.querySelectorAll('.js-template').forEach(btn =>{
+      btn.addEventListener('click', ()=>{
+        const key = btn.getAttribute('data-key');
+        const vars = buildVars();
+        const builder = templates[key];
+        if(!builder){ return; }
+        const html = builder(vars);
+        showPreview(html);
+      });
+    });
+
+    async function copyHtml(){
+      if(!currentHtml) return;
+      const blob = new Blob([currentHtml], {type: 'text/html'});
+      const item = new ClipboardItem({'text/html': blob});
+      try{
+        await navigator.clipboard.write([item]);
+        showToast('클립보드에 복사했습니다. Gmail 작성창에 붙여넣기(Ctrl/⌘+V) 하세요.');
+      }catch(err){
+        // 퍼미션이 막힌 브라우저 대비 텍스트로 폴백
+        const ta = document.createElement('textarea');
+        ta.value = currentHtml; document.body.appendChild(ta); ta.select();
+        try{ document.execCommand('copy'); showToast('HTML 복사 권한이 없어 텍스트로 복사했습니다.'); }
+        catch(e){ alert('복사에 실패했습니다.'); }
+        finally{ document.body.removeChild(ta); }
+      }
+    }
+
+    copyBtn.addEventListener('click', copyHtml);
+  </script>
+</body>
+</html>
