@@ -174,7 +174,7 @@ function escapeHtml(s){
         <li>문서 형식은 PPT, PDF, Markdown 등 자유롭게 선택하시면 됩니다.</li>
   </ul>
 
-        <p style="margin:10px 0 3px 0;">✅ <strong>마감 기한</strong> :</p>
+        <p style="margin:3px 0 3px 0;">✅ <strong>마감 기한</strong> :</p>
         <ul style="margin:0 0 14px 18px; padding:0;">
         <li>금일 자정(yyyy-mm-dd 11:59)전 까지 회신 부탁드립니다.</li>
         <li>해당 메일에 [전체 답장] 또는 recruit@featuring.in으로 제출해주시면 됩니다.</li>
@@ -184,7 +184,7 @@ function escapeHtml(s){
 
         <p style="margin:0 0 3px 0;">과제 진행 중 궁금하신 사항이 있거나 제출 기한에 어려움이 있으실 경우, 언제든 편하게 해당 메일로 연락 부탁드립니다. :)</p>
 
-        <p style="margin:0 0 6px 0; color:#b91c1c; font-style:italic; font-size:12px;">
+        <p style="margin:0 0 14px 0; color:#b91c1c; font-style:italic; font-size:12px;">
         (*해당 과제는 피처링의 자산이므로 외부 및 제3자 유출 시 채용 과정이 취소되며, 별도의 조치 될 수 있음을 사전에 안내드립니다.)
         </p>
 
@@ -228,7 +228,7 @@ function escapeHtml(s){
 };
     
     const subjectTemplates = {
-      task: (v) => `[Featuring] ${v.position} 과제 전형 진행 안내드립니다`,
+      task: (v) => `[Featuring] ${v.position} 과제 전형 진행 안내드립니다.`,
       interview1: (v) => `[Featuring] ${v.position} 1차 인터뷰 안내`,
       interviewFinal: (v) => `[Featuring] ${v.position} 최종 인터뷰 안내`,
       scheduleConfirm: (v) => `[Featuring] ${v.position} 일정 확정 안내`,
