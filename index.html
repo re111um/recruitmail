@@ -28,16 +28,23 @@
       box-shadow:0 10px 30px rgba(0,0,0,.03);
     }
     h1{margin:0 0 6px; font-size:32px; letter-spacing:-.02em}
-    .sub{margin:0 0 20px; color:var(--muted)}
+  /* 기본 3열(grid 활성화) */
+  .grid{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:14px}
 
-    /* 데스크톱에서 4열: 이름 1fr | 포지션 0.5fr | 체크박스 auto | URL 1.5fr */
-    /* 포지션명 라벨 줄에 체크박스 우측 배치 */
+  /* 데스크톱(≥901px): 이름 1fr | 포지션 1fr | 인턴십 min-content | URL 1fr */
+  @media (min-width:901px){
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr min-content 1fr;
+      align-items:end;
+      gap:14px;
+    }
+}
+    
     .field .label-row{ display:flex; align-items:center; justify-content:space-between; }
     .field .intern{ display:flex; align-items:center; gap:6px; font-weight:600; }
 
     /* 체크박스 크기 고정 (13×13) */
-    #isIntern{ width:13px; height:13px; }
-
     #isIntern{ width:13px; height:13px; }
     
     label{display:block; font-weight:600; margin:0 0 6px}
@@ -78,7 +85,7 @@
 }
 
 /* 인턴십 칸: 라벨 위, 체크박스 아래(기본 폼과 동일 높이 느낌) */
-.field.compact{ display:flex; flex-direction:column; justify-content:flex-start; }
+.field.compact{ display:flex; flex-direction:column; }
 .field.compact label{ margin:0 0 6px 0; font-weight:600; }
 
 /* 체크박스는 텍스트 입력 스타일을 덮어쓰기(13×13) */
@@ -112,7 +119,7 @@
 <div class="field">
   <label for="taskurl">과제 URL (선택)</label>
   <input id="taskurl" type="url" placeholder="예: https://..." />
-  </div>
+</div>
 </div>
 
     <div class="btn-row" aria-label="단계 버튼">
@@ -198,7 +205,7 @@ function subjectRole(v){
     const templates = {
      task: (v) => { const role = roleHtml(v); return wrapEmail(`
         <p style="margin:0 0 3px 0;"><strong>[Featuring]</strong></p>
-        <p style="margin:0 0 3px 0;">안녕하세요. ${roleHtml(v)}님. :)</p>
+        <p style="margin:0 0 3px 0;">안녕하세요. ${escapeHtml(v.name)}님. :)</p>
         <p style="margin:0 0 14px 0;">피처링 채용팀입니다.</p>
 
         <p style="margin:0 0 3px 0;">먼저 당사와 ${role} 포지션에 관심 가져주시고 지원해주셔서 감사합니다.</p>
@@ -231,31 +238,31 @@ function subjectRole(v){
         <p style="margin:0;">감사합니다.<br />피처링 채용팀 드림.</p>
 `),
       interview1: (v) => wrapEmail(`
-        <p style="margin:0 0 14px 0;">안녕하세요, <strong>${roleHtml(v)}</strong>님.</p>
+        <p style="margin:0 0 14px 0;">안녕하세요, <strong>${escapeHtml(v.name)}</strong>님.</p>
         <p style="margin:0 0 14px 0;"><strong>1차 인터뷰</strong> 관련 안내 드립니다. (세부 문안은 추후 교체)</p>
         <p style="margin:0;">감사합니다.<br />featuring 채용팀 드림</p>
       `),
 
       interviewFinal: (v) => wrapEmail(`
-        <p style="margin:0 0 14px 0;">안녕하세요, <strong>${roleHtml(v)}</strong>님.</p>
+        <p style="margin:0 0 14px 0;">안녕하세요, <strong>${escapeHtml(v.name)}</strong>님.</p>
         <p style="margin:0 0 14px 0;"><strong>최종 인터뷰</strong> 관련 안내 드립니다. (세부 문안은 추후 교체)</p>
         <p style="margin:0;">감사합니다.<br />featuring 채용팀 드림</p>
       `),
 
-     scheduleConfirm: (v) => { const role = roleHtml(v); return wrapEmail(`
-        <p style="margin:0 0 14px 0;">안녕하세요, <strong>${roleHtml(v)}</strong>님.</p>
+    scheduleConfirm: (v) => { const role = roleHtml(v); return wrapEmail(`
+        <p style="margin:0 0 14px 0;">안녕하세요, ${escapeHtml(v.name)}님.</p>
         <p style="margin:0 0 14px 0;"><strong>${role} </strong> 포지션 <strong>일정 확정</strong> 관련 안내 드립니다. (세부 문안은 추후 교체)</p>
         <p style="margin:0;">감사합니다.<br />featuring 채용팀 드림</p>
       `),
 
       reference: (v) => wrapEmail(`
-        <p style="margin:0 0 14px 0;">안녕하세요, <strong>${roleHtml(v)}</strong>님.</p>
+        <p style="margin:0 0 14px 0;">안녕하세요, <strong>${escapeHtml(v.name)}</strong>님.</p>
         <p style="margin:0 0 14px 0;"><strong>레퍼런스 체크</strong> 단계 안내 드립니다. (세부 문안은 추후 교체)</p>
         <p style="margin:0;">감사합니다.<br />featuring 채용팀 드림</p>
       `),
 
      onboarding: (v) => { const role = roleHtml(v); return wrapEmail(`
-        <p style="margin:0 0 14px 0;">안녕하세요. ${roleHtml(v)}님.</p>
+        <p style="margin:0 0 14px 0;">안녕하세요. ${escapeHtml(v.name)}님.</p>
         <p style="margin:0 0 14px 0;">피처링 채용팀입니다. <strong>${role} </strong> 포지션 <strong>입사 안내</strong> 드립니다.</p>
 
         <p style="margin:0 0 6px 0;">✅ <strong>입사 일정</strong></p>
@@ -285,14 +292,14 @@ function subjectRole(v){
       `),
       
       reject: (v) => wrapEmailNoHeader(`
-        <p style="margin:0 0 14px 0;">안녕하세요, <strong>${roleHtml(v)}</strong>님.</p>
+        <p style="margin:0 0 14px 0;">안녕하세요, <strong>${escapeHtml(v.name)}</strong>님.</p>
         <p style="margin:0 0 14px 0;">아쉽게도 이번 <strong>${role} </strong> 포지션 채용 전형에서는 함께하지 못하게 되었습니다. 소중한 시간 내어 지원해 주셔서 진심으로 감사드립니다.</p>
         <p style="margin:0;">감사합니다.<br />featuring 채용팀 드림</p>
       `),
 
       
      finalNotice: (v) => wrapEmail(`
-        <p style="margin:0 0 14px 0;">안녕하세요, <strong>${roleHtml(v)}</strong>님.</p>
+        <p style="margin:0 0 14px 0;">안녕하세요, ${escapeHtml(v.name)}님.</p>
         <p style="margin:0 0 14px 0;"><strong>최종 안내</strong> 관련 문구가 여기에 표시됩니다. (세부 문안은 추후 교체)</p>
         <p style="margin:0;">감사합니다.<br />featuring 채용팀 드림</p>
       `)
