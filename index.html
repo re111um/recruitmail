@@ -35,13 +35,10 @@
   .grid{ grid-template-columns: 1fr 0.5fr auto 1.5fr; }
 }
 
-/* 체크박스 라벨+입력 inline 정렬 */
-.field.inline{
-  display:flex; align-items:center; gap:8px;
-  /* 주변 입력들과 수평 맞춤 */
-  padding-top:26px;  /* 필요시 24~28px 선에서 미세조정 */
-}
+.field.inline{ display:flex; align-items:center; gap:8px; padding-top:26px; }
 .field.inline label{ margin:0 6px 0 0; font-weight:600; }
+
+    #isIntern{ width:13px; height:13px; }
     
     label{display:block; font-weight:600; margin:0 0 6px}
     .field input{
@@ -81,7 +78,7 @@
     <h1>Featuring Recruit 메일 서식</h1>
     <p class="sub">아래 3가지만 입력한 뒤, 원하는 단계 버튼을 누르세요. 하단 미리보기에서 <strong>서식 복사</strong>를 클릭하면 Gmail 본문(HTML)으로 그대로 붙여넣을 수 있습니다.</p>
 
-   <div class="grid">
+<div class="grid">
   <div class="field">
     <label for="name">지원자명</label>
     <input id="name" type="text" placeholder="예: 홍길동" />
@@ -92,10 +89,10 @@
     <input id="position" type="text" placeholder="예: HR Manager" />
   </div>
 
-  <!-- ▲ 포지션명 바로 다음, 중간에 체크박스 -->
+  <!-- ▼ 포지션명 ↔ 과제 URL 사이에 13×13 체크박스 삽입 -->
   <div class="field inline">
-    <label for="isIntern">인턴십 여부</label>
-    <input id="isIntern" type="checkbox" /> 인턴십
+    <label for="isIntern">인턴십</label>
+    <input id="isIntern" type="checkbox" />
   </div>
 
   <div class="field">
