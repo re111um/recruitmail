@@ -30,10 +30,19 @@
     h1{margin:0 0 6px; font-size:32px; letter-spacing:-.02em}
     .sub{margin:0 0 20px; color:var(--muted)}
 
-    .grid{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:14px}
-    @media (max-width:900px){ .grid{grid-template-columns:1fr 1fr} }
-    @media (max-width:640px){ .grid{grid-template-columns:1fr} }
+    /* 데스크톱에서 4열: 이름 1fr | 포지션 0.5fr | 체크박스 auto | URL 1.5fr */
+@media (min-width:901px){
+  .grid{ grid-template-columns: 1fr 0.5fr auto 1.5fr; }
+}
 
+/* 체크박스 라벨+입력 inline 정렬 */
+.field.inline{
+  display:flex; align-items:center; gap:8px;
+  /* 주변 입력들과 수평 맞춤 */
+  padding-top:26px;  /* 필요시 24~28px 선에서 미세조정 */
+}
+.field.inline label{ margin:0 6px 0 0; font-weight:600; }
+    
     label{display:block; font-weight:600; margin:0 0 6px}
     .field input{
       width:100%; padding:14px 12px; border:1px solid var(--line); border-radius:12px;
@@ -72,24 +81,28 @@
     <h1>Featuring Recruit 메일 서식</h1>
     <p class="sub">아래 3가지만 입력한 뒤, 원하는 단계 버튼을 누르세요. 하단 미리보기에서 <strong>서식 복사</strong>를 클릭하면 Gmail 본문(HTML)으로 그대로 붙여넣을 수 있습니다.</p>
 
-    <div class="grid">
-      <div class="field">
-        <label for="name">지원자명</label>
-        <input id="name" type="text" placeholder="예: 홍길동" />
-      </div>
-      <div class="field">
-        <label for="position">포지션명</label>
-        <input id="position" type="text" placeholder="예: HR Manager" />
-      </div>
-      <div class="field">
-        <label for="taskurl">과제 URL (선택)</label>
-        <input id="taskurl" type="url" placeholder="예: https://..." />
-      </div>
-    </div>
-    <div class="field">
-      <label for="isIntern">인턴십 여부</label>
-      <input id="isIntern" type="checkbox" /> 인턴십
-    </div>
+   <div class="grid">
+  <div class="field">
+    <label for="name">지원자명</label>
+    <input id="name" type="text" placeholder="예: 홍길동" />
+  </div>
+
+  <div class="field">
+    <label for="position">포지션명</label>
+    <input id="position" type="text" placeholder="예: HR Manager" />
+  </div>
+
+  <!-- ▲ 포지션명 바로 다음, 중간에 체크박스 -->
+  <div class="field inline">
+    <label for="isIntern">인턴십 여부</label>
+    <input id="isIntern" type="checkbox" /> 인턴십
+  </div>
+
+  <div class="field">
+    <label for="taskurl">과제 URL (선택)</label>
+    <input id="taskurl" type="url" placeholder="예: https://..." />
+  </div>
+</div>
 
     <div class="btn-row" aria-label="단계 버튼">
       <button class="btn js-template" data-key="task">과제전형</button>
