@@ -67,8 +67,18 @@
     .preview h3{margin:0 0 10px; font-size:16px}
     .preview .frame{background:#fff; border:1px solid var(--line); border-radius:12px; padding:18px}
 
-    .toast{position:fixed; right:16px; bottom:16px; background:#111; color:#fff; border-radius:12px; padding:12px 14px; opacity:0; transform:translateY(8px); transition:all .2s ease}
-    .toast.show{opacity:1; transform:translateY(0)}
+  .toast{
+  position:fixed; top:50%; left:50%;
+  transform:translate(-50%,-40%) scale(.98);
+  background:#111; color:#fff; border-radius:12px;
+  padding:14px 18px; opacity:0; transition:all .2s ease;
+  text-align:center; z-index:9999; box-shadow:0 10px 30px rgba(0,0,0,.25);
+  max-width: 86vw;
+}
+.toast.show{ opacity:1; transform:translate(-50%,-50%) scale(1) }
+
+/* 추가 문구(작게, 회색) */
+.toast .note{ margin-top:8px; font-size:12px; color:#d1d5db; line-height:1.4 }
 
     .hr{height:1px; background:var(--line); margin:18px 0}
 
@@ -342,7 +352,7 @@ reference: (v) => wrapEmail(`
   <div style="padding-left:5px; margin:0 0 3px 0;">
   <p style="margin:0 0 3px 0;">- 대상 : 지정 1~2명 (팀 리더 우선)</p>
   <p style="margin:0 0 3px 0;">- 진행방식 : 유선 인터뷰</p>
-  <p style="margin:0 0 3px 0;">- 진행일정 : 대상자들과 개별 논의하여 차주까지 진행 예정</p>
+  <p style="margin:0 0 14px 0;">- 진행일정 : 대상자들과 개별 논의하여 차주까지 진행 예정</p>
   </div>
 
   <p style="margin:0 0 3px 0;">레퍼런스 체크 진행을 위하여 전자 서명을 통해 동의서 서명을 요청드릴 예정이며,</p> 
@@ -473,7 +483,7 @@ finalNotice: (v) => wrapEmail(`
 
   <p style="margin:0 0 3px 0;">4) 피처링 가이드 자료<strong></strong></p>
     <div style="padding-left:5px; margin:0 0 3px 0;">
-  <p style="margin:0 3px 14px 0;">- <a href="https://teamfeaturing.notion.site/Featuring-Employee-Experience-df09fd30889a42e3845c7802d316b184" style="${brandLinkStyle}">첨부 링크</a> 참고 바랍니다.</p>
+  <p style="margin:0 3px 14px 0;">- <a href="https://teamfeaturing.notion.site/Featuring-Employee-Experience-df09fd30889a42e3845c7802d316b184" style="${brandLinkStyle}"><span style="color:#3d85c6">첨부 링크</a></span> 참고 바랍니다.</p>
   </div>
 
   <p style="margin:0 0 3px 0;">해당 오퍼레터에 동의 및 합류 여부 회신 부탁드리며, 이후 안내 사항은 별도로 메일 보내드리겠습니다 :)</p>
@@ -522,12 +532,19 @@ finalNotice: (v) => wrapEmail(`
       copyBtn.disabled = !html;
     }
 
-    function showToast(msg){
-      toast.textContent = msg;
-      toast.classList.add('show');
-      setTimeout(()=> toast.classList.remove('show'), 1700);
-    }
+function showToast(msg, withNote){
+  // 추가 문구(옵션) 포함 표시
+  const note = '날짜나 시간, 금액이나 비어있는 공간을 꼭 확인하여 발송 전 채워주세요.';
+  toast.innerHTML = withNote
+    ? `${escapeHtml(msg)}<div class="note">${escapeHtml(note)}</div>`
+    : escapeHtml(msg);
 
+  toast.classList.add('show');
+  // 여러 번 눌러도 타이머 초기화
+  clearTimeout(toast._t);
+  toast._t = setTimeout(()=> toast.classList.remove('show'), 3000);
+}
+    
 function renderTemplateByKey(key){
   const builder = templates[key];
   if(!builder){
@@ -567,12 +584,12 @@ function renderTemplateByKey(key){
       const item = new ClipboardItem({'text/html': blob});
       try{
         await navigator.clipboard.write([item]);
-        showToast('클립보드에 복사했습니다. Gmail 작성창에 붙여넣기(Ctrl/⌘+V) 하세요.');
+        showToast('클립보드에 복사했습니다. Gmail 작성창에 붙여넣기(Ctrl/⌘+V) 하세요.', true);
       }catch(err){
         // 퍼미션이 막힌 브라우저 대비 텍스트로 폴백
         const ta = document.createElement('textarea');
         ta.value = currentHtml; document.body.appendChild(ta); ta.select();
-        try{ document.execCommand('copy'); showToast('HTML 복사 권한이 없어 텍스트로 복사했습니다.'); }
+        try{ document.execCommand('copy'); showToast('HTML 복사 권한이 없어 텍스트로 복사했습니다.', true); }
         catch(e){ alert('복사에 실패했습니다.'); }
         finally{ document.body.removeChild(ta); }
       }
