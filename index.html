@@ -86,6 +86,10 @@
         <input id="taskurl" type="url" placeholder="예: https://..." />
       </div>
     </div>
+    <div class="field">
+      <label for="isIntern">인턴십 여부</label>
+      <input id="isIntern" type="checkbox" /> 인턴십
+    </div>
 
     <div class="btn-row" aria-label="단계 버튼">
       <button class="btn js-template" data-key="task">과제전형</button>
@@ -153,15 +157,27 @@ function escapeHtml(s){
   });
 }
 
+    // 포지션명(HTML 본문용) — 인턴십이면 " (인턴십)" 꼬리표 추가 + HTML 이스케이프
+function roleHtml(v){
+  const p = (v.position || '').trim();
+  return escapeHtml(p) + (v.isIntern ? ' (인턴십)' : '');
+}
+
+// 포지션명(메일 제목용) — HTML 이스케이프 불필요
+function subjectRole(v){
+  const p = (v.position || '').trim();
+  return p + (v.isIntern ? ' (인턴십)' : '');
+}
+
     // 기본 플레이스홀더 템플릿: 실제 문안은 이후 제공되는 내용으로 손쉽게 바꿀 수 있게 함수 분리
 
     const templates = {
-      task: (v) => wrapEmail(`
+     task: (v) => { const role = roleHtml(v); return wrapEmail(`
         <p style="margin:0 0 3px 0;"><strong>[Featuring]</strong></p>
         <p style="margin:0 0 3px 0;">안녕하세요. ${escapeHtml(v.name)}님. :)</p>
         <p style="margin:0 0 14px 0;">피처링 채용팀입니다.</p>
 
-        <p style="margin:0 0 3px 0;">먼저 당사와 ${escapeHtml(v.position)} 포지션에 관심 가져주시고 지원해주셔서 감사합니다.</p>
+        <p style="margin:0 0 3px 0;">먼저 당사와 ${role} 포지션에 관심 가져주시고 지원해주셔서 감사합니다.</p>
         <p style="margin:0 0 14px 0;">과제는 실제 업무와 유사한 상황을 기반으로 구성되어 있습니다. 목표는 아키텍처 설계 및 기술적 의사결정 능력을 평가하기 위함입니다.</p>
 
         <p style="margin:0 0 3px 0;"><strong>[과제 전형 안내]</strong></p>
@@ -202,9 +218,9 @@ function escapeHtml(s){
         <p style="margin:0;">감사합니다.<br />featuring 채용팀 드림</p>
       `),
 
-      scheduleConfirm: (v) => wrapEmail(`
+     scheduleConfirm: (v) => { const role = roleHtml(v); return wrapEmail(`
         <p style="margin:0 0 14px 0;">안녕하세요, <strong>${escapeHtml(v.name)}</strong>님.</p>
-        <p style="margin:0 0 14px 0;"><strong>${escapeHtml(v.position)}</strong> 포지션 <strong>일정 확정</strong> 관련 안내 드립니다. (세부 문안은 추후 교체)</p>
+        <p style="margin:0 0 14px 0;"><strong>${role} </strong> 포지션 <strong>일정 확정</strong> 관련 안내 드립니다. (세부 문안은 추후 교체)</p>
         <p style="margin:0;">감사합니다.<br />featuring 채용팀 드림</p>
       `),
 
@@ -214,9 +230,9 @@ function escapeHtml(s){
         <p style="margin:0;">감사합니다.<br />featuring 채용팀 드림</p>
       `),
 
-     onboarding: (v) => wrapEmail(`
+     onboarding: (v) => { const role = roleHtml(v); return wrapEmail(`
         <p style="margin:0 0 14px 0;">안녕하세요. ${escapeHtml(v.name)}님.</p>
-        <p style="margin:0 0 14px 0;">피처링 채용팀입니다. <strong>${escapeHtml(v.position)}</strong> 포지션 <strong>입사 안내</strong> 드립니다.</p>
+        <p style="margin:0 0 14px 0;">피처링 채용팀입니다. <strong>${role} </strong> 포지션 <strong>입사 안내</strong> 드립니다.</p>
 
         <p style="margin:0 0 6px 0;">✅ <strong>입사 일정</strong></p>
         <ul style="margin:0 0 14px 18px; padding:0;">
@@ -245,8 +261,8 @@ function escapeHtml(s){
       `),
       
       reject: (v) => wrapEmailNoHeader(`
-        <p style="margin:0 0 14px 0;">안녕하세요, <strong>${escapeHtml(v.name)}</strong>님.</p>
-        <p style="margin:0 0 14px 0;">아쉽게도 이번 <strong>${escapeHtml(v.position)}</strong> 포지션 채용 전형에서는 함께하지 못하게 되었습니다. 소중한 시간 내어 지원해 주셔서 진심으로 감사드립니다.</p>
+        <p style="margin:0 0 14px 0;">안녕하세요, <strong>${roleHtml(v)}</strong>님.</p>
+        <p style="margin:0 0 14px 0;">아쉽게도 이번 <strong>${role} </strong> 포지션 채용 전형에서는 함께하지 못하게 되었습니다. 소중한 시간 내어 지원해 주셔서 진심으로 감사드립니다.</p>
         <p style="margin:0;">감사합니다.<br />featuring 채용팀 드림</p>
       `),
 
@@ -259,15 +275,15 @@ function escapeHtml(s){
 };
     
     const subjectTemplates = {
-      task: (v) => `[Featuring] ${v.position} 포지션 과제 전형 진행 안내드립니다.`,
-      interview1: (v) => `[Featuring] ${v.position} 1차 인터뷰 안내`,
-      interviewFinal: (v) => `[Featuring] ${v.position} 최종 인터뷰 안내`,
-      scheduleConfirm: (v) => `[Featuring] ${v.position} 일정 확정 안내`,
-      reference: (v) => `[Featuring] ${v.position} 레퍼런스 체크 안내`,
-      offer: (v) => `[Featuring] ${v.position} 처우협의 및 오퍼레터 안내`,
-      finalNotice: (v) => `[Featuring] ${v.position} 최종 안내`,
-      onboarding: (v) => `[Featuring] ${v.position} 입사 안내`,
-      reject: (v) => `[Featuring] ${v.position} 채용 전형 결과 안내`
+    task: (v) => `[Featuring] ${subjectRole(v)} 과제 전형 진행 안내드립니다`,
+    interview1: (v) => `[Featuring] ${subjectRole(v)} 1차 인터뷰 안내`,
+    interviewFinal: (v) => `[Featuring] ${subjectRole(v)} 최종 인터뷰 안내`,
+    scheduleConfirm: (v) => `[Featuring] ${subjectRole(v)} 일정 확정 안내`,
+    reference: (v) => `[Featuring] ${subjectRole(v)} 레퍼런스 체크 안내`,
+    offer: (v) => `[Featuring] ${subjectRole(v)} 처우협의 및 오퍼레터 안내`,
+    onboarding: (v) => `[Featuring] ${subjectRole(v)} 입사 안내`,
+    finalNotice: (v) => `[Featuring] ${subjectRole(v)} 최종 안내`,
+    reject: (v) => `[Featuring] ${subjectRole(v)} 채용 전형 결과 안내`
 };
 
     const nameEl = document.getElementById('name');
@@ -276,6 +292,7 @@ function escapeHtml(s){
     const previewEl = document.getElementById('preview');
     const copyBtn = document.getElementById('copyBtn');
     const toast = document.getElementById('toast');
+    const isInternEl = document.getElementById('isIntern');
     const copySubjectBtn = document.getElementById('copySubjectBtn');     // ★ 추가
     const subjectPreviewEl = document.getElementById('subjectPreview');   // ★ 추가
 
@@ -286,7 +303,8 @@ function escapeHtml(s){
       return {
         name: (nameEl.value || '').trim() || '지원자',
         position: (positionEl.value || '').trim() || '포지션',
-        taskurl: (taskurlEl.value || '').trim()
+        taskurl: (taskurlEl.value || '').trim(),
+        isIntern: !!(isInternEl && isInternEl.checked)
       };
     }
 
