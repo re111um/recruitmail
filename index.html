@@ -31,12 +31,12 @@
     .sub{margin:0 0 20px; color:var(--muted)}
 
     /* 데스크톱에서 4열: 이름 1fr | 포지션 0.5fr | 체크박스 auto | URL 1.5fr */
-@media (min-width:901px){
-  .grid{ grid-template-columns: 1fr 0.5fr auto 1.5fr; }
-}
+    /* 포지션명 라벨 줄에 체크박스 우측 배치 */
+    .field .label-row{ display:flex; align-items:center; justify-content:space-between; }
+    .field .intern{ display:flex; align-items:center; gap:6px; font-weight:600; }
 
-.field.inline{ display:flex; align-items:center; gap:8px; padding-top:26px; }
-.field.inline label{ margin:0 6px 0 0; font-weight:600; }
+    /* 체크박스 크기 고정 (13×13) */
+    #isIntern{ width:13px; height:13px; }
 
     #isIntern{ width:13px; height:13px; }
     
@@ -84,11 +84,13 @@
     <input id="name" type="text" placeholder="예: 홍길동" />
   </div>
 
-  <div class="field">
+<div class="field">
+  <div class="label-row">
     <label for="position">포지션명</label>
-    <input id="position" type="text" placeholder="예: HR Manager" />
+    <label class="intern"><input id="isIntern" type="checkbox" /> 인턴십</label>
   </div>
-
+  <input id="position" type="text" placeholder="예: HR Manager" />
+</div>
   <!-- ▼ 포지션명 ↔ 과제 URL 사이에 13×13 체크박스 삽입 -->
   <div class="field inline">
     <label for="isIntern">인턴십</label>
