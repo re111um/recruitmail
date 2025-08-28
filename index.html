@@ -71,6 +71,21 @@
     .toast.show{opacity:1; transform:translateY(0)}
 
     .hr{height:1px; background:var(--line); margin:18px 0}
+
+    /* 데스크톱(≥901px): 이름 1fr | 포지션 1fr | 인턴십 auto | URL 1fr */
+@media (min-width:901px){
+  .grid{ grid-template-columns: 1fr 1fr auto 1fr; }
+}
+
+/* 인턴십 칸: 라벨 위, 체크박스 아래(기본 폼과 동일 높이 느낌) */
+.field.compact{ display:flex; flex-direction:column; justify-content:flex-start; }
+.field.compact label{ margin:0 0 6px 0; font-weight:600; }
+
+/* 체크박스는 텍스트 입력 스타일을 덮어쓰기(13×13) */
+.field.compact input[type="checkbox"]{
+  width:13px; height:13px; padding:0; margin:0;
+  border:none; border-radius:0; box-shadow:none; outline:none;
+}
   </style>
 </head>
 <body>
@@ -85,17 +100,18 @@
   </div>
 
 <div class="field">
-  <div class="label-row">
-    <label for="position">포지션명</label>
-    <label class="intern"><input id="isIntern" type="checkbox" /> 인턴십</label>
-  </div>
+  <label for="position">포지션명</label>
   <input id="position" type="text" placeholder="예: HR Manager" />
 </div>
   <!-- ▼ 포지션명 ↔ 과제 URL 사이에 13×13 체크박스 삽입 -->
-
-  <div class="field">
-    <label for="taskurl">과제 URL (선택)</label>
-    <input id="taskurl" type="url" placeholder="예: https://..." />
+<div class="field compact">
+  <label for="isIntern">인턴십</label>
+  <input id="isIntern" type="checkbox" />
+</div>
+  
+<div class="field">
+  <label for="taskurl">과제 URL (선택)</label>
+  <input id="taskurl" type="url" placeholder="예: https://..." />
   </div>
 </div>
 
