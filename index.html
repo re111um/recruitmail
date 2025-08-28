@@ -72,25 +72,22 @@
 
     .hr{height:1px; background:var(--line); margin:18px 0}
 
-    /* 데스크톱(≥901px): 이름 1fr | 포지션 1fr | 인턴십 auto | URL 1fr */
-@media (min-width:901px){
-  .grid{
-    display:grid; /* 안전장치 */
-    grid-template-columns: 1fr 1fr min-content 1fr;
-    gap:14px;
-  }
-}
-/* 인턴십 칸: 라벨 위, 체크박스 아래(기본 폼과 동일 높이 느낌) */
-.field.compact{ display:flex; flex-direction:column; }
-.field.compact label{ margin:0 0 6px 0; font-weight:600; }
-.field.compact .checkbox-wrap{
-  height: var(--control-h);
-  display:flex; align-items:center;   /* 세로 중앙 */
-}
 /* 체크박스는 텍스트 입력 스타일을 덮어쓰기(13×13) */
 .field.compact input[type="checkbox"]{
   width:13px; height:13px; padding:0; margin:0;
   border:none; border-radius:0; box-shadow:none; outline:none;
+}
+    
+  .grid{ display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:14px; }
+    /* 데스크톱에서도 3열 유지 (이전에 넣었던 4열 규칙은 삭제!) */
+  @media (min-width:901px){
+    .grid{ display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:14px; }
+    /* 인턴십 칸: 라벨과 체크박스를 한 줄로, 높이는 입력창과 맞추고 세로 중앙 정렬 */
+    .field.small{ display:flex; align-items:center; gap:8px; min-height:44px; }
+    .field.small label{ margin:0; font-weight:600; }
+
+/* 체크박스 고정 크기 */
+  #isIntern{ width:13px; height:13px; }
 }
   </style>
 </head>
@@ -100,27 +97,27 @@
     <p class="sub">아래 3가지만 입력한 뒤, 원하는 단계 버튼을 누르세요. 하단 미리보기에서 <strong>서식 복사</strong>를 클릭하면 Gmail 본문(HTML)으로 그대로 붙여넣을 수 있습니다.</p>
 
 <div class="grid">
+  <!-- 1행: 이름 / 포지션 / 과제 URL (3열) -->
   <div class="field">
     <label for="name">지원자명</label>
     <input id="name" type="text" placeholder="예: 홍길동" />
   </div>
+  <div class="field">
+    <label for="position">포지션명</label>
+    <input id="position" type="text" placeholder="예: HR Manager" />
+  </div>
+  <div class="field">
+    <label for="taskurl">과제 URL (선택)</label>
+    <input id="taskurl" type="url" placeholder="예: https://..." />
+  </div>
 
-<div class="field">
-  <label for="position">포지션명</label>
-  <input id="position" type="text" placeholder="예: HR Manager" />
+  <!-- 2행: 왼쪽 1칸에 인턴십만 표시 -->
+  <div class="field small">
+    <label for="isIntern">인턴십</label>
+    <input id="isIntern" type="checkbox" />
+  </div>
 </div>
-  <!-- ▼ 포지션명 ↔ 과제 URL 사이에 13×13 체크박스 삽입 -->
-<div class="field compact">
-  <label for="isIntern">인턴십</label>
-  <div class="checkbox-wrap"><input id="isIntern" type="checkbox" /></div>
-</div>
-  
-<div class="field">
-  <label for="taskurl">과제 URL (선택)</label>
-  <input id="taskurl" type="url" placeholder="예: https://..." />
-</div>
-</div>
-
+    
     <div class="btn-row" aria-label="단계 버튼">
       <button class="btn js-template" data-key="task">과제전형</button>
       <button class="btn js-template" data-key="interview1">1차 인터뷰</button>
