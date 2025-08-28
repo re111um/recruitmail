@@ -221,9 +221,9 @@ function normalizeUrl(u){
         <p style="margin:0 0 14px 0;">과제는 실제 업무와 유사한 상황을 기반으로 구성되어 있습니다. 목표는 아키텍처 설계 및 기술적 의사결정 능력을 평가하기 위함입니다.</p>
 
         <p style="margin:0 0 3px 0;"><strong>[과제 전형 안내]</strong></p>
+        <div style="padding-left:8px; margin:0 0 3px 0;">
         <p style="margin:0 3px 3px 0;">✅ <strong>과제 주제</strong> : 소셜 미디어 데이터 파이프라인 시스템 설계</p>
         ${v.taskurl ? `<p style="margin:0 3px 3px 0;">✅ <strong>과제 링크</strong> : <a href="${v.taskurl}" style="${brandLinkStyle}"><span style="color:#3d85c6">URL</span></a></p>` : ''}
-
         <p style="margin:3px 0 3px 0;">✅ <strong>제출 형식</strong> :</p>
         <ul style="margin:0 0 3px 18px; padding:0;">
         <li>구성을 한눈에 볼 수 있는 도식(Flowchart, Architecture Diagram 등)을 포함해주세요.</li>
@@ -236,7 +236,7 @@ function normalizeUrl(u){
         <li><strong>금일 자정(yyyy-mm-dd 11:59)전 까지</strong> 회신 부탁드립니다.</li>
         <li>해당 메일에 [전체 답장] 또는 recruit@featuring.in으로 제출해주시면 됩니다.</li>
   </ul>
-
+</div>
         <p style="margin:0 0 3px 0;">제출하신 과제는 내부 기술 리드 및 개발팀과 함께 검토할 예정이며, 결과는 제출일로부터 영업일 기준 3일 전까지 안내 드리겠습니다.</p>
         <p style="margin:0 0 3px 0;">과제 진행 중 궁금하신 사항이 있거나 제출 기한에 어려움이 있으실 경우, 언제든 편하게 해당 메일로 연락 부탁드립니다. :)</p>
 
@@ -259,14 +259,17 @@ interview1: (v) => wrapEmail(`
     <p style="margin:0 0 14px 0;">인터뷰는 대면으로 진행 가능하며, 가능한 일정 확인을 위해 메일로 연락드리게 되었습니다.</p>
 
     <p style="margin:0 0 3px 0;"><strong>[진행 가능 일정/장소]</strong></p>
+    <div style="padding-left:5px; margin:0 0 3px 0;">
     <p style="margin:0 0 3px 0;">- 유형 : 1차 인터뷰 (실무진 참여)</p>
     <p style="margin:0 0 3px 0;">- 포지션 : ${roleHtml(v)}</p>
     <p style="margin:0 0 3px 0;">- 장소 : 서울 강남구 테헤란로 129, 빗썸금융타워 8층</p>
     <p style="margin:0 0 3px 0;">- 일시 : 아래 중 가능한 일정으로 회신바랍니다.</p>
+    <div style="padding-left:8px; margin:0 0 14px 0;">
        <p style="margin:0 5px 3px 0;">1. {mm/dd} {월} {nn}:{00}</p>
        <p style="margin:0 5px 3px 0;">2. {mm/dd} {월} {nn}:{00}</p>
        <p style="margin:0 5px 14px 0;">3. {mm/dd} {월} {nn}:{00}</p>
-
+  </div>
+</div>
     <p style="margin:0 0 3px 0;">혹시 해당 일시 및 시간대가 어려우시다면, 가능한 시간을 함께 공유해 주시면 조율하여 진행하도록 하겠습니다.</p>
     <p style="margin:0 0 14px 0;">추가로 인터뷰에 앞서 준비해야 할 사항이나 궁금한 점이 있으시다면 언제든지 편하게 연락 부탁 드립니다. :)</p>
     
@@ -282,13 +285,17 @@ interviewFinal: (v) => wrapEmail(`
   <p style="margin:0 0 14px 0;">{지원자명}님께서 보여주신 역량과 지금까지 쌓아오신 커리어에 대해 인상 깊게 생각하여 <strong>최종 인터뷰 제안</strong>드리고자 합니다.</p>
 
   <p style="margin:0 0 3px 0;"><strong>[진행 가능 일정/장소]</strong></p>
+  <div style="padding-left:5px; margin:0 0 3px 0;">
   <p style="margin:0 0 3px 0;">- 유형 : 2차(최종) 인터뷰 (C-level 참여)</p>
   <p style="margin:0 0 3px 0;">- 포지션 : ${roleHtml(v)}</p>
   <p style="margin:0 0 3px 0;">- 장소 : 서울 강남구 테헤란로 129, 빗썸금융타워 8층</p>
   <p style="margin:0 0 3px 0;">- 일시 : 아래 중 가능한 일정으로 회신바랍니다.</p>
+    <div style="padding-left:8px; margin:0 0 3px 0;">
        <p style="margin:0 5px 3px 0;">1. {mm/dd} {월} {nn}:{00}</p>
        <p style="margin:0 5px 3px 0;">2. {mm/dd} {월} {nn}:{00}</p>
        <p style="margin:0 5px 14px 0;">3. {mm/dd} {월} {nn}:{00}</p>
+    </div>
+  </div>
        
   <p style="margin:0 0 3px 0;">지난번처럼 혹시 해당 일시 및 시간대가 어려우시다면, 가능한 시간을 함께 공유해 주시면 조율하여 진행하도록 하겠습니다.</p>
   <p style="margin:0 0 14px 0;">${escapeHtml(v.name)}님의 뛰어난 역량을 더 깊게 알아가 볼 수 있을 자리가 될 것 같아 기쁘게 생각하고 있습니다. :)</p>
@@ -302,13 +309,19 @@ scheduleConfirm: (v) => { const role = roleHtml(v); return wrapEmail(`
   <p style="margin:0 0 14px 0;">말씀주신 일자로 확정하여 안내 도와드리겠습니다. :)</p>
 
   <p style="margin:0 0 3px 0;"><strong>[확정 일정 안내]</strong></p>
+    <div style="padding-left:5px; margin:0 0 3px 0;">
     <p style="margin:0 0 3px 0;">- 포지션 : ${roleHtml(v)}</p>
     <p style="margin:0 0 3px 0;">- 장소 : 서울 강남구 테헤란로 129, 빗썸금융타워 8층</p>
+      <div style="padding-left:8px; margin:0 0 3px 0;">
        <p style="margin:0 5px 3px 0;">✅ L(로비)층에 도착하시어 아래 연락처로 연락주시면 담당자가 직접 안내 도와드리겠습니다.</p>
        <p style="margin:0 5px 3px 0;">❓ L층은 정문으로 방문하시게 될 경우, 에스컬레이터를 타고 한 층 올라오셔야 합니다.</p>    
-       <p style="margin:0 5px 3px 0;">🙋 담당자 연락처 : 010-7376-0490</p>   
+       <p style="margin:0 5px 3px 0;">🙋 담당자 연락처 : 010-7376-0490</p>
+      <div style="padding-left:8px; margin:0 0 3px 0;">   
     <p style="margin:0 0 3px 0;">- 일시 : {mm/dd} {월} {nn}:{00}</p>
     <p style="margin:0 0 14px 0;">- 진행 시간 : 약 1시간 30분 소요 예정</p>
+      </div>
+    </div>
+  </div>
 
     <p style="margin:0 0 3px 0;">혹여 확정된 일자가 다가오기 전 부득이 일정 변경이 필요하신 경우, 해당 메일로 회신 부탁드립니다.</p>
     <p style="margin:0 0 14px 0;">인터뷰 당일에 웃는 얼굴로 뵙겠습니다. :)</p>
@@ -326,9 +339,11 @@ reference: (v) => wrapEmail(`
   <p style="margin:0 0 14px 0;">레퍼런스 체크 전형은 아래와 같이 진행될 예정입니다.</p> 
 
   <p style="margin:0 0 3px 0;"><strong>[레퍼런스 체크 전형 안내]</strong></p>
+  <div style="padding-left:5px; margin:0 0 3px 0;">
   <p style="margin:0 0 3px 0;">- 대상 : 지정 1~2명 (팀 리더 우선)</p>
   <p style="margin:0 0 3px 0;">- 진행방식 : 유선 인터뷰</p>
   <p style="margin:0 0 3px 0;">- 진행일정 : 대상자들과 개별 논의하여 차주까지 진행 예정</p>
+  </div>
 
   <p style="margin:0 0 3px 0;">레퍼런스 체크 진행을 위하여 전자 서명을 통해 동의서 서명을 요청드릴 예정이며,</p> 
   <p style="margin:0 0 14px 0;">레퍼런스 체크 진행에 대한 동의 여부와 진행을 원하시는 지정인 1~2명의 정보(이름, 관계, 전화번호)를 포함하여 해당 동의서 작성을 부탁드립니다.</p> 
@@ -355,33 +370,45 @@ onboarding: (v) => { const role = roleHtml(v); return wrapEmail(`
   <p style="margin:0 0 14px 0;">입사와 입사에 필요한 내용을 아래와 같이 안내드리며, 필요한 부분은 확인 후 회신 부탁드립니다.</p>
 
   <p style="margin:0 0 3px 0;"><strong>1) 입사 및 주요 일정 안내</strong></p>
+    <div style="padding-left:5px; margin:0 0 3px 0;">
     <p style="margin:0 3px 3px 0;">- 입사 일자 : {yyyy}년 {mm}월 {dd}일 (date) 10:00</p> 
     <p style="margin:0 3px 3px 0;">- 출근 장소 : 서울 강남구 테헤란로 129, 빗썸금융타워 8층</p> 
+      <div style="padding-left:8px; margin:0 0 3px 0;">
       <p style="margin:0 8px 3px 0;">✅ L(로비)층에 도착하시어 아래 연락처로 연락주시면 담당자가 직접 안내 도와드리겠습니다.</p> 
       <p style="margin:0 8px 3px 0;">❓ L층은 정문으로 방문하시게 될 경우, 에스컬레이터를 타고 한 층 올라오셔야 합니다.</p> 
-      <p style="margin:0 8px 14px 0;">🙋 담당자 연락처 : 010-7376-0490, 박찬형(Thomas)</p> 
+      <p style="margin:0 8px 14px 0;">🙋 담당자 연락처 : 010-7376-0490, 박찬형(Thomas)</p>
+    </div>
+  </div>
 
   <p style="margin:0 0 3px 0;"><strong>2) 연봉 및 수습기간 안내</strong></p>
+    <div style="padding-left:5px; margin:0 0 3px 0;">
     <p style="margin:0 3px 3px 0;">- 처우안 : {$,$$$만 원}</p>
     <p style="margin:0 3px 3px 0;">- 수습기간 : 3개월</p>
     <p style="margin:0 3px 14px 0; color:#666666; font-style:italic; font-size:12px;">
     *수습기간 종료 후, 사내 규정에 의거한 평가와 쌍방 협의를 통해 정규직 전환 계약을 진행하고 있습니다.<br />이에 근무형태와 무관하게 모든 임직원의 첫 계약은 만 3개월 계약직으로 계약한 후, 정규직 계약으로 전환하고 있습니다.<br />(모든 인사규정은 최초입사일 기준으로 진행됩니다.)
+</div>
 
   <p style="margin:0 0 3px 0;"><strong>3) 호칭 및 계정 생성</strong></p>
+    <div style="padding-left:5px; margin:0 0 3px 0;">
     <p style="margin:0 3px 3px 0;">- 피처링은 직함을 부르지 않고, 수평적인 조직문화를 지향하며 모두 닉네임(영어이름)을 사용하고 있습니다 (ex. 마틴, 포자, 얼, 해리 등)</p> 
     <p style="margin:0 3px 3px 0;">- 또한 해당 이름은 회사 개인계정으로 함께 사용 되고 있습니다. (ex. poza@featuring.in)</p>
-    <p style="margin:0 8px 14px 0; background-color:#FFFF00;">👉닉네임을 정한 후 [영문/한글] 양식으로 회신 부탁드립니다. (ex. martin/마틴)</p> 
+    <p style="margin:0 8px 14px 0; background-color:#FFFF00;">👉닉네임을 정한 후 [영문/한글] 양식으로 회신 부탁드립니다. (ex. martin/마틴)</p>
+  </div>  
     
    <p style="margin:0 0 3px 0;"><strong>4) 입사 전 제출서류</strong></p>
+     <div style="padding-left:5px; margin:0 0 3px 0;">
     <p style="margin:0 3px 3px 0;">- 신분증 사본 1부<br />- 주민등록등본 사본 1부 (등본상 현 거주지와 다르다면 실거주지 주소도 회신 부탁드립니다.) <br />- 통장 사본 1부<br /> (이하 신입은 해당 없음.)<br />- 최근 5년 내 직장 경력증명서 (발급이 어려운 경우 사유를 함께 적어서 회신 부탁드립니다.)<br />- 23년, 24년, 25년 원천징수영수증</p>
     <p style="margin:0 3px 14px 0; color:#666666; font-style:italic; font-size:12px;">
-    *하드카피(출력본)는 가져오실 필요 없고, 이메일로 파일 회신 부탁드립니다.</p> 
+    *하드카피(출력본)는 가져오실 필요 없고, 이메일로 파일 회신 부탁드립니다.</p>
+    </div>
     
    <p style="margin:0 0 3px 0;"><strong>5) 랩탑 및 장비, SW 관련</strong></p>
+     <div style="padding-left:5px; margin:0 0 3px 0;">
       <p style="margin:0 3px 3px 0;">- 랩탑 운영체제 선택 : LG그램(windows) or 맥북</p>
       <p style="margin:0 3px 3px 0;">- 기본 장비 : 랩탑, 모니터 1대, 랩탑 거치대<br />
       (*나머지 악세사리 및 장비(마우스, 키보드 등)는 개인적으로 준비해주시기 바랍니다. </p>
       <p style="margin:0 3px 14px 0; background-color:#FFFF00;">👉랩탑 종류 회신 부탁드리며, 필수 활용 SW가 있다면 미리 말씀부탁드립니다.</p>
+    </div>
 
   <p style="margin:0 0 14px 0;">입사 일정 및 관련하여 궁금한 점은 언제든 편하게 연락 부탁드립니다.</p>
       
@@ -420,24 +447,34 @@ finalNotice: (v) => wrapEmail(`
   <p style="margin:0 0 14px 0;">🎉 최종 합격을 진심으로 축하드립니다. :)</p>
 
   <p style="margin:0 0 3px 0;"><strong>1) 제안 연봉</strong></p>
+  <div style="padding-left:5px; margin:0 0 3px 0;">
   <p style="margin:0 3px 3px 0;">- 기본 연봉 : {$,$$$만 원}</p>
+  </div>
 
   <p style="margin:0 0 3px 0;"><strong>2) 입사 일자</strong></p>
+  <div style="padding-left:5px; margin:0 0 3px 0;">
   <p style="margin:0 3px 3px 0;">- 예정일자 : yyyy.mm.dd (date)</p>
   <p style="margin:0 3px 3px 0;">- 개인 상황에 따라 상호 협의 가능한 사항입니다.</p>
   <p style="margin:0 3px 3px 0;">- 피처링은 수습기간 3개월이 있으며, 급여는 100% 지급됩니다.</p>
   <p style="margin:0 0 14px 0;">- 고용형태와 무관하게 모든 임직원의 첫 계약은 수습기간 3개월 계약직 계약 후, 수습 통과 후 정규직 계약으로 전환하고 있는 점 참고 부탁드립니다.<br />(*모든 인사는 최초입사일을 기준으로 산정됩니다.)</p>
+  </div>
 
   <p style="margin:0 0 3px 0;"><strong>3) 소속 부서 및 업무 안내</strong></p>
+    <div style="padding-left:5px; margin:0 0 3px 0;">
   <p style="margin:0 3px 3px 0;">- 소속 : </p>
   <p style="margin:0 3px 3px 0;">- 주요 업무 : </p>
+    <div style="padding-left:8px; margin:0 0 3px 0;">
     <p style="margin:0 8px 3px 0;">①</p>
     <p style="margin:0 8px 3px 0;">②</p>
     <p style="margin:0 8px 3px 0;">③</p>
     <p style="margin:0 8px 14px 0;">④</p>
+  </div>
+</div>
 
   <p style="margin:0 0 3px 0;">4) 피처링 가이드 자료<strong></strong></p>
+    <div style="padding-left:5px; margin:0 0 3px 0;">
   <p style="margin:0 3px 14px 0;">- <a href="https://teamfeaturing.notion.site/Featuring-Employee-Experience-df09fd30889a42e3845c7802d316b184" style="${brandLinkStyle}">첨부 링크</a> 참고 바랍니다.</p>
+  </div>
 
   <p style="margin:0 0 3px 0;">해당 오퍼레터에 동의 및 합류 여부 회신 부탁드리며, 이후 안내 사항은 별도로 메일 보내드리겠습니다 :)</p>
   <p style="margin:0 3px 14px 0;">궁금하신 부분은 언제든 편하게 말씀 부탁드리며, 함께 만들어 갈 성장을 기대하고 있겠습니다.</p>
