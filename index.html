@@ -317,8 +317,9 @@
         <input id="c1h" class="h" inputmode="numeric" maxlength="2" placeholder="24" />
         <span class="colon">:</span>
         <input id="c1i" class="i" inputmode="numeric" maxlength="2" placeholder="00" /  </div>
+      </div>
     </div>
-    </div>
+  </div>
 <!-- ▲ 날짜 입력 블록 끝 -->
 
     <!-- 2행: 왼쪽 1칸에 인턴십만 표시 -->
@@ -816,6 +817,7 @@ enforceNumericForDateInputs(); // 페이지 로드 시 1회
   const isInternEl = document.getElementById('isIntern');
   const copySubjectBtn = document.getElementById('copySubjectBtn');
   const subjectPreviewEl = document.getElementById('subjectPreview');
+    let currentSubject = '';
     /* ▼▼▼ 여기에 C) JS(과제 선택 드롭다운) 삽입 ▼▼▼ */
     const taskSelectBtn = document.getElementById('taskSelectBtn');
     const taskDropdown  = document.getElementById('taskDropdown');
@@ -898,35 +900,27 @@ function showToast(msg, withNote){
   // 추가 문구(옵션) 포함 표시
   const note = '날짜나 시간, 금액이나 비어있는 공간을 꼭 확인하여 발송 전 채워주세요.';
   toast.innerHTML = withNote
-    ? `${escapeHtml(msg)}<div class="note">${escapeHtml(note)}</div>
+    ? `${escapeHtml(msg)}<div class="note">${escapeHtml(note)}</div>`
     : escapeHtml(msg);
 
   toast.classList.add('show');
-  // 여러 번 눌러도 타이머 초기화
   clearTimeout(toast._t);
   toast._t = setTimeout(()=> toast.classList.remove('show'), 3000);
 }
     
 function renderTemplateByKey(key){
   const builder = templates[key];
-  if(!builder){
-    showPreview('<p style="margin:0">선택한 서식이 아직 준비되지 않았습니다.</p>');
-    currentSubject = '';
-    copySubjectBtn.disabled = true;
-    subjectPreviewEl.textContent = '';
-    return;
-  }
+  if(!builder){ /* ... */ return; }
   try{
     const vars = buildVars();
     const html = builder(vars);
     showPreview(html);
 
-    // ★ 제목 계산 및 미리보기/버튼 상태 갱신
     const sb = subjectTemplates[key];
+    // 백틱 대신 문자열 연결로 안전하게 (윗쪽 템플릿 리터럴 누락의 파급 예방)
     currentSubject = sb ? sb(vars) : '[Featuring] ' + (vars.position || '');
     subjectPreviewEl.textContent = currentSubject;
     copySubjectBtn.disabled = !currentSubject;
-
   }catch(err){
     console.error('[템플릿 렌더 오류]', err);
     showPreview('<p style="margin:0;color:#b91c1c">서식을 표시하는 중 오류가 발생했습니다.</p>');
@@ -934,45 +928,22 @@ function renderTemplateByKey(key){
     copySubjectBtn.disabled = true;
     subjectPreviewEl.textContent = '';
   }
-}
+} // ✅ 함수 닫기
 
-    document.querySelectorAll('.js-template').forEach(btn =>{
-      btn.addEventListener('click', ()=> renderTemplateByKey(btn.dataset.key));
-    });
-
-    async function copyHtml(){
-      if(!currentHtml) return;
-      const blob = new Blob([currentHtml], {type: 'text/html'});
-      const item = new ClipboardItem({'text/html': blob});
-      try{
-        await navigator.clipboard.write([item]);
-        showToast('클립보드에 복사했습니다. Gmail 작성창에 붙여넣기(Ctrl/⌘+V) 하세요.', true);
-      }catch(err){
-        // 퍼미션이 막힌 브라우저 대비 텍스트로 폴백
-        const ta = document.createElement('textarea');
-        ta.value = currentHtml; document.body.appendChild(ta); ta.select();
-        try{ document.execCommand('copy'); showToast('HTML 복사 권한이 없어 텍스트로 복사했습니다.', true); }
-        catch(e){ alert('복사에 실패했습니다.'); }
-        finally{ document.body.removeChild(ta); }
-      }
-    }
-
-    copyBtn.addEventListener('click', copyHtml);
-    async function copySubject(){
+// 제목 복사 함수도 정확히 닫기
+function copySubject(){
   if(!currentSubject) return;
-  try{
-    await navigator.clipboard.writeText(currentSubject);
-    showToast('제목을 복사했습니다. 메일 제목 입력란에 붙여넣기(Ctrl/⌘+V) 하세요.');
-  }catch(err){
-    // 권한 이슈 시 폴백
-    const ta = document.createElement('textarea');
-    ta.value = currentSubject; document.body.appendChild(ta); ta.select();
-    try{ document.execCommand('copy'); showToast('제목을 텍스트로 복사했습니다.'); }
-    catch(e){ alert('제목 복사에 실패했습니다.'); }
-    finally{ document.body.removeChild(ta); }
-  }
-}
-copySubjectBtn.addEventListener('click', copySubject);
+  navigator.clipboard.writeText(currentSubject)
+    .then(()=> showToast('제목을 복사했습니다. 발송 전 빈칸을 확인하세요.'))
+    .catch(()=>{
+      const ta=document.createElement('textarea'); ta.value=currentSubject;
+      document.body.appendChild(ta); ta.select();
+      try{ document.execCommand('copy'); showToast('제목을 텍스트로 복사했습니다.'); }
+      finally{ document.body.removeChild(ta); }
+    });
+} // ✅ 함수 닫기
+
+copySubjectBtn.addEventListener('click', copySubject); // ✅ 리스너
   </script>
 </body>
 </html>
