@@ -598,14 +598,15 @@ finalNotice: (v) => wrapEmailNoHeader(`
     reject: (v) => `[Featuring] ${nameFull(v)}님 채용 전형 결과 안내드립니다.`
 };
 
-    const nameEl = document.getElementById('name');
-    const positionEl = document.getElementById('position');
-    const previewEl = document.getElementById('preview');
-    const copyBtn = document.getElementById('copyBtn');
-    const toast = document.getElementById('toast');
-    const isInternEl = document.getElementById('isIntern');
-    const copySubjectBtn = document.getElementById('copySubjectBtn');     // ★ 추가
-    const subjectPreviewEl = document.getElementById('subjectPreview');   // ★ 추가
+  const nameEl = document.getElementById('name');
+  const positionEl = document.getElementById('position');
+  const taskurlEl = document.getElementById('taskurl');   // ★ 이 줄이 반드시 IIFE보다 위
+  const previewEl = document.getElementById('preview');
+  const copyBtn = document.getElementById('copyBtn');
+  const toast = document.getElementById('toast');
+  const isInternEl = document.getElementById('isIntern');
+  const copySubjectBtn = document.getElementById('copySubjectBtn');
+  const subjectPreviewEl = document.getElementById('subjectPreview');
     /* ▼▼▼ 여기에 C) JS(과제 선택 드롭다운) 삽입 ▼▼▼ */
     const taskSelectBtn = document.getElementById('taskSelectBtn');
     const taskDropdown  = document.getElementById('taskDropdown');
@@ -645,9 +646,13 @@ document.addEventListener('click', (e)=>{
 });
 
 (function initTaskSelect(){
+  // 필수 요소가 없으면 조용히 종료(다중 스크립트/순서 이슈 방지)
+  if (!taskurlEl || !taskSelectBtn || !taskDropdown) return;
+
   const none = document.querySelector('input[name="taskurlOpt"][value=""]');
-  if(none){ none.checked = true; }
-  taskurlEl.value = '';
+  if (none) none.checked = true;
+
+  taskurlEl.value = ''; // 기본: 과제 없음
   taskSelectBtn.textContent = getSelectedTaskLabel();
   toggleTaskDropdown(false);
 })();
