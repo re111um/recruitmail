@@ -600,14 +600,6 @@ finalNotice: (v) => wrapEmailNoHeader(`
 
     const nameEl = document.getElementById('name');
     const positionEl = document.getElementById('position');
-    const taskRadioEls = document.querySelectorAll('input[name="taskurlOpt"]');
-taskRadioEls.forEach(radio => {
-  radio.addEventListener('change', () => {
-    taskurlEl.value = typeof normalizeUrl === 'function'
-      ? normalizeUrl(radio.value)
-      : radio.value;
-  });
-});
     const previewEl = document.getElementById('preview');
     const copyBtn = document.getElementById('copyBtn');
     const toast = document.getElementById('toast');
