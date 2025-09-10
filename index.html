@@ -82,6 +82,17 @@
 
     .hr{height:1px; background:var(--line); margin:18px 0}
 
+    /* ▼ 날짜 그리드 안으로 들어가 버려도, 두 칼럼 전체를 차지하도록 강제 */
+.grid.dates .btn-row,
+.grid.dates .actions,
+.grid.dates .preview{
+  grid-column: 1 / -1;
+  width: 100%;
+}
+
+/* ▼ 날짜 영역 바로 다음 줄에서 버튼줄이 시작되도록 간격 보장 */
+.grid.dates + .btn-row{ margin-top:16px; }
+
 /* 체크박스는 텍스트 입력 스타일을 덮어쓰기(13×13) */
 .field.compact input[type="checkbox"]{
   width:13px; height:13px; padding:0; margin:0;
@@ -316,10 +327,11 @@
         </select>
         <input id="c1h" class="h" inputmode="numeric" maxlength="2" placeholder="24" />
         <span class="colon">:</span>
-        <input id="c1i" class="i" inputmode="numeric" maxlength="2" placeholder="00" /  </div>
+        <input id="c1i" class="i" inputmode="numeric" maxlength="2" placeholder="00" /  
+        </div>
       </div>
     </div>
-  </div>
+
 <!-- ▲ 날짜 입력 블록 끝 -->
 
     <!-- 2행: 왼쪽 1칸에 인턴십만 표시 -->
