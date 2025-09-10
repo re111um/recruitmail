@@ -471,7 +471,7 @@ function readDate(prefix){
         <p style="margin:0 0 3px 0;"><strong>[과제 전형 안내]</strong></p>
         <div style="padding-left:8px; margin:0 0 3px 0;">
         <p style="margin:0 3px 3px 0;">✅ <strong>과제 주제</strong> : ${escapeHtml(v.taskTopic)}</p>
-        ${v.taskurl ? <p style="margin:0 3px 3px 0;">✅ <strong>과제 링크</strong> : <a href="${v.taskurl}" style="${brandLinkStyle}"><span style="color:#3d85c6">URL</span></a></p> : ''}
+        {v.taskurl ? <p style="margin:0 3px 3px 0;">✅ <strong>과제 링크</strong> : <a href="${v.taskurl}" style="${brandLinkStyle}"><span style="color:#3d85c6">URL</span></a></p> : ''}
         <p style="margin:3px 0 3px 0;">✅ <strong>제출 형식</strong> :</p>
         <ul style="margin:0 0 3px 18px; padding:0;">
         <li>구성을 한눈에 볼 수 있는 도식(Flowchart, Architecture Diagram 등)을 포함해주세요.</li>
