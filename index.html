@@ -693,13 +693,13 @@ document.addEventListener('click', (e)=>{
   function buildVars(){
   const rawUrl = (taskurlEl && taskurlEl.value ? taskurlEl.value : '').trim();  // ★ url 변수 선언
   const normalizedUrl = normalizeUrl(rawUrl);                                    // ★ 정규화 유지
-    return {
-      name: (nameEl.value || '').trim() || '지원자',
-      position: (positionEl.value || '').trim() || '포지션',
-      taskurl: normalizeUrl((taskurlEl.value || '').trim()),   // ★ 여기만 변경
-      taskTopic: getTaskTopicByUrl(url),              // ★ 추가: 선택 옵션에 따른 주제      
-      isIntern: !!(isInternEl && isInternEl.checked)
-    };
+  return {
+    name: (nameEl.value || '').trim() || '지원자',
+    position: (positionEl.value || '').trim() || '포지션',
+    taskurl: normalizedUrl,                        // ★ 동일 값 사용
+    taskTopic: getTaskTopicByUrl(normalizedUrl),   // ★ 선언한 값으로 주제 매핑
+    isIntern: !!(isInternEl && isInternEl.checked)
+  };
 }
 
     function showPreview(html){
