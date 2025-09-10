@@ -514,9 +514,10 @@ interview1: (v) => wrapEmail(`
     <p style="margin:0 0 3px 0;">- 일시 : 아래 중 가능한 일정으로 회신 부탁드립니다.</p>
     <div style="padding-left:8px; margin:0 0 14px 0;">
       {
+${
   v.proposeDates.length
-    ? <ul style="margin:0 0 5px 3px; padding:0;">${v.proposeDates.map(d=><li>${escapeHtml(d)}</li>).join('')}</ul>
-    : <p style="margin:0 0 14px 0; color:#6b7280;">{날짜를 입력하세요}</p>
+    ? `<ul style="margin:0 0 5px 3px; padding:0;">${v.proposeDates.map(d => `<li>${escapeHtml(d)}</li>`).join('')}</ul>`
+    : `<p style="margin:0 0 14px 0; color:#6b7280;">{날짜를 입력하세요}</p>`
 }
   </div>
 </div>
@@ -541,10 +542,10 @@ interviewFinal: (v) => wrapEmail(`
   <p style="margin:0 0 3px 0;">- 장소 : 서울 강남구 테헤란로 129, 빗썸금융타워 8층</p>
   <p style="margin:0 0 3px 0;">- 일시 : 아래 중 가능한 일정으로 회신바랍니다.</p>
     <div style="padding-left:8px; margin:0 0 3px 0;">
-{
+${
   v.proposeDates.length
-    ? <ul style="margin:0 0 5px 3px; padding:0;">${v.proposeDates.map(d=><li>${escapeHtml(d)}</li>).join('')}</ul>
-    : <p style="margin:0 0 14px 0; color:#6b7280;">{날짜를 입력하세요}</p>
+    ? `<ul style="margin:0 0 5px 3px; padding:0;">${v.proposeDates.map(d => `<li>${escapeHtml(d)}</li>`).join('')}</ul>`
+    : `<p style="margin:0 0 14px 0; color:#6b7280;">{날짜를 입력하세요}</p>`
 }
     </div>
   </div>
@@ -570,10 +571,10 @@ scheduleConfirm: (v) => { const role = roleHtml(v); return wrapEmail(`
        <p style="margin:0 5px 3px 0;">🙋 담당자 연락처 : 010-7376-0490</p>
       <div style="padding-left:8px; margin:0 0 3px 0;">   
     <p style="margin:0 0 3px 0;">- 일시 : </p>
-      {
+${
   v.confirmDate
-    ? <p style="margin:0 0 14px 0;">${escapeHtml(v.confirmDate)}</p>
-    : <p style="margin:0 0 14px 0; color:#6b7280;">{날짜를 입력하세요}</p>
+    ? `<p style="margin:0 0 14px 0;">${escapeHtml(v.confirmDate)}</p>`
+    : `<p style="margin:0 0 14px 0; color:#6b7280;">{날짜를 입력하세요}</p>`
 }
     <p style="margin:0 0 14px 0;">- 진행 시간 : 약 1시간 30분 소요 예정</p>
       </div>
@@ -630,9 +631,10 @@ onboarding: (v) => { const role = roleHtml(v); return wrapEmailNoHeader(`
     <div style="padding-left:5px; margin:0 0 3px 0;">
     <p style="margin:0 3px 3px 0;">- 예정일자 : </p>
     {
+${
   v.confirmDate
-    ? <p style="margin:0 0 3px 0;">${escapeHtml(v.confirmDate)}</p>
-    : <p style="margin:0 0 3px 0; color:#6b7280;">{날짜를 입력하세요}</p>
+    ? `<p style="margin:0 0 14px 0;">${escapeHtml(v.confirmDate)}</p>`
+    : `<p style="margin:0 0 14px 0; color:#6b7280;">{날짜를 입력하세요}</p>`
 }
     <p style="margin:0 3px 3px 0;">- 출근 장소 : 서울 강남구 테헤란로 129, 빗썸금융타워 8층</p> 
       <div style="padding-left:8px; margin:0 0 3px 0;">
@@ -717,9 +719,10 @@ finalNotice: (v) => wrapEmailNoHeader(`
   <p style="margin:0 0 3px 0;"><strong>2) 입사 일자</strong></p>
   <div style="padding-left:5px; margin:0 0 3px 0;">
   <p style="margin:0 3px 3px 0;">- 예정일자 : </p>{
+ ${
   v.confirmDate
-    ? <p style="margin:0 0 14px 0;">${escapeHtml(v.confirmDate)}</p>
-    : <p style="margin:0 0 14px 0; color:#6b7280;">{날짜를 입력하세요}</p>
+    ? `<p style="margin:0 0 14px 0;">${escapeHtml(v.confirmDate)}</p>`
+    : `<p style="margin:0 0 14px 0; color:#6b7280;">{날짜를 입력하세요}</p>`
 }
   <p style="margin:0 3px 3px 0;">- 개인 상황에 따라 상호 협의 가능한 사항입니다.</p>
   <p style="margin:0 3px 3px 0;">- 피처링은 수습기간 3개월이 있으며, 급여는 100% 지급됩니다.</p>
