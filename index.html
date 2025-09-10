@@ -691,6 +691,8 @@ document.addEventListener('click', (e)=>{
     let currentSubject = ''; // ★ 추가
 
   function buildVars(){
+  const rawUrl = (taskurlEl && taskurlEl.value ? taskurlEl.value : '').trim();  // ★ url 변수 선언
+  const normalizedUrl = normalizeUrl(rawUrl);                                    // ★ 정규화 유지
     return {
       name: (nameEl.value || '').trim() || '지원자',
       position: (positionEl.value || '').trim() || '포지션',
