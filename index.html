@@ -28,11 +28,9 @@
       border:1px solid var(--line); border-radius:24px; padding:28px 28px 32px;
       box-shadow:0 10px 30px rgba(0,0,0,.03);
     }
-    h1{margin:0 0 6px; font-size:32px; letter-spacing:-.02em}
-  /* 기본 3열(grid 활성화) */
-  .grid{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:14px}
-
-    }
+h1{margin:0 0 6px; font-size:32px; letter-spacing:-.02em}
+/* 기본 3열(grid 활성화) */
+.grid{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:14px}
     
     .field .label-row{ display:flex; align-items:center; justify-content:space-between; }
     .field .intern{ display:flex; align-items:center; gap:6px; font-weight:600; }
@@ -99,15 +97,10 @@
   border:none; border-radius:0; box-shadow:none; outline:none;
 }
     
-  .grid{ display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:14px; }
-    /* 데스크톱에서도 3열 유지 (이전에 넣었던 4열 규칙은 삭제!) */
-  @media (min-width:901px){
-    .grid{ display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:14px; }
-    /* 인턴십 칸: 라벨과 체크박스를 한 줄로, 높이는 입력창과 맞추고 세로 중앙 정렬 */
-    .field.small{ display:flex; align-items:center; gap:8px; min-height:44px; }
-    .field.small label{ margin:0; font-weight:600; }
-
-/* 체크박스 고정 크기 */
+/* 위쪽에 이미 .grid 3열 선언이 있으므로 여기서는 삭제 */
+@media (min-width:901px){
+  .field.small{ display:flex; align-items:center; gap:8px; min-height:44px; }
+  .field.small label{ margin:0; font-weight:600; }
   #isIntern{ width:13px; height:13px; }
 }
 
@@ -169,8 +162,6 @@
 .intern-inline input[type="checkbox"]{ width:13px; height:13px; }
     
 /* 버튼 행은 독립 행으로 내려오게 */
-.btn-row{ position:relative; margin:16px 0 8px; clear:both; }   
-.date-row + .date-row{ margin-top:8px; background:#fafafa; }
 .date-row input, .date-row select{
   border:1px solid var(--line); border-radius:10px; padding:8px 10px; font-size:14px;
 }
@@ -185,13 +176,6 @@
 .date-row .colon{ color:#6b7280; }
 @media (max-width:900px){ .grid.dates{ grid-template-columns:1fr; } }
 
-/* 인턴십을 날짜 그리드의 오른쪽 컬럼으로 */
-.intern-inline{
-  display:flex; align-items:center; gap:8px;
-  margin-top:8px;               /* 확정일자 박스와 간격 */
-}
-.intern-inline .intern-label{ margin:0; font-weight:600; }
-.intern-inline input[type="checkbox"]{ width:13px; height:13px; }
     
   </style>
 </head>
@@ -327,13 +311,20 @@
         </select>
         <input id="c1h" class="h" inputmode="numeric" maxlength="2" placeholder="24" />
         <span class="colon">:</span>
-        <input id="c1i" class="i" inputmode="numeric" maxlength="2" placeholder="00" /  
+        <input id="c1i" class="i" inputmode="numeric" maxlength="2" placeholder="00" />
         </div>
       </div>
     </div>
 
 <!-- ▲ 날짜 입력 블록 끝 -->
-
+<div class="grid dates-after">
+  <div class="spacer"></div> <!-- 왼쪽 빈 칸 -->
+  <div class="field intern-field">
+    <label for="isIntern" class="intern-label">인턴십</label>
+    <input id="isIntern" type="checkbox" />
+  </div>
+</div>
+  
     <!-- 2행: 왼쪽 1칸에 인턴십만 표시 -->
   <div class="field intern-field">
     <label for="isIntern" class="intern-label">인턴십</label>
