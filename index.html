@@ -138,14 +138,24 @@
 .dept .dropdown .opt{ min-width:0; color:#111; }
 
 /* 날짜 입력 UI */
-.grid.dates{ grid-template-columns:1fr 1fr; gap:18px; }
-.datebox{
-  border:1px solid var(--line); border-radius:12px; padding:10px; background:#fff;
+.grid.dates{
+  display:grid; grid-template-columns:1fr 1fr; gap:18px;
+  align-items:start; /* 라벨/박스의 상단을 맞춰 줌 */
+  margin:8px 0 16px; /* 버튼과 간격 */
 }
-.date-row{
-  display:flex; align-items:center; gap:6px;
-  padding:6px 8px; border-radius:8px;
+ /* 각 날짜 박스는 블록 레벨로 확실히 영역을 가짐 */
+.datebox{ display:block; border:1px solid var(--line); border-radius:12px; padding:10px; background:#fff; }
+.date-row{ display:flex; align-items:center; gap:6px; padding:6px 8px; border-radius:8px; }
+.date-row + .date-row{ margin-top:8px; background:#fafafa; }
+
+/* 인턴십을 오른쪽 컬럼에 고정 */
+.grid.dates .intern-field{
+  grid-column:2; display:flex; align-items:center; gap:8px; padding-top:6px;
 }
+.grid.dates .intern-field label{ margin:0; }
+
+/* 버튼 행은 독립 행으로 내려오게 */
+.btn-row{ position:relative; margin:16px 0 8px; clear:both; }   
 .date-row + .date-row{ margin-top:8px; background:#fafafa; }
 .date-row input, .date-row select{
   border:1px solid var(--line); border-radius:10px; padding:8px 10px; font-size:14px;
@@ -231,11 +241,6 @@
   </div>
 </div>
 
-  <!-- 2행: 왼쪽 1칸에 인턴십만 표시 -->
-<div class="field intern-field">
-  <label for="isIntern">인턴십</label>
-  <input id="isIntern" type="checkbox" />
-</div>
 
     <!-- ▼ 날짜 입력 블록 -->
 <div class="grid dates">
@@ -291,6 +296,7 @@
     </div>
   </div>
 
+
   <!-- 확정일자(1개) -->
   <div class="field">
     <label>확정일자</label>
@@ -313,6 +319,13 @@
   </div>
 </div>
 <!-- ▲ 날짜 입력 블록 끝 -->
+
+    <!-- 2행: 왼쪽 1칸에 인턴십만 표시 -->
+  <div class="field intern-field">
+    <label for="isIntern">인턴십</label>
+    <input id="isIntern" type="checkbox" />
+  </div>
+</div>
     
     <div class="btn-row" aria-label="단계 버튼">
       <button class="btn js-template" data-key="task">과제전형</button>
@@ -776,32 +789,29 @@ finalNotice: (v) => wrapEmailNoHeader(`
   const taskurlEl = document.getElementById('taskurl');   // ★ 이 줄이 반드시 IIFE보다 위
   const previewEl = document.getElementById('preview');
   const copyBtn = document.getElementById('copyBtn');
-    function enforceNumericForDateInputs(){
+/* 숫자만 입력 허용(yyyy/mm/dd/HH/MM) — DOM 레퍼런스 선언 이후에 넣기 */
+function enforceNumericForDateInputs(){
   const maxLen = { y:4, m:2, d:2, h:2, i:2 };
   const sel = '.date-row input.y,.date-row input.m,.date-row input.d,.date-row input.h,.date-row input.i';
   document.querySelectorAll(sel).forEach(el=>{
-    // 클래스명으로 최대 자리수 찾기
     const cls = ['y','m','d','h','i'].find(c => el.classList.contains(c));
     const max = maxLen[cls] || 2;
     el.setAttribute('maxlength', String(max));
-    el.setAttribute('inputmode', 'numeric'); // 모바일 숫자 키패드
+    el.setAttribute('inputmode', 'numeric');
 
-    // 숫자가 아닌 입력을 막음
     el.addEventListener('keydown', (e)=>{
       const ok = ['Backspace','Delete','ArrowLeft','ArrowRight','Tab','Home','End'];
       if (ok.includes(e.key) || e.ctrlKey || e.metaKey) return;
       if (!/^\d$/.test(e.key)) e.preventDefault();
     });
-
-    // 붙여넣기/입력 시 숫자만 남기고 길이 제한
     el.addEventListener('input', ()=>{
       const digits = (el.value || '').replace(/\D/g,'').slice(0, max);
       if (el.value !== digits) el.value = digits;
     });
   });
 }
-// 페이지 로드 시 1회 실행
-enforceNumericForDateInputs();
+enforceNumericForDateInputs(); // 페이지 로드 시 1회
+    
   const toast = document.getElementById('toast');
   const isInternEl = document.getElementById('isIntern');
   const copySubjectBtn = document.getElementById('copySubjectBtn');
