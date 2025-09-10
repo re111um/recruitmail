@@ -172,12 +172,12 @@
 @media (max-width:900px){ .grid.dates{ grid-template-columns:1fr; } }
 
 /* 인턴십을 날짜 그리드의 오른쪽 컬럼으로 */
-.grid.dates .intern-field{
-  grid-column: 2;                 /* 오른쪽 칼럼 고정 */
-  display: flex; align-items: center; gap: 8px;
-  padding-top: 8px;
+.intern-inline{
+  display:flex; align-items:center; gap:8px;
+  margin-top:8px;               /* 확정일자 박스와 간격 */
 }
-.grid.dates .intern-field label{ margin:0; }
+.intern-inline .intern-label{ margin:0; font-weight:600; }
+.intern-inline input[type="checkbox"]{ width:13px; height:13px; }
     
   </style>
 </head>
@@ -313,18 +313,14 @@
         </select>
         <input id="c1h" class="h" inputmode="numeric" maxlength="2" placeholder="24" />
         <span class="colon">:</span>
-        <input id="c1i" class="i" inputmode="numeric" maxlength="2" placeholder="00" />
-      </div>
+        <input id="c1i" class="i" inputmode="numeric" maxlength="2" placeholder="00" /  </div>
     </div>
-  </div>
-</div>
 <!-- ▲ 날짜 입력 블록 끝 -->
 
     <!-- 2행: 왼쪽 1칸에 인턴십만 표시 -->
   <div class="field intern-field">
-    <label for="isIntern">인턴십</label>
-    <input id="isIntern" type="checkbox" />
-  </div>
+    <label for="isIntern" class="intern-label">인턴십</label>
+    <input id="isIntern" type="checkbox" />  </div>
 </div>
     
     <div class="btn-row" aria-label="단계 버튼">
