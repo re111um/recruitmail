@@ -471,7 +471,7 @@ function readDate(prefix){
         <p style="margin:0 0 3px 0;"><strong>[과제 전형 안내]</strong></p>
         <div style="padding-left:8px; margin:0 0 3px 0;">
         <p style="margin:0 3px 3px 0;">✅ <strong>과제 주제</strong> : ${escapeHtml(v.taskTopic)}</p>
-        ${v.taskurl ? `<p style="margin:0 3px 3px 0;">✅ <strong>과제 링크</strong> : <a href="${v.taskurl}" style="${brandLinkStyle}"><span style="color:#3d85c6">URL</span></a></p>` : ''}
+        ${v.taskurl ? <p style="margin:0 3px 3px 0;">✅ <strong>과제 링크</strong> : <a href="${v.taskurl}" style="${brandLinkStyle}"><span style="color:#3d85c6">URL</span></a></p> : ''}
         <p style="margin:3px 0 3px 0;">✅ <strong>제출 형식</strong> :</p>
         <ul style="margin:0 0 3px 18px; padding:0;">
         <li>구성을 한눈에 볼 수 있는 도식(Flowchart, Architecture Diagram 등)을 포함해주세요.</li>
@@ -515,8 +515,8 @@ interview1: (v) => wrapEmail(`
     <div style="padding-left:8px; margin:0 0 14px 0;">
       {
   v.proposeDates.length
-    ? `<ul style="margin:0 0 5px 3px; padding:0;">${v.proposeDates.map(d=>`<li>${escapeHtml(d)}</li>`).join('')}</ul>`
-    : `<p style="margin:0 0 14px 0; color:#6b7280;">{날짜를 입력하세요}</p>`
+    ? <ul style="margin:0 0 5px 3px; padding:0;">${v.proposeDates.map(d=><li>${escapeHtml(d)}</li>).join('')}</ul>
+    : <p style="margin:0 0 14px 0; color:#6b7280;">{날짜를 입력하세요}</p>
 }
   </div>
 </div>
@@ -543,8 +543,8 @@ interviewFinal: (v) => wrapEmail(`
     <div style="padding-left:8px; margin:0 0 3px 0;">
 {
   v.proposeDates.length
-    ? `<ul style="margin:0 0 5px 3px; padding:0;">${v.proposeDates.map(d=>`<li>${escapeHtml(d)}</li>`).join('')}</ul>`
-    : `<p style="margin:0 0 14px 0; color:#6b7280;">{날짜를 입력하세요}</p>`
+    ? <ul style="margin:0 0 5px 3px; padding:0;">${v.proposeDates.map(d=><li>${escapeHtml(d)}</li>).join('')}</ul>
+    : <p style="margin:0 0 14px 0; color:#6b7280;">{날짜를 입력하세요}</p>
 }
     </div>
   </div>
@@ -572,8 +572,8 @@ scheduleConfirm: (v) => { const role = roleHtml(v); return wrapEmail(`
     <p style="margin:0 0 3px 0;">- 일시 : </p>
       {
   v.confirmDate
-    ? `<p style="margin:0 0 14px 0;">${escapeHtml(v.confirmDate)}</p>`
-    : `<p style="margin:0 0 14px 0; color:#6b7280;">{날짜를 입력하세요}</p>`
+    ? <p style="margin:0 0 14px 0;">${escapeHtml(v.confirmDate)}</p>
+    : <p style="margin:0 0 14px 0; color:#6b7280;">{날짜를 입력하세요}</p>
 }
     <p style="margin:0 0 14px 0;">- 진행 시간 : 약 1시간 30분 소요 예정</p>
       </div>
@@ -631,8 +631,8 @@ onboarding: (v) => { const role = roleHtml(v); return wrapEmailNoHeader(`
     <p style="margin:0 3px 3px 0;">- 예정일자 : </p>
     {
   v.confirmDate
-    ? `<p style="margin:0 0 3px 0;">${escapeHtml(v.confirmDate)}</p>`
-    : `<p style="margin:0 0 3px 0; color:#6b7280;">{날짜를 입력하세요}</p>`
+    ? <p style="margin:0 0 3px 0;">${escapeHtml(v.confirmDate)}</p>
+    : <p style="margin:0 0 3px 0; color:#6b7280;">{날짜를 입력하세요}</p>
 }
     <p style="margin:0 3px 3px 0;">- 출근 장소 : 서울 강남구 테헤란로 129, 빗썸금융타워 8층</p> 
       <div style="padding-left:8px; margin:0 0 3px 0;">
@@ -718,8 +718,8 @@ finalNotice: (v) => wrapEmailNoHeader(`
   <div style="padding-left:5px; margin:0 0 3px 0;">
   <p style="margin:0 3px 3px 0;">- 예정일자 : </p>{
   v.confirmDate
-    ? `<p style="margin:0 0 14px 0;">${escapeHtml(v.confirmDate)}</p>`
-    : `<p style="margin:0 0 14px 0; color:#6b7280;">{날짜를 입력하세요}</p>`
+    ? <p style="margin:0 0 14px 0;">${escapeHtml(v.confirmDate)}</p>
+    : <p style="margin:0 0 14px 0; color:#6b7280;">{날짜를 입력하세요}</p>
 }
   <p style="margin:0 3px 3px 0;">- 개인 상황에 따라 상호 협의 가능한 사항입니다.</p>
   <p style="margin:0 3px 3px 0;">- 피처링은 수습기간 3개월이 있으며, 급여는 100% 지급됩니다.</p>
@@ -852,7 +852,7 @@ function showToast(msg, withNote){
   // 추가 문구(옵션) 포함 표시
   const note = '날짜나 시간, 금액이나 비어있는 공간을 꼭 확인하여 발송 전 채워주세요.';
   toast.innerHTML = withNote
-    ? `${escapeHtml(msg)}<div class="note">${escapeHtml(note)}</div>`
+    ? `${escapeHtml(msg)}<div class="note">${escapeHtml(note)}</div>
     : escapeHtml(msg);
 
   toast.classList.add('show');
