@@ -136,6 +136,30 @@
 
 /* 옵션 텍스트 */
 .dept .dropdown .opt{ min-width:0; color:#111; }
+
+/* 날짜 입력 UI */
+.grid.dates{ grid-template-columns:1fr 1fr; gap:18px; }
+.datebox{
+  border:1px solid var(--line); border-radius:12px; padding:10px; background:#fff;
+}
+.date-row{
+  display:flex; align-items:center; gap:6px;
+  padding:6px 8px; border-radius:8px;
+}
+.date-row + .date-row{ margin-top:8px; background:#fafafa; }
+.date-row input, .date-row select{
+  border:1px solid var(--line); border-radius:10px; padding:8px 10px; font-size:14px;
+}
+.date-row input:focus, .date-row select:focus{
+  outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(109,40,217,.12);
+}
+.date-row .y{ width:86px; text-align:center; }
+.date-row .m,.date-row .d{ width:56px; text-align:center; }
+.date-row .h,.date-row .i{ width:56px; text-align:center; }
+.date-row .w{ min-width:84px; }
+.date-row .sep{ color:#6b7280; }
+.date-row .colon{ color:#6b7280; }
+@media (max-width:900px){ .grid.dates{ grid-template-columns:1fr; } }
     
   </style>
 </head>
@@ -205,6 +229,83 @@
     <input id="isIntern" type="checkbox" />
   </div>
 </div>
+
+    <!-- ▼ 날짜 입력 블록 -->
+<div class="grid dates">
+  <!-- 제안일자(최대 3개) -->
+  <div class="field">
+    <label>제안일자</label>
+    <div class="datebox">
+      <!-- p1 -->
+      <div class="date-row">
+        <input id="p1y" class="y" inputmode="numeric" maxlength="4" placeholder="yyyy" />
+        <span class="sep">-</span>
+        <input id="p1m" class="m" inputmode="numeric" maxlength="2" placeholder="mm" />
+        <span class="sep">-</span>
+        <input id="p1d" class="d" inputmode="numeric" maxlength="2" placeholder="dd" />
+        <select id="p1w" class="w">
+          <option value="">(요일)</option><option>월</option><option>화</option><option>수</option>
+          <option>목</option><option>금</option><option>토</option><option>일</option>
+        </select>
+        <input id="p1h" class="h" inputmode="numeric" maxlength="2" placeholder="24" />
+        <span class="colon">:</span>
+        <input id="p1i" class="i" inputmode="numeric" maxlength="2" placeholder="00" />
+      </div>
+      <!-- p2 -->
+      <div class="date-row">
+        <input id="p2y" class="y" inputmode="numeric" maxlength="4" placeholder="yyyy" />
+        <span class="sep">-</span>
+        <input id="p2m" class="m" inputmode="numeric" maxlength="2" placeholder="mm" />
+        <span class="sep">-</span>
+        <input id="p2d" class="d" inputmode="numeric" maxlength="2" placeholder="dd" />
+        <select id="p2w" class="w">
+          <option value="">(요일)</option><option>월</option><option>화</option><option>수</option>
+          <option>목</option><option>금</option><option>토</option><option>일</option>
+        </select>
+        <input id="p2h" class="h" inputmode="numeric" maxlength="2" placeholder="24" />
+        <span class="colon">:</span>
+        <input id="p2i" class="i" inputmode="numeric" maxlength="2" placeholder="00" />
+      </div>
+      <!-- p3 -->
+      <div class="date-row">
+        <input id="p3y" class="y" inputmode="numeric" maxlength="4" placeholder="yyyy" />
+        <span class="sep">-</span>
+        <input id="p3m" class="m" inputmode="numeric" maxlength="2" placeholder="mm" />
+        <span class="sep">-</span>
+        <input id="p3d" class="d" inputmode="numeric" maxlength="2" placeholder="dd" />
+        <select id="p3w" class="w">
+          <option value="">(요일)</option><option>월</option><option>화</option><option>수</option>
+          <option>목</option><option>금</option><option>토</option><option>일</option>
+        </select>
+        <input id="p3h" class="h" inputmode="numeric" maxlength="2" placeholder="24" />
+        <span class="colon">:</span>
+        <input id="p3i" class="i" inputmode="numeric" maxlength="2" placeholder="00" />
+      </div>
+    </div>
+  </div>
+
+  <!-- 확정일자(1개) -->
+  <div class="field">
+    <label>확정일자</label>
+    <div class="datebox">
+      <div class="date-row">
+        <input id="c1y" class="y" inputmode="numeric" maxlength="4" placeholder="yyyy" />
+        <span class="sep">-</span>
+        <input id="c1m" class="m" inputmode="numeric" maxlength="2" placeholder="mm" />
+        <span class="sep">-</span>
+        <input id="c1d" class="d" inputmode="numeric" maxlength="2" placeholder="dd" />
+        <select id="c1w" class="w">
+          <option value="">(요일)</option><option>월</option><option>화</option><option>수</option>
+          <option>목</option><option>금</option><option>토</option><option>일</option>
+        </select>
+        <input id="c1h" class="h" inputmode="numeric" maxlength="2" placeholder="24" />
+        <span class="colon">:</span>
+        <input id="c1i" class="i" inputmode="numeric" maxlength="2" placeholder="00" />
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ▲ 날짜 입력 블록 끝 -->
     
     <div class="btn-row" aria-label="단계 버튼">
       <button class="btn js-template" data-key="task">과제전형</button>
@@ -345,6 +446,19 @@ function normalizeUrl(u){
 
     // 기본 플레이스홀더 템플릿: 실제 문안은 이후 제공되는 내용으로 손쉽게 바꿀 수 있게 함수 분리
 
+function pad2(n){ n=String(n||''); return n.length===1 ? ('0'+n) : n; }
+
+function readDate(prefix){
+  const y = (document.getElementById(prefix+'y')?.value||'').trim();
+  const m = (document.getElementById(prefix+'m')?.value||'').trim();
+  const d = (document.getElementById(prefix+'d')?.value||'').trim();
+  const w = (document.getElementById(prefix+'w')?.value||'').trim();
+  const h = (document.getElementById(prefix+'h')?.value||'').trim();
+  const i = (document.getElementById(prefix+'i')?.value||'').trim();
+  if(!(y && m && d && w && h && i)) return ''; // 하나라도 비면 미사용
+  return `${y}-${pad2(m)}-${pad2(d)} (${w}) ${pad2(h)}:${pad2(i)}`;
+}
+    
     const templates = {
      task: (v) => { const role = roleHtml(v); return wrapEmail(`
         <p style="margin:0 0 3px 0;"><strong>[Featuring]</strong></p>
@@ -399,9 +513,11 @@ interview1: (v) => wrapEmail(`
     <p style="margin:0 0 3px 0;">- 장소 : 서울 강남구 테헤란로 129, 빗썸금융타워 8층</p>
     <p style="margin:0 0 3px 0;">- 일시 : 아래 중 가능한 일정으로 회신 부탁드립니다.</p>
     <div style="padding-left:8px; margin:0 0 14px 0;">
-       <p style="margin:0 5px 3px 0;">1. mm/dd (월) nn:00</p>
-       <p style="margin:0 5px 3px 0;">2. mm/dd (월) nn:00</p>
-       <p style="margin:0 5px 14px 0;">3. mm/dd (월) nn:00</p>
+      {
+  v.proposeDates.length
+    ? `<ul style="margin:0 0 5px 3px; padding:0;">${v.proposeDates.map(d=>`<li>${escapeHtml(d)}</li>`).join('')}</ul>`
+    : `<p style="margin:0 0 14px 0; color:#6b7280;">{날짜를 입력하세요}</p>`
+}
   </div>
 </div>
     <p style="margin:0 0 3px 0;">혹시 해당 일시 및 시간대가 어려우시다면, 가능한 시간을 2~3개 일정정도 함께 공유해 주시면 조율하여 진행하도록 하겠습니다.</p>
@@ -425,9 +541,11 @@ interviewFinal: (v) => wrapEmail(`
   <p style="margin:0 0 3px 0;">- 장소 : 서울 강남구 테헤란로 129, 빗썸금융타워 8층</p>
   <p style="margin:0 0 3px 0;">- 일시 : 아래 중 가능한 일정으로 회신바랍니다.</p>
     <div style="padding-left:8px; margin:0 0 3px 0;">
-       <p style="margin:0 5px 3px 0;">1. {mm/dd} {월} {nn}:{00}</p>
-       <p style="margin:0 5px 3px 0;">2. {mm/dd} {월} {nn}:{00}</p>
-       <p style="margin:0 5px 14px 0;">3. {mm/dd} {월} {nn}:{00}</p>
+{
+  v.proposeDates.length
+    ? `<ul style="margin:0 0 5px 3px; padding:0;">${v.proposeDates.map(d=>`<li>${escapeHtml(d)}</li>`).join('')}</ul>`
+    : `<p style="margin:0 0 14px 0; color:#6b7280;">{날짜를 입력하세요}</p>`
+}
     </div>
   </div>
        
@@ -451,7 +569,12 @@ scheduleConfirm: (v) => { const role = roleHtml(v); return wrapEmail(`
        <p style="margin:0 5px 3px 0;">❓ L층은 정문으로 방문하시게 될 경우, 에스컬레이터를 타고 한 층 올라오셔야 합니다.</p>    
        <p style="margin:0 5px 3px 0;">🙋 담당자 연락처 : 010-7376-0490</p>
       <div style="padding-left:8px; margin:0 0 3px 0;">   
-    <p style="margin:0 0 3px 0;">- 일시 : {mm/dd} {월} {nn}:{00}</p>
+    <p style="margin:0 0 3px 0;">- 일시 : </p>
+      {
+  v.confirmDate
+    ? `<p style="margin:0 0 14px 0;">${escapeHtml(v.confirmDate)}</p>`
+    : `<p style="margin:0 0 14px 0; color:#6b7280;">{날짜를 입력하세요}</p>`
+}
     <p style="margin:0 0 14px 0;">- 진행 시간 : 약 1시간 30분 소요 예정</p>
       </div>
     </div>
@@ -505,7 +628,12 @@ onboarding: (v) => { const role = roleHtml(v); return wrapEmailNoHeader(`
 
   <p style="margin:0 0 3px 0;"><strong>1) 입사 및 주요 일정 안내</strong></p>
     <div style="padding-left:5px; margin:0 0 3px 0;">
-    <p style="margin:0 3px 3px 0;">- 입사 일자 : {yyyy}년 {mm}월 {dd}일 (date) 10:00</p> 
+    <p style="margin:0 3px 3px 0;">- 예정일자 : </p>
+    {
+  v.confirmDate
+    ? `<p style="margin:0 0 3px 0;">${escapeHtml(v.confirmDate)}</p>`
+    : `<p style="margin:0 0 3px 0; color:#6b7280;">{날짜를 입력하세요}</p>`
+}
     <p style="margin:0 3px 3px 0;">- 출근 장소 : 서울 강남구 테헤란로 129, 빗썸금융타워 8층</p> 
       <div style="padding-left:8px; margin:0 0 3px 0;">
       <p style="margin:0 8px 3px 0;">✅ L(로비)층에 도착하시어 아래 연락처로 연락주시면 담당자가 직접 안내 도와드리겠습니다.</p> 
@@ -588,7 +716,11 @@ finalNotice: (v) => wrapEmailNoHeader(`
 
   <p style="margin:0 0 3px 0;"><strong>2) 입사 일자</strong></p>
   <div style="padding-left:5px; margin:0 0 3px 0;">
-  <p style="margin:0 3px 3px 0;">- 예정일자 : yyyy.mm.dd (date)</p>
+  <p style="margin:0 3px 3px 0;">- 예정일자 : </p>{
+  v.confirmDate
+    ? `<p style="margin:0 0 14px 0;">${escapeHtml(v.confirmDate)}</p>`
+    : `<p style="margin:0 0 14px 0; color:#6b7280;">{날짜를 입력하세요}</p>`
+}
   <p style="margin:0 3px 3px 0;">- 개인 상황에 따라 상호 협의 가능한 사항입니다.</p>
   <p style="margin:0 3px 3px 0;">- 피처링은 수습기간 3개월이 있으며, 급여는 100% 지급됩니다.</p>
   <p style="margin:0 0 14px 0;">- 고용형태와 무관하게 모든 임직원의 첫 계약은 수습기간 3개월 계약직 계약 후, 수습 통과 후 정규직 계약으로 전환하고 있는 점 참고 부탁드립니다.<br />(*모든 인사는 최초입사일을 기준으로 산정됩니다.)</p>
@@ -691,13 +823,21 @@ document.addEventListener('click', (e)=>{
     let currentSubject = ''; // ★ 추가
 
   function buildVars(){
-  const rawUrl = (taskurlEl && taskurlEl.value ? taskurlEl.value : '').trim();  // ★ url 변수 선언
-  const normalizedUrl = normalizeUrl(rawUrl);                                    // ★ 정규화 유지
+  const rawUrl = (taskurlEl && taskurlEl.value ? taskurlEl.value : '').trim();
+  const normalizedUrl = normalizeUrl(rawUrl);
+
+  // 제안일자 최대 3개
+  const propose = [readDate('p1'), readDate('p2'), readDate('p3')].filter(Boolean);
+  // 확정일자 1개
+  const confirm = readDate('c1');
+
   return {
     name: (nameEl.value || '').trim() || '지원자',
     position: (positionEl.value || '').trim() || '포지션',
-    taskurl: normalizedUrl,                        // ★ 동일 값 사용
-    taskTopic: getTaskTopicByUrl(normalizedUrl),   // ★ 선언한 값으로 주제 매핑
+    taskurl: normalizedUrl,
+    taskTopic: getTaskTopicByUrl(normalizedUrl),
+    proposeDates: propose,                 // ★ 추가
+    confirmDate: confirm,                  // ★ 추가
     isIntern: !!(isInternEl && isInternEl.checked)
   };
 }
