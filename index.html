@@ -175,7 +175,27 @@ h1{margin:0 0 6px; font-size:32px; letter-spacing:-.02em}
 .date-row .sep{ color:#6b7280; }
 .date-row .colon{ color:#6b7280; }
 @media (max-width:900px){ .grid.dates{ grid-template-columns:1fr; } }
+    
+/* 날짜 그리드 바로 아래의 얇은 2열 래퍼 */
+.dates-after{
+  display:grid;
+  grid-template-columns: 1fr 1fr;   /* 왼쪽=제안일자 라인, 오른쪽=확정일자 라인 */
+  gap:18px;
+  margin-top:8px;
+}
 
+/* 인턴십을 항상 오른쪽 칼럼(=두 번째 칼럼)에 고정 */
+.dates-after .intern-field{
+  grid-column: 2;
+  display:flex; align-items:center; gap:8px;
+}
+.dates-after .intern-label{ margin:0; font-weight:600; }
+#isIntern{ width:13px; height:13px; }
+
+/* 모바일에서는 한 줄로 세우기(원하면 유지) */
+@media (max-width:900px){
+  .dates-after{ grid-template-columns: 1fr; }
+  .dates-after .intern-field{ grid-column: 1; }
     
   </style>
 </head>
@@ -317,10 +337,12 @@ h1{margin:0 0 6px; font-size:32px; letter-spacing:-.02em}
     </div>
 
     <!-- 2행: 왼쪽 1칸에 인턴십만 표시 -->
+<div class="dates-after">
   <div class="field intern-field">
     <label for="isIntern" class="intern-label">인턴십</label>
-    <input id="isIntern" type="checkbox" />  </div>
-  
+    <input id="isIntern" type="checkbox" />
+  </div>
+</div>
     
     <div class="btn-row" aria-label="단계 버튼">
       <button class="btn js-template" data-key="task">과제전형</button>
@@ -862,7 +884,7 @@ document.addEventListener('click', (e)=>{
   toggleTaskDropdown(false);
 })();
     let currentHtml = '';
-    let currentSubject = ''; // ★ 추가
+    currentSubject = ''; // ★ 추가
 
   function buildVars(){
   const rawUrl = (taskurlEl && taskurlEl.value ? taskurlEl.value : '').trim();
