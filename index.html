@@ -99,6 +99,38 @@
 /* 체크박스 고정 크기 */
   #isIntern{ width:13px; height:13px; }
 }
+
+    .dept{ position:relative; }
+.dept .dropdown{
+  /* 제공 스타일을 기본으로 하되, 페이지 레이아웃에 자연스럽게 놓이도록 static 배치 */
+  position:static; z-index:20; /* top/left/right는 static에서 무의미 */
+  background:#fff; border:1px solid #d1d5db; border-radius:10px;
+  max-height:260px; overflow-y:auto; overflow-x:hidden;
+  box-shadow:0 10px 20px rgba(0,0,0,.08); text-align:left;
+  padding:6px 8px 6px 5px; /* 박스 왼쪽 여백 5px */
+}
+.dept .dropdown ul{ margin:8px 0; padding:0; list-style:none; }
+.dept .dropdown li{ margin:0; padding:0; }
+
+/* [라디오 12px 칼럼] [텍스트 가변 칼럼] + 버튼↔텍스트 간격 5px */
+.dept .dropdown label{
+  display:grid; grid-template-columns:12px 1fr; align-items:center;
+  column-gap:5px; width:100%; box-sizing:border-box;
+  padding:0 8px 0 0; line-height:1.2;
+  white-space:normal; word-break:keep-all; overflow-wrap:anywhere;
+  cursor:pointer;
+}
+.dept .dropdown label:hover{ background:#f5f5f5; }
+
+/* 라디오 표시 크기 ≈ 5px */
+.dept .dropdown input[type="radio"]{
+  width:10px; height:10px; transform:scale(0.5);
+  margin:0; /* 브라우저 기본 여백 제거 */
+}
+
+/* 옵션 텍스트(span.opt) 줄바꿈 안정화 */
+.dept .dropdown .opt{ min-width:0; color:#111; }
+    
   </style>
 </head>
 <body>
@@ -116,10 +148,37 @@
     <label for="position">포지션명</label>
     <input id="position" type="text" placeholder="예: HR Manager" />
   </div>
-  <div class="field">
-    <label for="taskurl">과제 URL (선택)</label>
-    <input id="taskurl" type="url" placeholder="예: https://..." />
+  <!-- 과제 URL 입력 → 라디오 선택(라벨만 보이게) -->
+<div class="field dept">
+  <label>과제 선택</label>
+  <!-- 기존 빌드 로직 재사용용: 선택된 URL은 여기로 저장 -->
+  <input id="taskurl" type="hidden" />
+  <div class="dropdown" role="listbox" aria-label="과제 선택">
+    <ul>
+      <li>
+        <label>
+          <input type="radio" name="taskurlOpt"
+                 value="https://featuring-corp.atlassian.net/wiki/external/ZDAxNWM0NzUzMTE2NDllNmI0Mjc3MDVhYmRkNjdlMDI">
+          <span class="opt">DE 과제</span>
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="radio" name="taskurlOpt"
+                 value="https://featuring-corp.atlassian.net/wiki/external/NTQyZmZiMGIyM2YxNDk4ZDljZDczNjc4YmM2YzVkYTQ">
+          <span class="opt">BE 과제</span>
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="radio" name="taskurlOpt"
+                 value="https://featuring-corp.atlassian.net/wiki/external/NTU4ODQxZTc1MTQyNDM4OWEzYTEzZTdjNTcyNWM1M2U">
+          <span class="opt">AI 과제</span>
+        </label>
+      </li>
+    </ul>
   </div>
+</div>
 
   <!-- 2행: 왼쪽 1칸에 인턴십만 표시 -->
   <div class="field small">
@@ -522,7 +581,14 @@ finalNotice: (v) => wrapEmailNoHeader(`
 
     const nameEl = document.getElementById('name');
     const positionEl = document.getElementById('position');
-    const taskurlEl = document.getElementById('taskurl');
+    const taskRadioEls = document.querySelectorAll('input[name="taskurlOpt"]');
+taskRadioEls.forEach(radio => {
+  radio.addEventListener('change', () => {
+    taskurlEl.value = typeof normalizeUrl === 'function'
+      ? normalizeUrl(radio.value)
+      : radio.value;
+  });
+});
     const previewEl = document.getElementById('preview');
     const copyBtn = document.getElementById('copyBtn');
     const toast = document.getElementById('toast');
