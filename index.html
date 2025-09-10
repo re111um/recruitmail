@@ -160,6 +160,14 @@
 .date-row .sep{ color:#6b7280; }
 .date-row .colon{ color:#6b7280; }
 @media (max-width:900px){ .grid.dates{ grid-template-columns:1fr; } }
+
+/* 인턴십을 날짜 그리드의 오른쪽 컬럼으로 */
+.grid.dates .intern-field{
+  grid-column: 2;                 /* 오른쪽 칼럼 고정 */
+  display: flex; align-items: center; gap: 8px;
+  padding-top: 8px;
+}
+.grid.dates .intern-field label{ margin:0; }
     
   </style>
 </head>
@@ -224,10 +232,9 @@
 </div>
 
   <!-- 2행: 왼쪽 1칸에 인턴십만 표시 -->
-  <div class="field small">
-    <label for="isIntern">인턴십</label>
-    <input id="isIntern" type="checkbox" />
-  </div>
+<div class="field intern-field">
+  <label for="isIntern">인턴십</label>
+  <input id="isIntern" type="checkbox" />
 </div>
 
     <!-- ▼ 날짜 입력 블록 -->
@@ -769,6 +776,32 @@ finalNotice: (v) => wrapEmailNoHeader(`
   const taskurlEl = document.getElementById('taskurl');   // ★ 이 줄이 반드시 IIFE보다 위
   const previewEl = document.getElementById('preview');
   const copyBtn = document.getElementById('copyBtn');
+    function enforceNumericForDateInputs(){
+  const maxLen = { y:4, m:2, d:2, h:2, i:2 };
+  const sel = '.date-row input.y,.date-row input.m,.date-row input.d,.date-row input.h,.date-row input.i';
+  document.querySelectorAll(sel).forEach(el=>{
+    // 클래스명으로 최대 자리수 찾기
+    const cls = ['y','m','d','h','i'].find(c => el.classList.contains(c));
+    const max = maxLen[cls] || 2;
+    el.setAttribute('maxlength', String(max));
+    el.setAttribute('inputmode', 'numeric'); // 모바일 숫자 키패드
+
+    // 숫자가 아닌 입력을 막음
+    el.addEventListener('keydown', (e)=>{
+      const ok = ['Backspace','Delete','ArrowLeft','ArrowRight','Tab','Home','End'];
+      if (ok.includes(e.key) || e.ctrlKey || e.metaKey) return;
+      if (!/^\d$/.test(e.key)) e.preventDefault();
+    });
+
+    // 붙여넣기/입력 시 숫자만 남기고 길이 제한
+    el.addEventListener('input', ()=>{
+      const digits = (el.value || '').replace(/\D/g,'').slice(0, max);
+      if (el.value !== digits) el.value = digits;
+    });
+  });
+}
+// 페이지 로드 시 1회 실행
+enforceNumericForDateInputs();
   const toast = document.getElementById('toast');
   const isInternEl = document.getElementById('isIntern');
   const copySubjectBtn = document.getElementById('copySubjectBtn');
