@@ -100,35 +100,41 @@
   #isIntern{ width:13px; height:13px; }
 }
 
-    .dept{ position:relative; }
+.dept{ position:relative; }
+.dept .dept-trigger{
+  width:100%; padding:12px 12px; border:1px solid #d1d5db; border-radius:12px;
+  background:#fff; font-size:15px; text-align:left; cursor:pointer;
+}
+.dept .dept-trigger:focus{ outline:none; border-color:var(--accent); box-shadow:0 0 0 4px rgba(109,40,217,.12); }
+
+/* 라디오 박스(제공 CSS 적용, 드롭다운으로 펼침) */
 .dept .dropdown{
-  /* 제공 스타일을 기본으로 하되, 페이지 레이아웃에 자연스럽게 놓이도록 static 배치 */
-  position:static; z-index:20; /* top/left/right는 static에서 무의미 */
+  position:absolute; z-index:20; top:calc(100% + 6px); left:0; right:0;
   background:#fff; border:1px solid #d1d5db; border-radius:10px;
   max-height:260px; overflow-y:auto; overflow-x:hidden;
   box-shadow:0 10px 20px rgba(0,0,0,.08); text-align:left;
-  padding:6px 8px 6px 5px; /* 박스 왼쪽 여백 5px */
+  padding:6px 8px 6px 5px;
 }
+.dept .dropdown[hidden]{ display:none; }
 .dept .dropdown ul{ margin:8px 0; padding:0; list-style:none; }
 .dept .dropdown li{ margin:0; padding:0; }
 
-/* [라디오 12px 칼럼] [텍스트 가변 칼럼] + 버튼↔텍스트 간격 5px */
+/* [라디오 12px] [텍스트] + 간격 5px (제공안) */
 .dept .dropdown label{
   display:grid; grid-template-columns:12px 1fr; align-items:center;
   column-gap:5px; width:100%; box-sizing:border-box;
-  padding:0 8px 0 0; line-height:1.2;
+  padding:8px 8px; line-height:1.2; cursor:pointer;
   white-space:normal; word-break:keep-all; overflow-wrap:anywhere;
-  cursor:pointer;
 }
 .dept .dropdown label:hover{ background:#f5f5f5; }
 
-/* 라디오 표시 크기 ≈ 5px */
+/* 라디오 크기 */
 .dept .dropdown input[type="radio"]{
   width:10px; height:10px; transform:scale(0.5);
-  margin:0; /* 브라우저 기본 여백 제거 */
+  margin:0;
 }
 
-/* 옵션 텍스트(span.opt) 줄바꿈 안정화 */
+/* 옵션 텍스트 */
 .dept .dropdown .opt{ min-width:0; color:#111; }
     
   </style>
@@ -151,10 +157,23 @@
   <!-- 과제 URL 입력 → 라디오 선택(라벨만 보이게) -->
 <div class="field dept">
   <label>과제 선택</label>
-  <!-- 기존 빌드 로직 재사용용: 선택된 URL은 여기로 저장 -->
+  <!-- 선택된 URL 저장용(템플릿에서 v.taskurl로 사용) -->
   <input id="taskurl" type="hidden" />
-  <div class="dropdown" role="listbox" aria-label="과제 선택">
+
+  <!-- 트리거 버튼: 클릭 시 옵션 펼침/접힘 -->
+  <button type="button" id="taskSelectBtn" class="dept-trigger" aria-haspopup="listbox" aria-expanded="false">
+    과제 없음
+  </button>
+
+  <!-- 옵션 목록: 기본은 숨김 -->
+  <div class="dropdown" id="taskDropdown" role="listbox" aria-label="과제 선택" hidden>
     <ul>
+      <li>
+        <label>
+          <input type="radio" name="taskurlOpt" value="">
+          <span class="opt">과제 없음</span>
+        </label>
+      </li>
       <li>
         <label>
           <input type="radio" name="taskurlOpt"
@@ -581,7 +600,7 @@ finalNotice: (v) => wrapEmailNoHeader(`
 
     const nameEl = document.getElementById('name');
     const positionEl = document.getElementById('position');
-    const taskRadioEls = document.querySelectorAll('input[name="taskurlOpt"]');
+     = document.querySelectorAll('input[name="taskurlOpt"]');
 taskRadioEls.forEach(radio => {
   radio.addEventListener('change', () => {
     taskurlEl.value = typeof normalizeUrl === 'function'
@@ -595,7 +614,51 @@ taskRadioEls.forEach(radio => {
     const isInternEl = document.getElementById('isIntern');
     const copySubjectBtn = document.getElementById('copySubjectBtn');     // ★ 추가
     const subjectPreviewEl = document.getElementById('subjectPreview');   // ★ 추가
+    /* ▼▼▼ 여기에 C) JS(과제 선택 드롭다운) 삽입 ▼▼▼ */
+    const taskSelectBtn = document.getElementById('taskSelectBtn');
+    const taskDropdown  = document.getElementById('taskDropdown');
+    const taskRadioEls  = document.querySelectorAll('input[name="taskurlOpt"]');
+function getSelectedTaskLabel(){
+  const sel = document.querySelector('input[name="taskurlOpt"]:checked');
+  if(!sel){ return '과제 없음'; }
+  const label = sel.closest('label');
+  const span = label ? label.querySelector('.opt') : null;
+  return span ? span.textContent.trim() : '과제 없음';
+}
 
+function toggleTaskDropdown(force){
+  const willOpen = (typeof force === 'boolean') ? force : taskDropdown.hasAttribute('hidden');
+  if(willOpen){
+    taskDropdown.removeAttribute('hidden');
+    taskSelectBtn.setAttribute('aria-expanded','true');
+  }else{
+    taskDropdown.setAttribute('hidden','');
+    taskSelectBtn.setAttribute('aria-expanded','false');
+  }
+}
+taskSelectBtn.addEventListener('click', ()=> toggleTaskDropdown());
+
+taskRadioEls.forEach(radio => {
+  radio.addEventListener('change', ()=>{
+    const v = (radio.value || '').trim();
+    taskurlEl.value = v ? (typeof normalizeUrl === 'function' ? normalizeUrl(v) : v) : '';
+    taskSelectBtn.textContent = getSelectedTaskLabel();
+    toggleTaskDropdown(false);
+  });
+});
+
+document.addEventListener('click', (e)=>{
+  const dept = e.target.closest('.dept');
+  if(!dept){ toggleTaskDropdown(false); }
+});
+
+(function initTaskSelect(){
+  const none = document.querySelector('input[name="taskurlOpt"][value=""]');
+  if(none){ none.checked = true; }
+  taskurlEl.value = '';
+  taskSelectBtn.textContent = getSelectedTaskLabel();
+  toggleTaskDropdown(false);
+})();
     let currentHtml = '';
     let currentSubject = ''; // ★ 추가
 
