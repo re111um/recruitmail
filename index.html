@@ -285,6 +285,37 @@ function subjectRole(v){
   return p + (v.isIntern ? ' (인턴십)' : '');
 }
 
+    function normalizeUrl(u){
+  if(!u) return '';
+  const s = u.trim();
+  if (/^(https?:)?\/\//i.test(s)) { return s.startsWith('//') ? 'https:' + s : s; }
+  return 'https://' + s;
+}
+
+/* ▼▼▼ 과제 옵션 메타(라벨/주제) — 필요시 주제 문구만 여기서 바꾸면 됩니다 */
+const TASK_META = {
+  "": { label: "과제 없음", topic: "" },
+  "https://featuring-corp.atlassian.net/wiki/external/ZDAxNWM0NzUzMTE2NDllNmI0Mjc3MDVhYmRkNjdlMDI": {
+    label: "DE 과제",
+    topic: "소셜 미디어 데이터 파이프라인 시스템 설계"
+  },
+  "https://featuring-corp.atlassian.net/wiki/external/NTQyZmZiMGIyM2YxNDk4ZDljZDczNjc4YmM2YzVkYTQ": {
+    label: "BE 과제",
+    topic: "대량 DM/메일 전송 시스템 설계"
+  },
+  "https://featuring-corp.atlassian.net/wiki/external/NTU4ODQxZTc1MTQyNDM4OWEzYTEzZTdjNTcyNWM1M2U": {
+    label: "AI 과제",
+    topic: "멀티모달 RAG 성능 최적화 시스템 구축"
+  }
+};
+
+function getTaskTopicByUrl(u){
+  if(!u) return '';
+  const k = normalizeUrl(u);
+  return (TASK_META[k] && TASK_META[k].topic) ? TASK_META[k].topic : '';
+}
+/* ▲▲▲ */
+    
     // ★ 이름 전체(인사말 1줄용)
 function nameFull(v){
   return escapeHtml((v.name || '').trim());
@@ -325,7 +356,7 @@ function normalizeUrl(u){
 
         <p style="margin:0 0 3px 0;"><strong>[과제 전형 안내]</strong></p>
         <div style="padding-left:8px; margin:0 0 3px 0;">
-        <p style="margin:0 3px 3px 0;">✅ <strong>과제 주제</strong> : 소셜 미디어 데이터 파이프라인 시스템 설계</p>
+        <p style="margin:0 3px 3px 0;">✅ <strong>과제 주제</strong> : ${escapeHtml(v.taskTopic)}</p>
         ${v.taskurl ? `<p style="margin:0 3px 3px 0;">✅ <strong>과제 링크</strong> : <a href="${v.taskurl}" style="${brandLinkStyle}"><span style="color:#3d85c6">URL</span></a></p>` : ''}
         <p style="margin:3px 0 3px 0;">✅ <strong>제출 형식</strong> :</p>
         <ul style="margin:0 0 3px 18px; padding:0;">
@@ -664,6 +695,7 @@ document.addEventListener('click', (e)=>{
       name: (nameEl.value || '').trim() || '지원자',
       position: (positionEl.value || '').trim() || '포지션',
       taskurl: normalizeUrl((taskurlEl.value || '').trim()),   // ★ 여기만 변경
+      taskTopic: getTaskTopicByUrl(url),              // ★ 추가: 선택 옵션에 따른 주제      
       isIntern: !!(isInternEl && isInternEl.checked)
     };
 }
