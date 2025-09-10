@@ -600,7 +600,7 @@ finalNotice: (v) => wrapEmailNoHeader(`
 
     const nameEl = document.getElementById('name');
     const positionEl = document.getElementById('position');
-     = document.querySelectorAll('input[name="taskurlOpt"]');
+    const taskRadioEls = document.querySelectorAll('input[name="taskurlOpt"]');
 taskRadioEls.forEach(radio => {
   radio.addEventListener('change', () => {
     taskurlEl.value = typeof normalizeUrl === 'function'
