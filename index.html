@@ -77,7 +77,7 @@
     /* 날짜 입력 2열 */
     .grid.dates{
       display:grid; grid-template-columns:1fr 1fr; gap:18px;
-      align-items:start; margin:8px 0 14px;
+      align-items:start; margin:8px 0 0px;
     }
     .datebox{display:block; border:1px solid var(--line); border-radius:12px; padding:10px; background:#fff;}
     .date-row{display:flex; align-items:center; gap:6px; padding:6px 8px; border-radius:8px;}
@@ -98,13 +98,6 @@
       .grid.dates{grid-template-columns:1fr;}
     }
 
-/* 확정일자 블록 아래에 붙는 인턴십 줄 */
-.field-confirm .intern-inline{
-  display:flex; align-items:center; gap:8px;
-  margin-top:14px;           /* 확정일자 박스와 14px 간격 */
-}
-.intern-inline .intern-label{ margin:0; font-weight:600; }
-#isIntern{ width:13px; height:13px; }
     
     /* 과제 선택 트리거: 둥근 버튼형 + 케럿(▼/▲) */
 .dept .dept-trigger{
@@ -169,6 +162,21 @@
 
 /* 옵션 텍스트 줄바꿈 안정화 */
 .dept .dropdown .opt{ min-width:0; color:#111; }
+
+.dates-after{
+  display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:14px;
+}
+.dates-after .intern-field{
+  grid-column:2; display:flex; align-items:center; gap:8px;
+}
+.dates-after .intern-label{ margin:0; font-weight:600; }
+#isIntern{ width:13px; height:13px; }
+
+@media (max-width:900px){
+  .dates-after{ grid-template-columns:1fr; }
+  .dates-after .intern-field{ grid-column:1; }
+}
+    
   </style>
 </head>
 <body>
@@ -303,6 +311,7 @@
     </div>
 
   <!-- ✅ 확정일자 박스 바로 아래 14px 간격으로 인턴십 -->
+  <div class="dates-after">  
   <div class="intern-inline">
     <label for="isIntern" class="intern-label">인턴십</label>
     <input id="isIntern" type="checkbox" />
@@ -331,7 +340,6 @@
       <h3>미리보기</h3>
       <div id="preview" class="frame" aria-live="polite">아직 선택된 서식이 없습니다.</div>
     </div>
-  </div>
 
   <div id="toast" class="toast" role="status" aria-live="polite">클립보드에 복사했습니다.</div>
 
