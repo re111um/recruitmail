@@ -169,8 +169,12 @@
 .dates-after .intern-field{
   grid-column:2; display:flex; align-items:center; gap:8px;
 }
-.dates-after .intern-label{ margin:0; font-weight:600; }
+.dates-after .intern-field .intern-label{
+  display:inline-flex; align-items:center;
+  margin:0; font-weight:600;
+}
 #isIntern{ width:13px; height:13px; }
+
 
 @media (max-width:900px){
   .dates-after{ grid-template-columns:1fr; }
