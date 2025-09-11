@@ -14,13 +14,13 @@
       --accent:#6d28d9;
       --accent-ink:#ffffff;
       --radius:16px;
-      --control-h: 44px;          /* 입력창 시각 높이(체크박스 중앙 정렬 기준) */
-}
+      --control-h:44px;
+    }
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
       margin:0; padding:24px; background:var(--bg); color:var(--ink);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, Helvetica, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,Helvetica,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;
       line-height:1.5;
     }
     .container{
@@ -28,16 +28,11 @@
       border:1px solid var(--line); border-radius:24px; padding:28px 28px 32px;
       box-shadow:0 10px 30px rgba(0,0,0,.03);
     }
-h1{margin:0 0 6px; font-size:32px; letter-spacing:-.02em}
-/* 기본 3열(grid 활성화) */
-.grid{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:14px}
-    
-    .field .label-row{ display:flex; align-items:center; justify-content:space-between; }
-    .field .intern{ display:flex; align-items:center; gap:6px; font-weight:600; }
+    h1{margin:0 0 6px; font-size:32px; letter-spacing:-.02em}
 
-    /* 체크박스 크기 고정 (13×13) */
-    #isIntern{ width:13px; height:13px; }
-    
+    /* 1행: 기본 3열 */
+    .grid{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:14px}
+
     label{display:block; font-weight:600; margin:0 0 6px}
     .field input{
       width:100%; padding:14px 12px; border:1px solid var(--line); border-radius:12px;
@@ -51,7 +46,7 @@ h1{margin:0 0 6px; font-size:32px; letter-spacing:-.02em}
       transition:all .15s ease; box-shadow:0 2px 0 rgba(17,17,17,.04);
     }
     .btn:hover{transform:translateY(-1px); box-shadow:0 6px 14px rgba(17,17,17,.06)}
-    .btn.primary{background:var(--accent); color:var(--accent-ink); border-color:transparent} /* ★ 복구 */
+    .btn.primary{background:var(--accent); color:var(--accent-ink); border-color:transparent}
     .btn.black{background:#111111; color:#ffffff; border-color:#111111}
     .btn[disabled]{opacity:.55; cursor:not-allowed; transform:none; box-shadow:none}
 
@@ -65,138 +60,57 @@ h1{margin:0 0 6px; font-size:32px; letter-spacing:-.02em}
     .preview h3{margin:0 0 10px; font-size:16px}
     .preview .frame{background:#fff; border:1px solid var(--line); border-radius:12px; padding:18px}
 
-  .toast{
-  position:fixed; top:50%; left:50%;
-  transform:translate(-50%,-40%) scale(.98);
-  background:#111; color:#fff; border-radius:12px;
-  padding:14px 18px; opacity:0; transition:all .2s ease;
-  text-align:center; z-index:9999; box-shadow:0 10px 30px rgba(0,0,0,.25);
-  max-width: 86vw;
-}
-.toast.show{ opacity:1; transform:translate(-50%,-50%) scale(1) }
-
-/* 추가 문구(작게, 회색) */
-.toast .note{ margin-top:8px; font-size:12px; color:#d1d5db; line-height:1.4 }
+    /* 중앙 토스트 */
+    .toast{
+      position:fixed; top:50%; left:50%;
+      transform:translate(-50%,-40%) scale(.98);
+      background:#111; color:#fff; border-radius:12px;
+      padding:14px 18px; opacity:0; transition:all .2s ease;
+      text-align:center; z-index:9999; box-shadow:0 10px 30px rgba(0,0,0,.25);
+      max-width:86vw;
+    }
+    .toast.show{opacity:1; transform:translate(-50%,-50%) scale(1)}
+    .toast .note{margin-top:8px; font-size:12px; color:#d1d5db; line-height:1.4}
 
     .hr{height:1px; background:var(--line); margin:18px 0}
 
-    /* ▼ 날짜 그리드 안으로 들어가 버려도, 두 칼럼 전체를 차지하도록 강제 */
-.grid.dates .btn-row,
-.grid.dates .actions,
-.grid.dates .preview{
-  grid-column: 1 / -1;
-  width: 100%;
-}
+    /* 날짜 입력 2열 */
+    .grid.dates{
+      display:grid; grid-template-columns:1fr 1fr; gap:18px;
+      align-items:start; margin:8px 0 16px;
+    }
+    .datebox{display:block; border:1px solid var(--line); border-radius:12px; padding:10px; background:#fff;}
+    .date-row{display:flex; align-items:center; gap:6px; padding:6px 8px; border-radius:8px;}
+    .date-row + .date-row{margin-top:8px; background:#fafafa;}
+    .date-row input, .date-row select{
+      border:1px solid var(--line); border-radius:10px; padding:8px 10px; font-size:14px;
+    }
+    .date-row input:focus, .date-row select:focus{
+      outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(109,40,217,.12);
+    }
+    .date-row .y{width:86px; text-align:center;}
+    .date-row .m,.date-row .d{width:56px; text-align:center;}
+    .date-row .h,.date-row .i{width:56px; text-align:center;}
+    .date-row .w{min-width:84px;}
+    .date-row .sep,.date-row .colon{color:#6b7280;}
 
-/* ▼ 날짜 영역 바로 다음 줄에서 버튼줄이 시작되도록 간격 보장 */
-.grid.dates + .btn-row{ margin-top:16px; }
+    @media (max-width:900px){
+      .grid.dates{grid-template-columns:1fr;}
+    }
 
-/* 체크박스는 텍스트 입력 스타일을 덮어쓰기(13×13) */
-.field.compact input[type="checkbox"]{
-  width:13px; height:13px; padding:0; margin:0;
-  border:none; border-radius:0; box-shadow:none; outline:none;
-}
-    
-/* 위쪽에 이미 .grid 3열 선언이 있으므로 여기서는 삭제 */
-@media (min-width:901px){
-  .field.small{ display:flex; align-items:center; gap:8px; min-height:44px; }
-  .field.small label{ margin:0; font-weight:600; }
-  #isIntern{ width:13px; height:13px; }
-}
-
-.dept{ position:relative; }
-.dept .dept-trigger{
-  width:100%; padding:12px 12px; border:1px solid #d1d5db; border-radius:12px;
-  background:#fff; font-size:15px; text-align:left; cursor:pointer;
-}
-.dept .dept-trigger:focus{ outline:none; border-color:var(--accent); box-shadow:0 0 0 4px rgba(109,40,217,.12); }
-
-/* 라디오 박스(제공 CSS 적용, 드롭다운으로 펼침) */
-.dept .dropdown{
-  position:absolute; z-index:20; top:calc(100% + 6px); left:0; right:0;
-  background:#fff; border:1px solid #d1d5db; border-radius:10px;
-  max-height:260px; overflow-y:auto; overflow-x:hidden;
-  box-shadow:0 10px 20px rgba(0,0,0,.08); text-align:left;
-  padding:6px 8px 6px 5px;
-}
-.dept .dropdown[hidden]{ display:none; }
-.dept .dropdown ul{ margin:8px 0; padding:0; list-style:none; }
-.dept .dropdown li{ margin:0; padding:0; }
-
-/* [라디오 12px] [텍스트] + 간격 5px (제공안) */
-.dept .dropdown label{
-  display:grid; grid-template-columns:12px 1fr; align-items:center;
-  column-gap:5px; width:100%; box-sizing:border-box;
-  padding:8px 8px; line-height:1.2; cursor:pointer;
-  white-space:normal; word-break:keep-all; overflow-wrap:anywhere;
-}
-.dept .dropdown label:hover{ background:#f5f5f5; }
-
-/* 라디오 크기 */
-.dept .dropdown input[type="radio"]{
-  width:10px; height:10px; transform:scale(0.5);
-  margin:0;
-}
-
-/* 옵션 텍스트 */
-.dept .dropdown .opt{ min-width:0; color:#111; }
-
-/* 날짜 입력 UI */
-.grid.dates{
-  display:grid; grid-template-columns:1fr 1fr; gap:18px;
-  align-items:start; /* 라벨/박스의 상단을 맞춰 줌 */
-  margin:8px 0 16px; /* 버튼과 간격 */
-}
- /* 각 날짜 박스는 블록 레벨로 확실히 영역을 가짐 */
-.datebox{ display:block; border:1px solid var(--line); border-radius:12px; padding:10px; background:#fff; }
-.date-row{ display:flex; align-items:center; gap:6px; padding:6px 8px; border-radius:8px; }
-.date-row + .date-row{ margin-top:8px; background:#fafafa; }
-
-/* 인턴십을 오른쪽 컬럼에 고정 */
-/* 확정일자 박스 바로 아래에 붙는 인턴십 라인 */
-.intern-inline{
-  display:flex; align-items:center; gap:8px;
-  margin-top:8px;                 /* 확정일자와 간격 */
-}
-.intern-inline .intern-label{ margin:0; font-weight:600; }
-.intern-inline input[type="checkbox"]{ width:13px; height:13px; }
-    
-/* 버튼 행은 독립 행으로 내려오게 */
-.date-row input, .date-row select{
-  border:1px solid var(--line); border-radius:10px; padding:8px 10px; font-size:14px;
-}
-.date-row input:focus, .date-row select:focus{
-  outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(109,40,217,.12);
-}
-.date-row .y{ width:86px; text-align:center; }
-.date-row .m,.date-row .d{ width:56px; text-align:center; }
-.date-row .h,.date-row .i{ width:56px; text-align:center; }
-.date-row .w{ min-width:84px; }
-.date-row .sep{ color:#6b7280; }
-.date-row .colon{ color:#6b7280; }
-@media (max-width:900px){ .grid.dates{ grid-template-columns:1fr; } }
-    
-/* 날짜 그리드 바로 아래의 얇은 2열 래퍼 */
-.dates-after{
-  display:grid;
-  grid-template-columns: 1fr 1fr;   /* 왼쪽=제안일자 라인, 오른쪽=확정일자 라인 */
-  gap:18px;
-  margin-top:8px;
-}
-
-/* 인턴십을 항상 오른쪽 칼럼(=두 번째 칼럼)에 고정 */
-.dates-after .intern-field{
-  grid-column: 2;
-  display:flex; align-items:center; gap:8px;
-}
-.dates-after .intern-label{ margin:0; font-weight:600; }
-#isIntern{ width:13px; height:13px; }
-
-/* 모바일에서는 한 줄로 세우기(원하면 유지) */
-@media (max-width:900px){
-  .dates-after{ grid-template-columns: 1fr; }
-  .dates-after .intern-field{ grid-column: 1; }
-    
+    /* 날짜 바로 아래, 인턴십을 오른쪽 칼럼 라인에 고정 */
+    .dates-after{
+      display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:8px;
+    }
+    .dates-after .intern-field{
+      grid-column:2; display:flex; align-items:center; gap:8px;
+    }
+    .dates-after .intern-label{margin:0; font-weight:600;}
+    #isIntern{width:13px; height:13px;}
+    @media (max-width:900px){
+      .dates-after{grid-template-columns:1fr;}
+      .dates-after .intern-field{grid-column:1;}
+    }
   </style>
 </head>
 <body>
@@ -204,146 +118,139 @@ h1{margin:0 0 6px; font-size:32px; letter-spacing:-.02em}
     <h1>Featuring Recruit 메일 서식</h1>
     <p class="sub">아래 3가지만 입력한 뒤, 원하는 단계 버튼을 누르세요. 하단 미리보기에서 <strong>서식 복사</strong>를 클릭하면 Gmail 본문(HTML)으로 그대로 붙여넣을 수 있습니다.</p>
 
-<div class="grid">
-  <!-- 1행: 이름 / 포지션 / 과제 URL (3열) -->
-  <div class="field">
-    <label for="name">지원자명</label>
-    <input id="name" type="text" placeholder="예: 홍길동" />
-  </div>
-  <div class="field">
-    <label for="position">포지션명</label>
-    <input id="position" type="text" placeholder="예: HR Manager" />
-  </div>
-  <!-- 과제 URL 입력 → 라디오 선택(라벨만 보이게) -->
-<div class="field dept">
-  <label>과제 선택</label>
-  <!-- 선택된 URL 저장용(템플릿에서 v.taskurl로 사용) -->
-  <input id="taskurl" type="hidden" />
-
-  <!-- 트리거 버튼: 클릭 시 옵션 펼침/접힘 -->
-  <button type="button" id="taskSelectBtn" class="dept-trigger" aria-haspopup="listbox" aria-expanded="false">
-    과제 없음
-  </button>
-
-  <!-- 옵션 목록: 기본은 숨김 -->
-  <div class="dropdown" id="taskDropdown" role="listbox" aria-label="과제 선택" hidden>
-    <ul>
-      <li>
-        <label>
-          <input type="radio" name="taskurlOpt" value="">
-          <span class="opt">과제 없음</span>
-        </label>
-      </li>
-      <li>
-        <label>
-          <input type="radio" name="taskurlOpt"
-                 value="https://featuring-corp.atlassian.net/wiki/external/ZDAxNWM0NzUzMTE2NDllNmI0Mjc3MDVhYmRkNjdlMDI">
-          <span class="opt">DE 과제</span>
-        </label>
-      </li>
-      <li>
-        <label>
-          <input type="radio" name="taskurlOpt"
-                 value="https://featuring-corp.atlassian.net/wiki/external/NTQyZmZiMGIyM2YxNDk4ZDljZDczNjc4YmM2YzVkYTQ">
-          <span class="opt">BE 과제</span>
-        </label>
-      </li>
-      <li>
-        <label>
-          <input type="radio" name="taskurlOpt"
-                 value="https://featuring-corp.atlassian.net/wiki/external/NTU4ODQxZTc1MTQyNDM4OWEzYTEzZTdjNTcyNWM1M2U">
-          <span class="opt">AI 과제</span>
-        </label>
-      </li>
-    </ul>
-  </div>
-</div>
-
-
-    <!-- ▼ 날짜 입력 블록 -->
-<div class="grid dates">
-  <!-- 제안일자(최대 3개) -->
-  <div class="field">
-    <label>제안일자</label>
-    <div class="datebox">
-      <!-- p1 -->
-      <div class="date-row">
-        <input id="p1y" class="y" inputmode="numeric" maxlength="4" placeholder="yyyy" />
-        <span class="sep">-</span>
-        <input id="p1m" class="m" inputmode="numeric" maxlength="2" placeholder="mm" />
-        <span class="sep">-</span>
-        <input id="p1d" class="d" inputmode="numeric" maxlength="2" placeholder="dd" />
-        <select id="p1w" class="w">
-          <option value="">(요일)</option><option>월</option><option>화</option><option>수</option>
-          <option>목</option><option>금</option><option>토</option><option>일</option>
-        </select>
-        <input id="p1h" class="h" inputmode="numeric" maxlength="2" placeholder="24" />
-        <span class="colon">:</span>
-        <input id="p1i" class="i" inputmode="numeric" maxlength="2" placeholder="00" />
+    <div class="grid">
+      <div class="field">
+        <label for="name">지원자명</label>
+        <input id="name" type="text" placeholder="예: 홍길동" />
       </div>
-      <!-- p2 -->
-      <div class="date-row">
-        <input id="p2y" class="y" inputmode="numeric" maxlength="4" placeholder="yyyy" />
-        <span class="sep">-</span>
-        <input id="p2m" class="m" inputmode="numeric" maxlength="2" placeholder="mm" />
-        <span class="sep">-</span>
-        <input id="p2d" class="d" inputmode="numeric" maxlength="2" placeholder="dd" />
-        <select id="p2w" class="w">
-          <option value="">(요일)</option><option>월</option><option>화</option><option>수</option>
-          <option>목</option><option>금</option><option>토</option><option>일</option>
-        </select>
-        <input id="p2h" class="h" inputmode="numeric" maxlength="2" placeholder="24" />
-        <span class="colon">:</span>
-        <input id="p2i" class="i" inputmode="numeric" maxlength="2" placeholder="00" />
+      <div class="field">
+        <label for="position">포지션명</label>
+        <input id="position" type="text" placeholder="예: HR Manager" />
       </div>
-      <!-- p3 -->
-      <div class="date-row">
-        <input id="p3y" class="y" inputmode="numeric" maxlength="4" placeholder="yyyy" />
-        <span class="sep">-</span>
-        <input id="p3m" class="m" inputmode="numeric" maxlength="2" placeholder="mm" />
-        <span class="sep">-</span>
-        <input id="p3d" class="d" inputmode="numeric" maxlength="2" placeholder="dd" />
-        <select id="p3w" class="w">
-          <option value="">(요일)</option><option>월</option><option>화</option><option>수</option>
-          <option>목</option><option>금</option><option>토</option><option>일</option>
-        </select>
-        <input id="p3h" class="h" inputmode="numeric" maxlength="2" placeholder="24" />
-        <span class="colon">:</span>
-        <input id="p3i" class="i" inputmode="numeric" maxlength="2" placeholder="00" />
-      </div>
-    </div>
-  </div>
 
-
-  <!-- 확정일자(1개) -->
-  <div class="field">
-    <label>확정일자</label>
-    <div class="datebox">
-      <div class="date-row">
-        <input id="c1y" class="y" inputmode="numeric" maxlength="4" placeholder="yyyy" />
-        <span class="sep">-</span>
-        <input id="c1m" class="m" inputmode="numeric" maxlength="2" placeholder="mm" />
-        <span class="sep">-</span>
-        <input id="c1d" class="d" inputmode="numeric" maxlength="2" placeholder="dd" />
-        <select id="c1w" class="w">
-          <option value="">(요일)</option><option>월</option><option>화</option><option>수</option>
-          <option>목</option><option>금</option><option>토</option><option>일</option>
-        </select>
-        <input id="c1h" class="h" inputmode="numeric" maxlength="2" placeholder="24" />
-        <span class="colon">:</span>
-        <input id="c1i" class="i" inputmode="numeric" maxlength="2" placeholder="00" />
+      <!-- 과제 선택(라디오 드롭다운) -->
+      <div class="field dept">
+        <label>과제 선택</label>
+        <input id="taskurl" type="hidden" />
+        <button type="button" id="taskSelectBtn" class="dept-trigger" aria-haspopup="listbox" aria-expanded="false">
+          과제 없음
+        </button>
+        <div class="dropdown" id="taskDropdown" role="listbox" aria-label="과제 선택" hidden>
+          <ul>
+            <li>
+              <label>
+                <input type="radio" name="taskurlOpt" value="">
+                <span class="opt">과제 없음</span>
+              </label>
+            </li>
+            <li>
+              <label>
+                <input type="radio" name="taskurlOpt"
+                  value="https://featuring-corp.atlassian.net/wiki/external/ZDAxNWM0NzUzMTE2NDllNmI0Mjc3MDVhYmRkNjdlMDI">
+                <span class="opt">DE 과제</span>
+              </label>
+            </li>
+            <li>
+              <label>
+                <input type="radio" name="taskurlOpt"
+                  value="https://featuring-corp.atlassian.net/wiki/external/NTQyZmZiMGIyM2YxNDk4ZDljZDczNjc4YmM2YzVkYTQ">
+                <span class="opt">BE 과제</span>
+              </label>
+            </li>
+            <li>
+              <label>
+                <input type="radio" name="taskurlOpt"
+                  value="https://featuring-corp.atlassian.net/wiki/external/NTU4ODQxZTc1MTQyNDM4OWEzYTEzZTdjNTcyNWM1M2U">
+                <span class="opt">AI 과제</span>
+              </label>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
 
-    <!-- 2행: 왼쪽 1칸에 인턴십만 표시 -->
-<div class="dates-after">
-  <div class="field intern-field">
-    <label for="isIntern" class="intern-label">인턴십</label>
-    <input id="isIntern" type="checkbox" />
-  </div>
-</div>
-    
+    <!-- 날짜 입력 -->
+    <div class="grid dates">
+      <!-- 제안일자 -->
+      <div class="field">
+        <label>제안일자</label>
+        <div class="datebox">
+          <div class="date-row">
+            <input id="p1y" class="y" inputmode="numeric" maxlength="4" placeholder="yyyy" />
+            <span class="sep">-</span>
+            <input id="p1m" class="m" inputmode="numeric" maxlength="2" placeholder="mm" />
+            <span class="sep">-</span>
+            <input id="p1d" class="d" inputmode="numeric" maxlength="2" placeholder="dd" />
+            <select id="p1w" class="w">
+              <option value="">(요일)</option><option>월</option><option>화</option><option>수</option>
+              <option>목</option><option>금</option><option>토</option><option>일</option>
+            </select>
+            <input id="p1h" class="h" inputmode="numeric" maxlength="2" placeholder="24" />
+            <span class="colon">:</span>
+            <input id="p1i" class="i" inputmode="numeric" maxlength="2" placeholder="00" />
+          </div>
+          <div class="date-row">
+            <input id="p2y" class="y" inputmode="numeric" maxlength="4" placeholder="yyyy" />
+            <span class="sep">-</span>
+            <input id="p2m" class="m" inputmode="numeric" maxlength="2" placeholder="mm" />
+            <span class="sep">-</span>
+            <input id="p2d" class="d" inputmode="numeric" maxlength="2" placeholder="dd" />
+            <select id="p2w" class="w">
+              <option value="">(요일)</option><option>월</option><option>화</option><option>수</option>
+              <option>목</option><option>금</option><option>토</option><option>일</option>
+            </select>
+            <input id="p2h" class="h" inputmode="numeric" maxlength="2" placeholder="24" />
+            <span class="colon">:</span>
+            <input id="p2i" class="i" inputmode="numeric" maxlength="2" placeholder="00" />
+          </div>
+          <div class="date-row">
+            <input id="p3y" class="y" inputmode="numeric" maxlength="4" placeholder="yyyy" />
+            <span class="sep">-</span>
+            <input id="p3m" class="m" inputmode="numeric" maxlength="2" placeholder="mm" />
+            <span class="sep">-</span>
+            <input id="p3d" class="d" inputmode="numeric" maxlength="2" placeholder="dd" />
+            <select id="p3w" class="w">
+              <option value="">(요일)</option><option>월</option><option>화</option><option>수</option>
+              <option>목</option><option>금</option><option>토</option><option>일</option>
+            </select>
+            <input id="p3h" class="h" inputmode="numeric" maxlength="2" placeholder="24" />
+            <span class="colon">:</span>
+            <input id="p3i" class="i" inputmode="numeric" maxlength="2" placeholder="00" />
+          </div>
+        </div>
+      </div>
+
+      <!-- 확정일자 -->
+      <div class="field">
+        <label>확정일자</label>
+        <div class="datebox">
+          <div class="date-row">
+            <input id="c1y" class="y" inputmode="numeric" maxlength="4" placeholder="yyyy" />
+            <span class="sep">-</span>
+            <input id="c1m" class="m" inputmode="numeric" maxlength="2" placeholder="mm" />
+            <span class="sep">-</span>
+            <input id="c1d" class="d" inputmode="numeric" maxlength="2" placeholder="dd" />
+            <select id="c1w" class="w">
+              <option value="">(요일)</option><option>월</option><option>화</option><option>수</option>
+              <option>목</option><option>금</option><option>토</option><option>일</option>
+            </select>
+            <input id="c1h" class="h" inputmode="numeric" maxlength="2" placeholder="24" />
+            <span class="colon">:</span>
+            <input id="c1i" class="i" inputmode="numeric" maxlength="2" placeholder="00" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 날짜 아래, 오른쪽 라인에 인턴십 고정 -->
+    <div class="dates-after">
+      <div class="field intern-field">
+        <label for="isIntern" class="intern-label">인턴십</label>
+        <input id="isIntern" type="checkbox" />
+      </div>
+    </div>
+
+    <!-- 버튼/복사/미리보기: 기존 자리 유지 -->
     <div class="btn-row" aria-label="단계 버튼">
       <button class="btn js-template" data-key="task">과제전형</button>
       <button class="btn js-template" data-key="interview1">1차 인터뷰</button>
@@ -370,134 +277,97 @@ h1{margin:0 0 6px; font-size:32px; letter-spacing:-.02em}
   <div id="toast" class="toast" role="status" aria-live="polite">클립보드에 복사했습니다.</div>
 
   <script>
-    // ---------- 템플릿 구성 ----------
-    // 실제 본문은 Gmail에서 안전하게 보이도록 모든 스타일을 인라인으로 구성합니다.
-
-    const brandLinkStyle = "color:#111111; text-decoration:underline;"; // 링크도 진한 검정(요청사항)으로 설정
+    /* ---------- 유틸 ---------- */
+    const brandLinkStyle = "color:#111111; text-decoration:underline;";
 
     function getHeaderImageSrc(){
       try { return new URL('assets/process.png', window.location.href).href; } catch(e) { return 'assets/process.png'; }
     }
 
-function wrapEmail(contentHtml){
-  const header = '<div style="margin:0 0 20px 0; text-align:left;"><img src="' + getHeaderImageSrc() + '" width="760" height="98" alt="Featuring Recruit" style="display:block;margin:0;width:760px;height:98px;border:0;"/></div>';
-
-  // “감사합니다. … 채용팀 드림.” 문단 바로 앞에 이미지 삽입
-  const signoffRe = new RegExp('<p[^>]*>\\s*감사합니다\\.[\\s\\S]*?채용팀\\s*드림\\.?\\s*<\\/p>', 'i');
-  const injected = signoffRe.test(contentHtml)
-    ? contentHtml.replace(signoffRe, header + '$&')
-    : (header + contentHtml); // 혹시 문구를 못 찾으면 상단에 삽입(폴백)
-
-  return (
-    '<div style="font-family:Arial, Helvetica, \"Apple SD Gothic Neo\", \"Noto Sans KR\", \"Malgun Gothic\", sans-serif; font-size:14px; color:#111111; line-height:1.7;">' +
-      '<div style="padding:8px 0 16px 0">' + injected + '</div>' +
-    '</div>'
-  );
-}
-
-function wrapEmailNoHeader(contentHtml){
-  return (
-    '<div style="font-family:Arial, Helvetica, \"Apple SD Gothic Neo\", \"Noto Sans KR\", \"Malgun Gothic\", sans-serif; font-size:14px; color:#111111; line-height:1.7;">' +
-      '<div style="padding:8px 0 16px 0">' + contentHtml + '</div>' +
-    '</div>'
-  );
-}
-
-// ★ 선언 복구
-function escapeHtml(s){
-  return s.replace(/[&<>"]/g, function(tag){
-    const chars = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' };
-    return chars[tag] || tag;
-  });
-}
-
-    // 포지션명(HTML 본문용) — 인턴십이면 " (인턴십)" 꼬리표 추가 + HTML 이스케이프
-function roleHtml(v){
-  const p = (v.position || '').trim();
-  return escapeHtml(p) + (v.isIntern ? ' (인턴십)' : '');
-}
-
-// 포지션명(메일 제목용) — HTML 이스케이프 불필요
-function subjectRole(v){
-  const p = (v.position || '').trim();
-  return p + (v.isIntern ? ' (인턴십)' : '');
-}
-
+    function wrapEmail(contentHtml){
+      const header = '<div style="margin:0 0 20px 0; text-align:left;"><img src="' + getHeaderImageSrc() + '" width="760" height="98" alt="Featuring Recruit" style="display:block;margin:0;width:760px;height:98px;border:0;"/></div>';
+      const signoffRe = new RegExp('<p[^>]*>\\s*감사합니다\\.[\\s\\S]*?채용팀\\s*드림\\.?\\s*<\\/p>', 'i');
+      const injected = signoffRe.test(contentHtml) ? contentHtml.replace(signoffRe, header + '$&') : (header + contentHtml);
+      return '<div style="font-family:Arial, Helvetica, \\"Apple SD Gothic Neo\\", \\"Noto Sans KR\\", \\"Malgun Gothic\\", sans-serif; font-size:14px; color:#111111; line-height:1.7;"><div style="padding:8px 0 16px 0">' + injected + '</div></div>';
+    }
+    function wrapEmailNoHeader(contentHtml){
+      return '<div style="font-family:Arial, Helvetica, \\"Apple SD Gothic Neo\\", \\"Noto Sans KR\\", \\"Malgun Gothic\\", sans-serif; font-size:14px; color:#111111; line-height:1.7;"><div style="padding:8px 0 16px 0">' + contentHtml + '</div></div>';
+    }
+    function escapeHtml(s){
+      return String(s||'').replace(/[&<>"]/g, t => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[t]||t));
+    }
+    function roleHtml(v){
+      const p=(v.position||'').trim();
+      return escapeHtml(p) + (v.isIntern ? ' (인턴십)' : '');
+    }
+    function subjectRole(v){
+      const p=(v.position||'').trim();
+      return p + (v.isIntern ? ' (인턴십)' : '');
+    }
+    function nameFull(v){ return escapeHtml((v.name||'').trim()); }
+    function nameBody(v){
+      const s=(v.name||'').trim();
+      if(!s) return '';
+      const space=s.indexOf(' ');
+      const shown = space>0 ? s.slice(space+1) : (s.length>1 ? s.slice(1) : s);
+      return escapeHtml(shown);
+    }
     function normalizeUrl(u){
-  if(!u) return '';
-  const s = u.trim();
-  if (/^(https?:)?\/\//i.test(s)) { return s.startsWith('//') ? 'https:' + s : s; }
-  return 'https://' + s;
-}
+      if(!u) return '';
+      const s=u.trim();
+      if(/^(https?:)?\/\//i.test(s)) return s.startsWith('//') ? 'https:'+s : s;
+      return 'https://'+s;
+    }
+    function pad2(n){ n=String(n||''); return n.length===1?('0'+n):n; }
+    function readDate(prefix){
+      const y=(document.getElementById(prefix+'y')?.value||'').trim();
+      const m=(document.getElementById(prefix+'m')?.value||'').trim();
+      const d=(document.getElementById(prefix+'d')?.value||'').trim();
+      const w=(document.getElementById(prefix+'w')?.value||'').trim();
+      const h=(document.getElementById(prefix+'h')?.value||'').trim();
+      const i=(document.getElementById(prefix+'i')?.value||'').trim();
+      if(!(y&&m&&d&&w&&h&&i)) return '';
+      return `${y}-${pad2(m)}-${pad2(d)} (${w}) ${pad2(h)}:${pad2(i)}`;
+    }
 
-/* ▼▼▼ 과제 옵션 메타(라벨/주제) — 필요시 주제 문구만 여기서 바꾸면 됩니다 */
-const TASK_META = {
-  "": { label: "과제 없음", topic: "" },
-  "https://featuring-corp.atlassian.net/wiki/external/ZDAxNWM0NzUzMTE2NDllNmI0Mjc3MDVhYmRkNjdlMDI": {
-    label: "DE 과제",
-    topic: "소셜 미디어 데이터 파이프라인 시스템 설계"
-  },
-  "https://featuring-corp.atlassian.net/wiki/external/NTQyZmZiMGIyM2YxNDk4ZDljZDczNjc4YmM2YzVkYTQ": {
-    label: "BE 과제",
-    topic: "대량 DM/메일 전송 시스템 설계"
-  },
-  "https://featuring-corp.atlassian.net/wiki/external/NTU4ODQxZTc1MTQyNDM4OWEzYTEzZTdjNTcyNWM1M2U": {
-    label: "AI 과제",
-    topic: "멀티모달 RAG 성능 최적화 시스템 구축"
-  }
-};
+    /* 과제 옵션 메타 */
+    const TASK_META = {
+      "": { label: "과제 없음", topic: "" },
+      "https://featuring-corp.atlassian.net/wiki/external/ZDAxNWM0NzUzMTE2NDllNmI0Mjc3MDVhYmRkNjdlMDI": { label: "DE 과제", topic: "소셜 미디어 데이터 파이프라인 시스템 설계" },
+      "https://featuring-corp.atlassian.net/wiki/external/NTQyZmZiMGIyM2YxNDk4ZDljZDczNjc4YmM2YzVkYTQ": { label: "BE 과제", topic: "대량 DM/메일 전송 시스템 설계" },
+      "https://featuring-corp.atlassian.net/wiki/external/NTU4ODQxZTc1MTQyNDM4OWEzYTEzZTdjNTcyNWM1M2U": { label: "AI 과제", topic: "멀티모달 RAG 성능 최적화 시스템 구축" }
+    };
+    function getTaskTopicByUrl(u){
+      if(!u) return '';
+      const k=normalizeUrl(u);
+      return (TASK_META[k] && TASK_META[k].topic) ? TASK_META[k].topic : '';
+    }
 
-function getTaskTopicByUrl(u){
-  if(!u) return '';
-  const k = normalizeUrl(u);
-  return (TASK_META[k] && TASK_META[k].topic) ? TASK_META[k].topic : '';
-}
-/* ▲▲▲ */
-    
-    // ★ 이름 전체(인사말 1줄용)
-function nameFull(v){
-  return escapeHtml((v.name || '').trim());
-}
+    /* 숫자만 입력 */
+    function enforceNumericForDateInputs(){
+      const maxLen={y:4,m:2,d:2,h:2,i:2};
+      const sel='.date-row input.y,.date-row input.m,.date-row input.d,.date-row input.h,.date-row input.i';
+      document.querySelectorAll(sel).forEach(el=>{
+        const cls=['y','m','d','h','i'].find(c=>el.classList.contains(c));
+        const max=maxLen[cls]||2;
+        el.setAttribute('maxlength',String(max));
+        el.setAttribute('inputmode','numeric');
+        el.addEventListener('keydown',e=>{
+          const ok=['Backspace','Delete','ArrowLeft','ArrowRight','Tab','Home','End'];
+          if(ok.includes(e.key)||e.ctrlKey||e.metaKey) return;
+          if(!/^\d$/.test(e.key)) e.preventDefault();
+        });
+        el.addEventListener('input', ()=>{
+          const digits=(el.value||'').replace(/\D/g,'').slice(0,max);
+          if(el.value!==digits) el.value=digits;
+        });
+      });
+    }
+    enforceNumericForDateInputs();
 
-// ★ 이름 본문용: 성(첫 글자)을 제외하고 표시 (예: 홍길동 → 길동, 김철수 → 철수, John Doe → Doe)
-function nameBody(v){
-  const s = (v.name || '').trim();
-  if (!s) return '';
-  // 공백이 포함된 경우(서양식 등): 첫 번째 공백 뒤만 표시 → "John Doe" → "Doe"
-  const spaceIdx = s.indexOf(' ');
-  const shown = spaceIdx > 0 ? s.slice(spaceIdx + 1) : (s.length > 1 ? s.slice(1) : s);
-  return escapeHtml(shown);
-}
-
-    // ★ 신규: URL 정규화 (스킴 없으면 https:// 자동 추가)
-function normalizeUrl(u){
-  if(!u) return '';
-  const s = u.trim();
-  // http://, https://, 또는 // 로 시작하면 그대로 사용
-  if (/^(https?:)?\/\//i.test(s)) {
-    return s.startsWith('//') ? 'https:' + s : s;
-  }
-  // 그 외는 https:// 붙임
-  return 'https://' + s;
-}
-
-    // 기본 플레이스홀더 템플릿: 실제 문안은 이후 제공되는 내용으로 손쉽게 바꿀 수 있게 함수 분리
-
-function pad2(n){ n=String(n||''); return n.length===1 ? ('0'+n) : n; }
-
-function readDate(prefix){
-  const y = (document.getElementById(prefix+'y')?.value||'').trim();
-  const m = (document.getElementById(prefix+'m')?.value||'').trim();
-  const d = (document.getElementById(prefix+'d')?.value||'').trim();
-  const w = (document.getElementById(prefix+'w')?.value||'').trim();
-  const h = (document.getElementById(prefix+'h')?.value||'').trim();
-  const i = (document.getElementById(prefix+'i')?.value||'').trim();
-  if(!(y && m && d && w && h && i)) return ''; // 하나라도 비면 미사용
-  return `${y}-${pad2(m)}-${pad2(d)} (${w}) ${pad2(h)}:${pad2(i)}`;
-}
-    
+    /* 템플릿들 (문구 변경 없음) */
     const templates = {
-     task: (v) => { const role = roleHtml(v); return wrapEmail(`
+      task: (v) => { const role = roleHtml(v); return wrapEmail(`
         <p style="margin:0 0 3px 0;"><strong>[Featuring]</strong></p>
         <p style="margin:0 0 3px 0;">안녕하세요. ${nameFull(v)}님. :)</p>
         <p style="margin:0 0 14px 0;">피처링 채용팀입니다.</p>
@@ -508,7 +378,7 @@ function readDate(prefix){
         <p style="margin:0 0 3px 0;"><strong>[과제 전형 안내]</strong></p>
         <div style="padding-left:8px; margin:0 0 3px 0;">
         <p style="margin:0 3px 3px 0;">✅ <strong>과제 주제</strong> : ${escapeHtml(v.taskTopic)}</p>
-        {v.taskurl ? <p style="margin:0 3px 3px 0;">✅ <strong>과제 링크</strong> : <a href="${v.taskurl}" style="${brandLinkStyle}"><span style="color:#3d85c6">URL</span></a></p> : ''}
+        ${v.taskurl ? `<p style="margin:0 3px 3px 0;">✅ <strong>과제 링크</strong> : <a href="${v.taskurl}" style="${brandLinkStyle}"><span style="color:#3d85c6">URL</span></a></p>` : ''}
         <p style="margin:3px 0 3px 0;">✅ <strong>제출 형식</strong> :</p>
         <ul style="margin:0 0 3px 18px; padding:0;">
         <li>구성을 한눈에 볼 수 있는 도식(Flowchart, Architecture Diagram 등)을 포함해주세요.</li>
@@ -531,40 +401,36 @@ function readDate(prefix){
 
   <p style="margin:0;">감사합니다.<br />피처링 채용팀 드림.</p>
 `); },
-      
-interview1: (v) => wrapEmail(`
+
+      interview1: (v) => wrapEmail(`
   <p style="margin:0 0 3px 0;"><strong>[Featuring]</strong></p>
   <p style="margin:0 0 3px 0;">안녕하세요, ${nameFull(v)}님.</p>
   <p style="margin:0 0 14px 0;">피처링 채용팀입니다.</p>
 
-  
   <p style="margin:0 0 3px 0;">먼저 저희 회사와 ${roleHtml(v)} 포지션에 관심 가져주시고 지원해주셔서 감사합니다.</p>
-    <p style="margin:0 0 3px 0;">제출해 주신 이력서와 경력 사항을 검토한 결과,</p> 
-    <p style="margin:0 0 3px 0;">${nameBody(v)}님의 역량과 경험이 해당 포지션에 적합하다고 판단되어 1차 인터뷰를 진행하고자 합니다.</p>
-    <p style="margin:0 0 14px 0;">인터뷰는 대면으로 진행되며, 가능한 일정 확인을 위해 메일로 연락드리게 되었습니다.</p>
+  <p style="margin:0 0 3px 0;">제출해 주신 이력서와 경력 사항을 검토한 결과,</p> 
+  <p style="margin:0 0 3px 0;">${nameBody(v)}님의 역량과 경험이 해당 포지션에 적합하다고 판단되어 1차 인터뷰를 진행하고자 합니다.</p>
+  <p style="margin:0 0 14px 0;">인터뷰는 대면으로 진행되며, 가능한 일정 확인을 위해 메일로 연락드리게 되었습니다.</p>
 
-    <p style="margin:0 0 3px 0;"><strong>[진행 가능 일정/장소]</strong></p>
-    <div style="padding-left:5px; margin:0 0 3px 0;">
-    <p style="margin:0 0 3px 0;">- 유형 : 1차 인터뷰 (실무진 참여)</p>
-    <p style="margin:0 0 3px 0;">- 포지션 : ${roleHtml(v)}</p>
-    <p style="margin:0 0 3px 0;">- 장소 : 서울 강남구 테헤란로 129, 빗썸금융타워 8층</p>
-    <p style="margin:0 0 3px 0;">- 일시 : 아래 중 가능한 일정으로 회신 부탁드립니다.</p>
-    <div style="padding-left:8px; margin:0 0 14px 0;">
-      {
-${
-  v.proposeDates.length
+  <p style="margin:0 0 3px 0;"><strong>[진행 가능 일정/장소]</strong></p>
+  <div style="padding-left:5px; margin:0 0 3px 0;">
+  <p style="margin:0 0 3px 0;">- 유형 : 1차 인터뷰 (실무진 참여)</p>
+  <p style="margin:0 0 3px 0;">- 포지션 : ${roleHtml(v)}</p>
+  <p style="margin:0 0 3px 0;">- 장소 : 서울 강남구 테헤란로 129, 빗썸금융타워 8층</p>
+  <p style="margin:0 0 3px 0;">- 일시 : 아래 중 가능한 일정으로 회신 부탁드립니다.</p>
+  <div style="padding-left:8px; margin:0 0 14px 0;">
+${ v.proposeDates.length
     ? `<ul style="margin:0 0 5px 3px; padding:0;">${v.proposeDates.map(d => `<li>${escapeHtml(d)}</li>`).join('')}</ul>`
-    : `<p style="margin:0 0 14px 0; color:#6b7280;">{날짜를 입력하세요}</p>`
-}
+    : `<p style="margin:0 0 14px 0; color:#6b7280;">{날짜를 입력하세요}</p>` }
   </div>
 </div>
-    <p style="margin:0 0 3px 0;">혹시 해당 일시 및 시간대가 어려우시다면, 가능한 시간을 2~3개 일정정도 함께 공유해 주시면 조율하여 진행하도록 하겠습니다.</p>
-    <p style="margin:0 0 14px 0;">추가로 인터뷰에 앞서 준비해야 할 사항이나 궁금한 점이 있으시다면 언제든지 편하게 연락 부탁 드립니다. :)</p>
-    
+  <p style="margin:0 0 3px 0;">혹시 해당 일시 및 시간대가 어려우시다면, 가능한 시간을 2~3개 일정정도 함께 공유해 주시면 조율하여 진행하도록 하겠습니다.</p>
+  <p style="margin:0 0 14px 0;">추가로 인터뷰에 앞서 준비해야 할 사항이나 궁금한 점이 있으시다면 언제든지 편하게 연락 부탁 드립니다. :)</p>
+  
   <p style="margin:0;">감사합니다.<br />피처링 채용팀 드림.</p>
 `),
 
-interviewFinal: (v) => wrapEmail(`
+      interviewFinal: (v) => wrapEmail(`
   <p style="margin:0 0 3px 0;"><strong>[Featuring]</strong></p>
   <p style="margin:0 0 3px 0;">안녕하세요, ${nameFull(v)}님.</p>
   <p style="margin:0 0 14px 0;">피처링 채용팀입니다.</p>
@@ -579,11 +445,9 @@ interviewFinal: (v) => wrapEmail(`
   <p style="margin:0 0 3px 0;">- 장소 : 서울 강남구 테헤란로 129, 빗썸금융타워 8층</p>
   <p style="margin:0 0 3px 0;">- 일시 : 아래 중 가능한 일정으로 회신바랍니다.</p>
     <div style="padding-left:8px; margin:0 0 3px 0;">
-${
-  v.proposeDates.length
+${ v.proposeDates.length
     ? `<ul style="margin:0 0 5px 3px; padding:0;">${v.proposeDates.map(d => `<li>${escapeHtml(d)}</li>`).join('')}</ul>`
-    : `<p style="margin:0 0 14px 0; color:#6b7280;">{날짜를 입력하세요}</p>`
-}
+    : `<p style="margin:0 0 14px 0; color:#6b7280;">{날짜를 입력하세요}</p>` }
     </div>
   </div>
        
@@ -593,7 +457,7 @@ ${
   <p style="margin:0;">감사합니다.<br />피처링 채용팀 드림.</p>
 `),
 
-scheduleConfirm: (v) => { const role = roleHtml(v); return wrapEmail(`
+      scheduleConfirm: (v) => { const role = roleHtml(v); return wrapEmail(`
   <p style="margin:0 0 3px 0;"><strong>[Featuring]</strong></p>
   <p style="margin:0 0 3px 0;">빠르게 일정 확인 후 회신주셔서 감사합니다. ${nameBody(v)}님.</p>
   <p style="margin:0 0 14px 0;">말씀주신 일자로 확정하여 안내 도와드리겠습니다. :)</p>
@@ -608,11 +472,9 @@ scheduleConfirm: (v) => { const role = roleHtml(v); return wrapEmail(`
        <p style="margin:0 5px 3px 0;">🙋 담당자 연락처 : 010-7376-0490</p>
       <div style="padding-left:8px; margin:0 0 3px 0;">   
     <p style="margin:0 0 3px 0;">- 일시 : </p>
-${
-  v.confirmDate
+${ v.confirmDate
     ? `<p style="margin:0 0 14px 0;">${escapeHtml(v.confirmDate)}</p>`
-    : `<p style="margin:0 0 14px 0; color:#6b7280;">{날짜를 입력하세요}</p>`
-}
+    : `<p style="margin:0 0 14px 0; color:#6b7280;">{날짜를 입력하세요}</p>` }
     <p style="margin:0 0 14px 0;">- 진행 시간 : 약 1시간 30분 소요 예정</p>
       </div>
     </div>
@@ -622,9 +484,9 @@ ${
     <p style="margin:0 0 14px 0;">인터뷰 당일에 웃는 얼굴로 뵙겠습니다. :)</p>
   
    <p style="margin:0;">감사합니다.<br />피처링 채용팀 드림.</p>
-`); },  // ★ 함수/속성 정확히 닫기
+`); },
 
-reference: (v) => wrapEmail(`
+      reference: (v) => wrapEmail(`
   <p style="margin:0 0 3px 0;"><strong>[Featuring]</strong></p>
   <p style="margin:0 0 3px 0;">안녕하세요, ${nameFull(v)}님.</p>
   <p style="margin:0 0 14px 0;">피처링 채용팀입니다.</p>
@@ -656,7 +518,7 @@ reference: (v) => wrapEmail(`
   <p style="margin:0;">감사합니다.<br />피처링 채용팀 드림.</p>
 `),
 
-onboarding: (v) => { const role = roleHtml(v); return wrapEmailNoHeader(`
+      onboarding: (v) => { const role = roleHtml(v); return wrapEmailNoHeader(`
   <p style="margin:0 0 3px 0;"><strong>[Featuring]</strong></p>
   <p style="margin:0 0 3px 0;">안녕하세요, ${nameFull(v)}님.</p>
   <p style="margin:0 0 14px 0;">피처링 채용팀입니다.</p>
@@ -667,12 +529,9 @@ onboarding: (v) => { const role = roleHtml(v); return wrapEmailNoHeader(`
   <p style="margin:0 0 3px 0;"><strong>1) 입사 및 주요 일정 안내</strong></p>
     <div style="padding-left:5px; margin:0 0 3px 0;">
     <p style="margin:0 3px 3px 0;">- 예정일자 : </p>
-    {
-${
-  v.confirmDate
+${ v.confirmDate
     ? `<p style="margin:0 0 14px 0;">${escapeHtml(v.confirmDate)}</p>`
-    : `<p style="margin:0 0 14px 0; color:#6b7280;">{날짜를 입력하세요}</p>`
-}
+    : `<p style="margin:0 0 14px 0; color:#6b7280;">{날짜를 입력하세요}</p>` }
     <p style="margin:0 3px 3px 0;">- 출근 장소 : 서울 강남구 테헤란로 129, 빗썸금융타워 8층</p> 
       <div style="padding-left:8px; margin:0 0 3px 0;">
       <p style="margin:0 8px 3px 0;">✅ L(로비)층에 도착하시어 아래 연락처로 연락주시면 담당자가 직접 안내 도와드리겠습니다.</p> 
@@ -696,7 +555,7 @@ ${
     <p style="margin:0 8px 3px 0; background-color:#FFFF00;">👉닉네임을 정한 후 [영문/한글] 양식으로 회신 부탁드립니다. (ex. martin/마틴)</p>
     <p style="margin:0 3px 14px 0;">(*중복 또는 사용 불가한 닉네임일 수 있기에 2~3순위까지 고려해서 부탁드립니다.)</p>
   </div>  
-    
+  
    <p style="margin:0 0 3px 0;"><strong>4) 입사 전 제출서류</strong></p>
      <div style="padding-left:5px; margin:0 0 3px 0;">
     <p style="margin:0 3px 3px 0;">- 신분증 사본 1부<br />- 주민등록등본 사본 1부 (등본상 현 거주지와 다르다면 실거주지 주소도 회신 부탁드립니다.) <br />- 통장 사본 1부<br /> (이하 신입은 해당 없음.)<br />- 최근 5년 내 직장 경력증명서 (발급이 어려운 경우 사유를 함께 적어서 회신 부탁드립니다.)<br />- 23년, 24년, 25년 원천징수영수증</p>
@@ -715,9 +574,9 @@ ${
   <p style="margin:0 0 14px 0;">입사 일정 및 관련하여 궁금한 점은 언제든 편하게 연락 부탁드립니다.</p>
       
   <p style="margin:0;">감사합니다.<br />피처링 채용팀 드림.</p>
-`); },  // ★ 함수/속성 정확히 닫기
-      
-reject: (v) => wrapEmailNoHeader(`
+`); },
+
+      reject: (v) => wrapEmailNoHeader(`
   <p style="margin:0 0 3px 0;"><strong>[Featuring]</strong></p>
   <p style="margin:0 0 3px 0;">안녕하세요, ${nameFull(v)}님.</p>
   <p style="margin:0 0 14px 0;">피처링 채용팀입니다.</p>
@@ -739,12 +598,12 @@ reject: (v) => wrapEmailNoHeader(`
   <p style="margin:0;">감사합니다.<br />피처링 채용팀 드림.</p>
 `),
 
-finalNotice: (v) => wrapEmailNoHeader(`
+      finalNotice: (v) => wrapEmailNoHeader(`
   <p style="margin:0 0 3px 0;"><strong>[Featuring]</strong></p>
   <p style="margin:0 0 3px 0;">안녕하세요, ${nameFull(v)}님.</p>
   <p style="margin:0 0 14px 0;">피처링 채용팀입니다.</p>
 
-  <p style="margin:0 0 3px 0;">길었던 피처링의 채용 프로세스에 적극 응해주시고, 흔쾌히 대면 인터뷰에 참석해주시어 감사드립니다.p>
+  <p style="margin:0 0 3px 0;">길었던 피처링의 채용 프로세스에 적극 응해주시고, 흔쾌히 대면 인터뷰에 참석해주시어 감사드립니다.</p>
   <p style="margin:0 0 3px 0;">최종 인터뷰 결과, <strong>합격을 안내드리며 동시에 오퍼 레터 전달</strong>드립니다.</p>
   <p style="margin:0 0 14px 0;">🎉 최종 합격을 진심으로 축하드립니다. :)</p>
 
@@ -755,12 +614,10 @@ finalNotice: (v) => wrapEmailNoHeader(`
 
   <p style="margin:0 0 3px 0;"><strong>2) 입사 일자</strong></p>
   <div style="padding-left:5px; margin:0 0 3px 0;">
-  <p style="margin:0 3px 3px 0;">- 예정일자 : </p>{
- ${
-  v.confirmDate
+  <p style="margin:0 3px 3px 0;">- 예정일자 : </p>
+${ v.confirmDate
     ? `<p style="margin:0 0 14px 0;">${escapeHtml(v.confirmDate)}</p>`
-    : `<p style="margin:0 0 14px 0; color:#6b7280;">{날짜를 입력하세요}</p>`
-}
+    : `<p style="margin:0 0 14px 0; color:#6b7280;">{날짜를 입력하세요}</p>` }
   <p style="margin:0 3px 3px 0;">- 개인 상황에 따라 상호 협의 가능한 사항입니다.</p>
   <p style="margin:0 3px 3px 0;">- 피처링은 수습기간 3개월이 있으며, 급여는 100% 지급됩니다.</p>
   <p style="margin:0 0 14px 0;">- 고용형태와 무관하게 모든 임직원의 첫 계약은 수습기간 3개월 계약직 계약 후, 수습 통과 후 정규직 계약으로 전환하고 있는 점 참고 부탁드립니다.<br />(*모든 인사는 최초입사일을 기준으로 산정됩니다.)</p>
@@ -780,7 +637,7 @@ finalNotice: (v) => wrapEmailNoHeader(`
 
   <p style="margin:0 0 3px 0;">4) 피처링 가이드 자료<strong></strong></p>
     <div style="padding-left:5px; margin:0 0 3px 0;">
-  <p style="margin:0 3px 14px 0;">- <a href="https://teamfeaturing.notion.site/Featuring-Employee-Experience-df09fd30889a42e3845c7802d316b184" style="${brandLinkStyle}"><span style="color:#3d85c6">첨부 링크</a></span> 참고 바랍니다.</p>
+  <p style="margin:0 3px 14px 0;">- <a href="https://teamfeaturing.notion.site/Featuring-Employee-Experience-df09fd30889a42e3845c7802d316b184" style="${brandLinkStyle}"><span style="color:#3d85c6">첨부 링크</span></a> 참고 바랍니다.</p>
   </div>
 
   <p style="margin:0 0 3px 0;">해당 오퍼레터에 동의 및 합류 여부 회신 부탁드리며, 이후 안내 사항은 별도로 메일 보내드리겠습니다 :)</p>
@@ -788,178 +645,158 @@ finalNotice: (v) => wrapEmailNoHeader(`
     
   <p style="margin:0;">감사합니다.<br />피처링 채용팀 드림.</p>
 `)
-};
-    
+    };
+
     const subjectTemplates = {
-    task: (v) => `[Featuring] ${subjectRole(v)} 과제 전형 진행 안내드립니다.`,
-    interview1: (v) => `[Featuring] ${subjectRole(v)} 1차 인터뷰 제안드립니다.`,
-    interviewFinal: (v) => `[Featuring] ${subjectRole(v)} 1차 인터뷰 결과 안내드립니다.`,
-    scheduleConfirm: (v) => `[Featuring] ${subjectRole(v)} 일정 확정 안내드립니다.`,
-    reference: (v) => `[Featuring] 레퍼런스 체크 전형 안내드립니다.`,
-    finalNotice: (v) => `[Featuring] 최종 인터뷰 결과 안내드립니다.`,
-    onboarding: (v) => `[Featuring] ${subjectRole(v)} 입사 안내드립니다.`,
-    reject: (v) => `[Featuring] ${nameFull(v)}님 채용 전형 결과 안내드립니다.`
-};
+      task: (v) => `[Featuring] ${subjectRole(v)} 과제 전형 진행 안내드립니다.`,
+      interview1: (v) => `[Featuring] ${subjectRole(v)} 1차 인터뷰 제안드립니다.`,
+      interviewFinal: (v) => `[Featuring] ${subjectRole(v)} 1차 인터뷰 결과 안내드립니다.`,
+      scheduleConfirm: (v) => `[Featuring] ${subjectRole(v)} 일정 확정 안내드립니다.`,
+      reference: (v) => `[Featuring] 레퍼런스 체크 전형 안내드립니다.`,
+      finalNotice: (v) => `[Featuring] 최종 인터뷰 결과 안내드립니다.`,
+      onboarding: (v) => `[Featuring] ${subjectRole(v)} 입사 안내드립니다.`,
+      reject: (v) => `[Featuring] ${nameFull(v)}님 채용 전형 결과 안내드립니다.`
+    };
 
-  const nameEl = document.getElementById('name');
-  const positionEl = document.getElementById('position');
-  const taskurlEl = document.getElementById('taskurl');   // ★ 이 줄이 반드시 IIFE보다 위
-  const previewEl = document.getElementById('preview');
-  const copyBtn = document.getElementById('copyBtn');
-/* 숫자만 입력 허용(yyyy/mm/dd/HH/MM) — DOM 레퍼런스 선언 이후에 넣기 */
-function enforceNumericForDateInputs(){
-  const maxLen = { y:4, m:2, d:2, h:2, i:2 };
-  const sel = '.date-row input.y,.date-row input.m,.date-row input.d,.date-row input.h,.date-row input.i';
-  document.querySelectorAll(sel).forEach(el=>{
-    const cls = ['y','m','d','h','i'].find(c => el.classList.contains(c));
-    const max = maxLen[cls] || 2;
-    el.setAttribute('maxlength', String(max));
-    el.setAttribute('inputmode', 'numeric');
+    /* DOM refs */
+    const nameEl = document.getElementById('name');
+    const positionEl = document.getElementById('position');
+    const taskurlEl = document.getElementById('taskurl');
+    const previewEl = document.getElementById('preview');
+    const copyBtn = document.getElementById('copyBtn');
+    const toast = document.getElementById('toast');
+    const isInternEl = document.getElementById('isIntern');
+    const copySubjectBtn = document.getElementById('copySubjectBtn');
+    const subjectPreviewEl = document.getElementById('subjectPreview');
 
-    el.addEventListener('keydown', (e)=>{
-      const ok = ['Backspace','Delete','ArrowLeft','ArrowRight','Tab','Home','End'];
-      if (ok.includes(e.key) || e.ctrlKey || e.metaKey) return;
-      if (!/^\d$/.test(e.key)) e.preventDefault();
-    });
-    el.addEventListener('input', ()=>{
-      const digits = (el.value || '').replace(/\D/g,'').slice(0, max);
-      if (el.value !== digits) el.value = digits;
-    });
-  });
-}
-enforceNumericForDateInputs(); // 페이지 로드 시 1회
-    
-  const toast = document.getElementById('toast');
-  const isInternEl = document.getElementById('isIntern');
-  const copySubjectBtn = document.getElementById('copySubjectBtn');
-  const subjectPreviewEl = document.getElementById('subjectPreview');
+    let currentHtml = '';
     let currentSubject = '';
-    /* ▼▼▼ 여기에 C) JS(과제 선택 드롭다운) 삽입 ▼▼▼ */
+
+    /* 과제 드롭다운 */
     const taskSelectBtn = document.getElementById('taskSelectBtn');
     const taskDropdown  = document.getElementById('taskDropdown');
     const taskRadioEls  = document.querySelectorAll('input[name="taskurlOpt"]');
-function getSelectedTaskLabel(){
-  const sel = document.querySelector('input[name="taskurlOpt"]:checked');
-  if(!sel){ return '과제 없음'; }
-  const label = sel.closest('label');
-  const span = label ? label.querySelector('.opt') : null;
-  return span ? span.textContent.trim() : '과제 없음';
-}
 
-function toggleTaskDropdown(force){
-  const willOpen = (typeof force === 'boolean') ? force : taskDropdown.hasAttribute('hidden');
-  if(willOpen){
-    taskDropdown.removeAttribute('hidden');
-    taskSelectBtn.setAttribute('aria-expanded','true');
-  }else{
-    taskDropdown.setAttribute('hidden','');
-    taskSelectBtn.setAttribute('aria-expanded','false');
-  }
-}
-taskSelectBtn.addEventListener('click', ()=> toggleTaskDropdown());
+    function getSelectedTaskLabel(){
+      const sel=document.querySelector('input[name="taskurlOpt"]:checked');
+      if(!sel) return '과제 없음';
+      const label=sel.closest('label');
+      const span=label?label.querySelector('.opt'):null;
+      return span?span.textContent.trim():'과제 없음';
+    }
+    function toggleTaskDropdown(force){
+      const willOpen=(typeof force==='boolean') ? force : taskDropdown.hasAttribute('hidden');
+      if(willOpen){ taskDropdown.removeAttribute('hidden'); taskSelectBtn.setAttribute('aria-expanded','true'); }
+      else{ taskDropdown.setAttribute('hidden',''); taskSelectBtn.setAttribute('aria-expanded','false'); }
+    }
+    taskSelectBtn.addEventListener('click', ()=> toggleTaskDropdown());
+    taskRadioEls.forEach(radio=>{
+      radio.addEventListener('change', ()=>{
+        const v=(radio.value||'').trim();
+        taskurlEl.value = v ? normalizeUrl(v) : '';
+        taskSelectBtn.textContent=getSelectedTaskLabel();
+        toggleTaskDropdown(false);
+      });
+    });
+    document.addEventListener('click', (e)=>{
+      const dept=e.target.closest('.dept');
+      if(!dept) toggleTaskDropdown(false);
+    });
+    (function initTaskSelect(){
+      if(!taskurlEl||!taskSelectBtn||!taskDropdown) return;
+      const none=document.querySelector('input[name="taskurlOpt"][value=""]');
+      if(none) none.checked=true;
+      taskurlEl.value='';
+      taskSelectBtn.textContent=getSelectedTaskLabel();
+      toggleTaskDropdown(false);
+    })();
 
-taskRadioEls.forEach(radio => {
-  radio.addEventListener('change', ()=>{
-    const v = (radio.value || '').trim();
-    taskurlEl.value = v ? (typeof normalizeUrl === 'function' ? normalizeUrl(v) : v) : '';
-    taskSelectBtn.textContent = getSelectedTaskLabel();
-    toggleTaskDropdown(false);
-  });
-});
-
-document.addEventListener('click', (e)=>{
-  const dept = e.target.closest('.dept');
-  if(!dept){ toggleTaskDropdown(false); }
-});
-
-(function initTaskSelect(){
-  // 필수 요소가 없으면 조용히 종료(다중 스크립트/순서 이슈 방지)
-  if (!taskurlEl || !taskSelectBtn || !taskDropdown) return;
-
-  const none = document.querySelector('input[name="taskurlOpt"][value=""]');
-  if (none) none.checked = true;
-
-  taskurlEl.value = ''; // 기본: 과제 없음
-  taskSelectBtn.textContent = getSelectedTaskLabel();
-  toggleTaskDropdown(false);
-})();
-    let currentHtml = '';
-    currentSubject = ''; // ★ 추가
-
-  function buildVars(){
-  const rawUrl = (taskurlEl && taskurlEl.value ? taskurlEl.value : '').trim();
-  const normalizedUrl = normalizeUrl(rawUrl);
-
-  // 제안일자 최대 3개
-  const propose = [readDate('p1'), readDate('p2'), readDate('p3')].filter(Boolean);
-  // 확정일자 1개
-  const confirm = readDate('c1');
-
-  return {
-    name: (nameEl.value || '').trim() || '지원자',
-    position: (positionEl.value || '').trim() || '포지션',
-    taskurl: normalizedUrl,
-    taskTopic: getTaskTopicByUrl(normalizedUrl),
-    proposeDates: propose,                 // ★ 추가
-    confirmDate: confirm,                  // ★ 추가
-    isIntern: !!(isInternEl && isInternEl.checked)
-  };
-}
-
-    function showPreview(html){
-      currentHtml = html;
-      previewEl.innerHTML = html;
-      copyBtn.disabled = !html;
+    function buildVars(){
+      const rawUrl=(taskurlEl && taskurlEl.value ? taskurlEl.value : '').trim();
+      const normalizedUrl=normalizeUrl(rawUrl);
+      const propose=[readDate('p1'),readDate('p2'),readDate('p3')].filter(Boolean);
+      const confirm=readDate('c1');
+      return {
+        name:(nameEl.value||'').trim()||'지원자',
+        position:(positionEl.value||'').trim()||'포지션',
+        taskurl:normalizedUrl,
+        taskTopic:getTaskTopicByUrl(normalizedUrl),
+        proposeDates:propose,
+        confirmDate:confirm,
+        isIntern:!!(isInternEl && isInternEl.checked)
+      };
     }
 
-function showToast(msg, withNote){
-  // 추가 문구(옵션) 포함 표시
-  const note = '날짜나 시간, 금액이나 비어있는 공간을 꼭 확인하여 발송 전 채워주세요.';
-  toast.innerHTML = withNote
-    ? `${escapeHtml(msg)}<div class="note">${escapeHtml(note)}</div>`
-    : escapeHtml(msg);
+    function showPreview(html){
+      currentHtml=html;
+      previewEl.innerHTML=html;
+      copyBtn.disabled=!html;
+    }
 
-  toast.classList.add('show');
-  clearTimeout(toast._t);
-  toast._t = setTimeout(()=> toast.classList.remove('show'), 3000);
-}
-    
-function renderTemplateByKey(key){
-  const builder = templates[key];
-  if(!builder){ /* ... */ return; }
-  try{
-    const vars = buildVars();
-    const html = builder(vars);
-    showPreview(html);
+    function showToast(msg, withNote){
+      const note='날짜나 시간, 금액이나 비어있는 공간을 꼭 확인하여 발송 전 채워주세요.';
+      toast.innerHTML = withNote
+        ? (escapeHtml(msg) + '<div class="note">' + escapeHtml(note) + '</div>')
+        : escapeHtml(msg);
+      toast.classList.add('show');
+      clearTimeout(toast._t);
+      toast._t=setTimeout(()=> toast.classList.remove('show'), 3000);
+    }
 
-    const sb = subjectTemplates[key];
-    // 백틱 대신 문자열 연결로 안전하게 (윗쪽 템플릿 리터럴 누락의 파급 예방)
-    currentSubject = sb ? sb(vars) : '[Featuring] ' + (vars.position || '');
-    subjectPreviewEl.textContent = currentSubject;
-    copySubjectBtn.disabled = !currentSubject;
-  }catch(err){
-    console.error('[템플릿 렌더 오류]', err);
-    showPreview('<p style="margin:0;color:#b91c1c">서식을 표시하는 중 오류가 발생했습니다.</p>');
-    currentSubject = '';
-    copySubjectBtn.disabled = true;
-    subjectPreviewEl.textContent = '';
-  }
-} // ✅ 함수 닫기
+    function renderTemplateByKey(key){
+      const builder=templates[key];
+      if(!builder){ return; }
+      try{
+        const vars=buildVars();
+        const html=builder(vars);
+        showPreview(html);
+        const sb=subjectTemplates[key];
+        currentSubject = sb ? sb(vars) : '[Featuring] ' + (vars.position||'');
+        subjectPreviewEl.textContent=currentSubject;
+        copySubjectBtn.disabled=!currentSubject;
+      }catch(err){
+        console.error('[템플릿 렌더 오류]', err);
+        showPreview('<p style="margin:0;color:#b91c1c">서식을 표시하는 중 오류가 발생했습니다.</p>');
+        currentSubject='';
+        copySubjectBtn.disabled=true;
+        subjectPreviewEl.textContent='';
+      }
+    }
 
-// 제목 복사 함수도 정확히 닫기
-function copySubject(){
-  if(!currentSubject) return;
-  navigator.clipboard.writeText(currentSubject)
-    .then(()=> showToast('제목을 복사했습니다. 발송 전 빈칸을 확인하세요.'))
-    .catch(()=>{
-      const ta=document.createElement('textarea'); ta.value=currentSubject;
-      document.body.appendChild(ta); ta.select();
-      try{ document.execCommand('copy'); showToast('제목을 텍스트로 복사했습니다.'); }
-      finally{ document.body.removeChild(ta); }
+    function copySubject(){
+      if(!currentSubject) return;
+      navigator.clipboard.writeText(currentSubject)
+        .then(()=> showToast('제목을 복사했습니다. 발송 전 빈칸을 확인하세요.'))
+        .catch(()=>{
+          const ta=document.createElement('textarea'); ta.value=currentSubject;
+          document.body.appendChild(ta); ta.select();
+          try{ document.execCommand('copy'); showToast('제목을 텍스트로 복사했습니다.'); }
+          finally{ document.body.removeChild(ta); }
+        });
+    }
+
+    async function copyHtml(){
+      if(!currentHtml) return;
+      const blob=new Blob([currentHtml],{type:'text/html'});
+      const item=new ClipboardItem({'text/html':blob});
+      try{
+        await navigator.clipboard.write([item]);
+        showToast('클립보드에 복사했습니다. Gmail 작성창에 붙여넣기(Ctrl/⌘+V) 하세요.', true);
+      }catch(err){
+        const ta=document.createElement('textarea'); ta.value=currentHtml;
+        document.body.appendChild(ta); ta.select();
+        try{ document.execCommand('copy'); showToast('HTML 복사 권한이 없어 텍스트로 복사했습니다.'); }
+        catch(e){ alert('복사에 실패했습니다.'); }
+        finally{ document.body.removeChild(ta); }
+      }
+    }
+
+    /* 바인딩 */
+    document.querySelectorAll('.js-template').forEach(btn=>{
+      btn.addEventListener('click', ()=> renderTemplateByKey(btn.dataset.key));
     });
-} // ✅ 함수 닫기
-
-copySubjectBtn.addEventListener('click', copySubject); // ✅ 리스너
+    copyBtn.addEventListener('click', copyHtml);
+    copySubjectBtn.addEventListener('click', copySubject);
   </script>
 </body>
 </html>
