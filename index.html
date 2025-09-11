@@ -540,9 +540,10 @@ ${ v.proposeDates.length
       <div style="padding-left:8px; margin:0 0 3px 0;">   
     <p style="margin:0 0 3px 0;">- 일시 : </p>
 ${ v.confirmDate
-    ? `<p style="margin:0 0 14px 0;">${escapeHtml(v.confirmDate)}</p>`
-    : `<p style="margin:0 0 14px 0; color:#6b7280;">{날짜를 입력하세요}</p>` }
-    <p style="margin:0 0 14px 0;">- 진행 시간 : 약 1시간 30분 소요 예정</p>
+      ? escapeHtml(v.confirmDate)
+      : `<span style="color:#6b7280;">{날짜를 입력하세요}</span>` }
+</p>
+<p style="margin:0 0 14px 0;">- 진행 시간 : 약 1시간 30분 소요 예정</p>
       </div>
     </div>
   </div>
@@ -597,8 +598,9 @@ ${ v.confirmDate
     <div style="padding-left:5px; margin:0 0 3px 0;">
     <p style="margin:0 3px 3px 0;">- 예정일자 : </p>
 ${ v.confirmDate
-    ? `<p style="margin:0 0 14px 0;">${escapeHtml(v.confirmDate)}</p>`
-    : `<p style="margin:0 0 14px 0; color:#6b7280;">{날짜를 입력하세요}</p>` }
+      ? escapeHtml(v.confirmDate)
+      : `<span style="color:#6b7280;">{날짜를 입력하세요}</span>` }
+</p>
     <p style="margin:0 3px 3px 0;">- 출근 장소 : 서울 강남구 테헤란로 129, 빗썸금융타워 8층</p> 
       <div style="padding-left:8px; margin:0 0 3px 0;">
       <p style="margin:0 8px 3px 0;">✅ L(로비)층에 도착하시어 아래 연락처로 연락주시면 담당자가 직접 안내 도와드리겠습니다.</p> 
@@ -683,8 +685,9 @@ ${ v.confirmDate
   <div style="padding-left:5px; margin:0 0 3px 0;">
   <p style="margin:0 3px 3px 0;">- 예정일자 : </p>
 ${ v.confirmDate
-    ? `<p style="margin:0 0 14px 0;">${escapeHtml(v.confirmDate)}</p>`
-    : `<p style="margin:0 0 14px 0; color:#6b7280;">{날짜를 입력하세요}</p>` }
+      ? escapeHtml(v.confirmDate)
+      : `<span style="color:#6b7280;">{날짜를 입력하세요}</span>` }
+</p>
   <p style="margin:0 3px 3px 0;">- 개인 상황에 따라 상호 협의 가능한 사항입니다.</p>
   <p style="margin:0 3px 3px 0;">- 피처링은 수습기간 3개월이 있으며, 급여는 100% 지급됩니다.</p>
   <p style="margin:0 0 14px 0;">- 고용형태와 무관하게 모든 임직원의 첫 계약은 수습기간 3개월 계약직 계약 후, 수습 통과 후 정규직 계약으로 전환하고 있는 점 참고 부탁드립니다.<br />(*모든 인사는 최초입사일을 기준으로 산정됩니다.)</p>
