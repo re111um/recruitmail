@@ -98,20 +98,14 @@
       .grid.dates{grid-template-columns:1fr;}
     }
 
-    /* 날짜 바로 아래, 인턴십을 오른쪽 칼럼 라인에 고정 */
-    .dates-after{
-      display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:0px;
-    }
-    .dates-after .intern-field{
-      grid-column:2; display:flex; align-items:center; gap:8px;
-    }
-    .dates-after .intern-label{margin:0; font-weight:600;}
-    #isIntern{width:13px; height:13px;}
-    @media (max-width:900px){
-      .dates-after{grid-template-columns:1fr;}
-      .dates-after .intern-field{grid-column:1;}
-    }
-
+/* 확정일자 블록 아래에 붙는 인턴십 줄 */
+.field-confirm .intern-inline{
+  display:flex; align-items:center; gap:8px;
+  margin-top:14px;           /* 확정일자 박스와 14px 간격 */
+}
+.intern-inline .intern-label{ margin:0; font-weight:600; }
+#isIntern{ width:13px; height:13px; }
+    
     /* 과제 선택 트리거: 둥근 버튼형 + 케럿(▼/▲) */
 .dept .dept-trigger{
   width:100%;
@@ -143,7 +137,38 @@
 .dept .dept-trigger[aria-expanded="true"]::after{
   transform:rotate(180deg);           /* ▲ */
 }
+ 
+.dept{ position:relative; }
 
+.dept .dropdown{
+  position:absolute; z-index:20; top:calc(100% + 6px); left:0; right:0;
+  background:#fff; border:1px solid #d1d5db; border-radius:10px;
+  max-height:260px; overflow-y:auto; overflow-x:hidden;
+  box-shadow:0 10px 20px rgba(0,0,0,.08); text-align:left;
+  padding:6px 8px 6px 5px; /* 좌측 5px */
+}
+.dept .dropdown[hidden]{ display:none; }
+.dept .dropdown ul{ margin:8px 0; padding:0; list-style:none; }
+.dept .dropdown li{ margin:0; padding:0; }
+
+/* [라디오 12px] [텍스트 1fr] + 사이 5px */
+.dept .dropdown label{
+  display:grid; grid-template-columns:12px 1fr; align-items:center;
+  column-gap:5px; width:100%; box-sizing:border-box;
+  padding:0 8px 0 0; line-height:1.2;
+  white-space:normal; word-break:keep-all; overflow-wrap:anywhere;
+  cursor:pointer;
+}
+.dept .dropdown label:hover{ background:#f5f5f5; }
+
+/* 라디오 크기(작게) */
+.dept .dropdown input[type="radio"]{
+  width:10px; height:10px; transform:scale(0.5);
+  margin:0; /* 기본 여백 제거 */
+}
+
+/* 옵션 텍스트 줄바꿈 안정화 */
+.dept .dropdown .opt{ min-width:0; color:#111; }
   </style>
 </head>
 <body>
@@ -202,6 +227,8 @@
       </div>
     </div>
 
+    
+
     <!-- 날짜 입력 -->
     <div class="grid dates">
       <!-- 제안일자 -->
@@ -254,9 +281,9 @@
       </div>
 
       <!-- 확정일자 -->
-      <div class="field">
-        <label>확정일자</label>
-        <div class="datebox">
+      <div class="field field-confirm">
+      <label>확정일자</label>
+      <div class="datebox">
           <div class="date-row">
             <input id="c1y" class="y" inputmode="numeric" maxlength="4" placeholder="yyyy" />
             <span class="sep">-</span>
@@ -275,13 +302,12 @@
       </div>
     </div>
 
-    <!-- 날짜 아래, 오른쪽 라인에 인턴십 고정 -->
-    <div class="dates-after">
-      <div class="field intern-field">
-        <label for="isIntern" class="intern-label">인턴십</label>
-        <input id="isIntern" type="checkbox" />
-      </div>
-    </div>
+  <!-- ✅ 확정일자 박스 바로 아래 14px 간격으로 인턴십 -->
+  <div class="intern-inline">
+    <label for="isIntern" class="intern-label">인턴십</label>
+    <input id="isIntern" type="checkbox" />
+  </div>
+</div>
 
     <!-- 버튼/복사/미리보기: 기존 자리 유지 -->
     <div class="btn-row" aria-label="단계 버튼">
@@ -704,45 +730,50 @@ ${ v.confirmDate
 
     let currentHtml = '';
     let currentSubject = '';
+    
+// 과제 드롭다운
 
-    /* 과제 드롭다운 */
-    const taskSelectBtn = document.getElementById('taskSelectBtn');
-    const taskDropdown  = document.getElementById('taskDropdown');
-    const taskRadioEls  = document.querySelectorAll('input[name="taskurlOpt"]');
+  const taskSelectBtn = document.getElementById('taskSelectBtn');
+  const taskDropdown  = document.getElementById('taskDropdown');
+  const taskRadioEls  = document.querySelectorAll('input[name="taskurlOpt"]');
 
-    function getSelectedTaskLabel(){
-      const sel=document.querySelector('input[name="taskurlOpt"]:checked');
-      if(!sel) return '과제 없음';
-      const label=sel.closest('label');
-      const span=label?label.querySelector('.opt'):null;
-      return span?span.textContent.trim():'과제 없음';
-    }
-    function toggleTaskDropdown(force){
-      const willOpen=(typeof force==='boolean') ? force : taskDropdown.hasAttribute('hidden');
-      if(willOpen){ taskDropdown.removeAttribute('hidden'); taskSelectBtn.setAttribute('aria-expanded','true'); }
-      else{ taskDropdown.setAttribute('hidden',''); taskSelectBtn.setAttribute('aria-expanded','false'); }
-    }
+  function getSelectedTaskLabel(){
+    const sel = document.querySelector('input[name="taskurlOpt"]:checked');
+    if(!sel) return '과제 없음';
+    const label = sel.closest('label');
+    const span = label ? label.querySelector('.opt') : null;
+    return span ? span.textContent.trim() : '과제 없음';
+  }
+  function toggleTaskDropdown(force){
+    const willOpen = (typeof force==='boolean') ? force : taskDropdown.hasAttribute('hidden');
+    if(willOpen){ taskDropdown.removeAttribute('hidden'); taskSelectBtn.setAttribute('aria-expanded','true'); }
+    else{ taskDropdown.setAttribute('hidden',''); taskSelectBtn.setAttribute('aria-expanded','false'); }
+  }
+
+  // 이벤트 바인딩 & 초기화
+  if (taskSelectBtn && taskDropdown) {
     taskSelectBtn.addEventListener('click', ()=> toggleTaskDropdown());
     taskRadioEls.forEach(radio=>{
       radio.addEventListener('change', ()=>{
-        const v=(radio.value||'').trim();
+        const v = (radio.value||'').trim();
         taskurlEl.value = v ? normalizeUrl(v) : '';
-        taskSelectBtn.textContent=getSelectedTaskLabel();
+        taskSelectBtn.textContent = getSelectedTaskLabel();
         toggleTaskDropdown(false);
       });
     });
     document.addEventListener('click', (e)=>{
-      const dept=e.target.closest('.dept');
-      if(!dept) toggleTaskDropdown(false);
+      if(!e.target.closest('.dept')) toggleTaskDropdown(false);
     });
-    (function initTaskSelect(){
-      if(!taskurlEl||!taskSelectBtn||!taskDropdown) return;
-      const none=document.querySelector('input[name="taskurlOpt"][value=""]');
-      if(none) none.checked=true;
-      taskurlEl.value='';
-      taskSelectBtn.textContent=getSelectedTaskLabel();
-      toggleTaskDropdown(false);
-    })();
+
+    // 기본 상태
+    const none = document.querySelector('input[name="taskurlOpt"][value=""]');
+    if (none) none.checked = true;
+    taskurlEl.value = '';
+    taskSelectBtn.textContent = getSelectedTaskLabel();
+    toggleTaskDropdown(false);
+  }
+
+
 
     function buildVars(){
       const rawUrl=(taskurlEl && taskurlEl.value ? taskurlEl.value : '').trim();
