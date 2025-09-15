@@ -507,7 +507,7 @@ ${ v.proposeDates.length
   <p style="margin:0 0 14px 0;">피처링 채용팀입니다.</p>
 
   <p style="margin:0 0 3px 0;">우선 지난 인터뷰에 흔쾌히 응해주시고, 소중한 시간 할애하여 적극 참여해주신 점 진심으로 감사드립니다.</p>
-  <p style="margin:0 0 14px 0;">${nameBody(v)}님께서 보여주신 역량과 지금까지 쌓아오신 커리어에 대해 인상 깊게 생각하여 <strong>최종 인터뷰 제안</strong>드리고자 합니다.</p>
+  <p style="margin:0 0 14px 0;">${nameBody(v)}님께서 1차 인터뷰를 통해 보여주신 역량과 지금까지 쌓아오신 커리어에 대해 인상 깊게 생각하여 <strong>최종 인터뷰 제안</strong>드리고자 합니다.</p>
 
   <p style="margin:0 0 3px 0;"><strong>[진행 가능 일정/장소]</strong></p>
   <div style="padding-left:5px; margin:0 0 3px 0;">
@@ -542,8 +542,9 @@ ${ v.proposeDates.length
        <p style="margin:0 5px 3px 0;">❓ L층은 정문으로 방문하시게 될 경우, 에스컬레이터를 타고 한 층 올라오셔야 합니다.</p>    
        <p style="margin:0 5px 3px 0;">🙋 담당자 연락처 : 010-7376-0490</p>
       <div style="padding-left:8px; margin:0 0 3px 0;">   
-    <p style="margin:0 0 3px 0;">- 일시 : </p>
-${ v.confirmDate
+    <p style="margin:0 0 3px 0;">
+  - 일시 :
+  ${ v.confirmDate
       ? escapeHtml(v.confirmDate)
       : `<span style="color:#6b7280;">{날짜를 입력하세요}</span>` }
 </p>
@@ -600,8 +601,9 @@ ${ v.confirmDate
 
   <p style="margin:0 0 3px 0;"><strong>1) 입사 및 주요 일정 안내</strong></p>
     <div style="padding-left:5px; margin:0 0 3px 0;">
-    <p style="margin:0 3px 3px 0;">- 예정일자 : </p>
-${ v.confirmDate
+    <p style="margin:0 0 3px 0;">
+  - 예정일자 :
+  ${ v.confirmDate
       ? escapeHtml(v.confirmDate)
       : `<span style="color:#6b7280;">{날짜를 입력하세요}</span>` }
 </p>
@@ -663,7 +665,7 @@ ${ v.confirmDate
 
   <p style="margin:0 0 14px 0;">비록 이번 전형을 통해 ${nameBody(v)}님과 좋은 인연으로 함께 하지는 못하지만,<br />스스로 꿈꾸는 밝은 미래는 반드시 실현되리라 믿으며 진심 어린 응원의 마음을 전해드립니다.</p>
 
-  <p style="margin:0 0 14px 0;">향후 또 다른 경로로 여러분을 다시 만나 뵐 수 있기를 바라며 앞으로 펼쳐질 삶에 성장과 행복이 함께하기를 기원합니다.</p>
+  <p style="margin:0 0 14px 0;">향후 또 다른 경로로 ${nameBody(v)}님을 다시 만나 뵐 수 있기를 바라며 앞으로 펼쳐질 삶에 성장과 행복이 함께하기를 기원합니다.</p>
 
   <p style="margin:0 0 14px 0;"></p>
 
@@ -687,12 +689,13 @@ ${ v.confirmDate
 
   <p style="margin:0 0 3px 0;"><strong>2) 입사 일자</strong></p>
   <div style="padding-left:5px; margin:0 0 3px 0;">
-  <p style="margin:0 3px 3px 0;">- 예정일자 : </p>
-${ v.confirmDate
+  <p style="margin:0 0 3px 0;">
+  - 예정일자 :
+  ${ v.confirmDate
       ? escapeHtml(v.confirmDate)
       : `<span style="color:#6b7280;">{날짜를 입력하세요}</span>` }
 </p>
-  <p style="margin:0 3px 3px 0;">- 개인 상황에 따라 상호 협의 가능한 사항입니다.</p>
+margin:0 3px 3px 0;">- 개인 상황에 따라 상호 협의 가능한 사항입니다.</p>
   <p style="margin:0 3px 3px 0;">- 피처링은 수습기간 3개월이 있으며, 급여는 100% 지급됩니다.</p>
   <p style="margin:0 0 14px 0;">- 고용형태와 무관하게 모든 임직원의 첫 계약은 수습기간 3개월 계약직 계약 후, 수습 통과 후 정규직 계약으로 전환하고 있는 점 참고 부탁드립니다.<br />(*모든 인사는 최초입사일을 기준으로 산정됩니다.)</p>
   </div>
