@@ -613,7 +613,8 @@ ${ v.proposeDates.length
   <p style="margin:0 0 3px 0;">안녕하세요, ${nameFull(v)}님.</p>
   <p style="margin:0 0 14px 0;">피처링 채용팀입니다.</p>
 
-  <p style="margin:0 0 3px 0;">우선 회사를 대표하여 당사의 ${ v.isIntern ? `인턴십 프로그램 선별 프로세스` : `채용 프로세스` }를 진행해주시고, 최종 합류 결정에 대해서 환영과 깊은 감사를 전합니다.</p>
+  <p style="margin:0 0 3px 0;">오퍼레터에 회신 주셔서 감사드립니다. </br>
+  우선 회사를 대표하여 당사의 ${ v.isIntern ? `인턴십 프로그램 선별 프로세스` : `채용 프로세스` }를 진행해주시고, 최종 합류 결정에 대해서 환영과 깊은 감사를 전합니다.</p>
   <p style="margin:0 0 14px 0;">입사와 관련된 필요한 내용을 아래와 같이 안내드리며, 회신이 필요한 부분은 확인 후 꼭 전달 부탁드립니다.</p>
 
   <p style="margin:0 0 3px 0;"><strong>1) 입사 및 주요 일정 안내</strong></p>
@@ -634,13 +635,13 @@ ${ v.proposeDates.length
 
   <p style="margin:0 0 3px 0;"><strong>2) 연봉 및 수습기간 안내</strong></p>
     <div style="padding-left:5px; margin:0 0 3px 0;">
-    <p style="margin:0 3px 3px 0;">- ${ v.isIntern ? `지급 보수 : 프로그램 규정에 따름.` : `처우안 : 연봉 {$,$$$}만원(세전)`}</p>
-    <p style="margin:0 3px 3px 0;">- ${ v.isIntern ? `인턴십 기간 : n개월/n주` : `수습기간 : 3개월` }
+    <p style="margin:0 3px 3px 0;">- ${ v.isIntern ? `지급 보수 : 프로그램 규정에 따름.` : `최종안 : 연봉 {$,$$$}만원(세전)`}</p>
+    <p style="margin:0 3px 3px 0;">- ${ v.isIntern ? `인턴십 기간 : n개월/n주` : `수습기간 : 3개월` }</p>
     <p style="margin:0 3px 14px 0; color:#666666; font-style:italic; font-size:12px;">
     ${ v.isIntern ? `인턴십 기간 종료 후, 당사의 평가 및 방침에 따라 후보자 분께 정규직 제안을 드릴 수 있습니다.
     <br />(*모든 인사규정은 최초입사일 기준으로 진행됩니다.)` : `*수습기간 종료 후, 사내 규정에 의거한 평가와 쌍방 협의를 통해 정규직 전환 계약을 진행하고 있습니다.
     <br />이에 근무형태와 무관하게 모든 임직원의 첫 계약은 만 3개월 계약직으로 계약한 후, 정규직 계약으로 전환하고 있습니다.
-    <br />(*모든 인사규정은 최초입사일 기준으로 진행됩니다.)`}
+    <br />(*모든 인사규정은 최초입사일 기준으로 진행됩니다.)`}</p>
 </div>
 
   <p style="margin:0 0 3px 0;"><strong>3) 호칭 및 계정 생성</strong></p>
@@ -710,10 +711,13 @@ ${ v.proposeDates.length
   <p style="margin:0 0 3px 0;">길었던 피처링의 채용 프로세스에 적극 응해주시고, 흔쾌히 대면 인터뷰에 참석해주시어 감사드립니다.</p>
   <p style="margin:0 0 3px 0;">최종 인터뷰 결과, <strong>합격을 안내드리며 동시에 오퍼 레터 전달</strong>드립니다.</p>
   <p style="margin:0 0 14px 0;">🎉 최종 합격을 진심으로 축하드립니다. :)</p>
+  <p style="margin:0 3px 14px 0; color:#666666; font-style:italic; font-size:12px;">
+  *아래 오퍼레터에 승낙하지 않으면 입사 확정된 것으로 간주하지 않습니다. 상호 협의 하에 아래 내용이 변경될 수 있습니다.</p>
 
+  <p style="margin:0 0 3px 0;"><strong>[제안 내용 및 안내 사항]</strong></p>
   <p style="margin:0 0 3px 0;"><strong>1) 제안 연봉</strong></p>
   <div style="padding-left:5px; margin:0 0 3px 0;">
-  <p style="margin:0 3px 3px 0;">- 기본 연봉 : {$,$$$만 원}</p>
+  <p style="margin:0 3px 3px 0;">${ v.isIntern ? `- 지급 보수 : 프로그램 규정에 따름.` : `- 처우안 : 연봉 {$,$$$}만원(세전)`}</p>
   </div>
 
   <p style="margin:0 0 3px 0;"><strong>2) 입사 일자</strong></p>
@@ -724,15 +728,16 @@ ${ v.proposeDates.length
       ? escapeHtml(v.confirmDate)
       : `<span style="color:#6b7280;">{날짜를 입력하세요}</span>` }
 </p>
-margin:0 3px 3px 0;">- 개인 상황에 따라 상호 협의 가능한 사항입니다.</p>
-  <p style="margin:0 3px 3px 0;">- 피처링은 수습기간 3개월이 있으며, 급여는 100% 지급됩니다.</p>
-  <p style="margin:0 0 14px 0;">- 고용형태와 무관하게 모든 임직원의 첫 계약은 수습기간 3개월 계약직 계약 후, 수습 통과 후 정규직 계약으로 전환하고 있는 점 참고 부탁드립니다.<br />(*모든 인사는 최초입사일을 기준으로 산정됩니다.)</p>
+  <p style="margin:0 3px 3px 0;">${ v.isIntern ? `` : `- 개인 상황에 따라 상호 협의 가능한 사항입니다.`}</p>
+  <p style="margin:0 3px 3px 0;">${ v.isIntern ? `` : `- 피처링은 수습기간 3개월이 있으며, 급여는 100% 지급됩니다.`}</p>
+  <p style="margin:0 0 14px 0;">${ v.isIntern ? `- 인턴십 프로그램 종료 후 당사의 방침 및 평가에 따라 정규직 전환을 제안드릴 수 있습니다.` : `- 고용형태와 무관하게 모든 임직원의 첫 계약은 수습기간 3개월 계약직 계약 후, 수습 통과 후 정규직 계약으로 전환하고 있는 점 참고 부탁드립니다.`}<br />
+  (*모든 인사는 최초입사일을 기준으로 산정됩니다.)</p>
   </div>
 
   <p style="margin:0 0 3px 0;"><strong>3) 소속 부서 및 업무 안내</strong></p>
     <div style="padding-left:5px; margin:0 0 3px 0;">
   <p style="margin:0 3px 3px 0;">- 소속 : </p>
-  <p style="margin:0 3px 3px 0;">- 주요 업무 : </p>
+  <p style="margin:0 3px 3px 0;">- 주요 업무 : ${ v.isIntern ? `(인턴십)` : ``}</p>
     <div style="padding-left:8px; margin:0 0 3px 0;">
     <p style="margin:0 8px 3px 0;">①</p>
     <p style="margin:0 8px 3px 0;">②</p>
