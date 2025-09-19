@@ -476,7 +476,10 @@
 
         <p style="margin:3px 0 3px 0;">✅ <strong>마감 기한</strong> :</p>
         <ul style="margin:0 0 14px 18px; padding:0;">
-        <li><strong>금일 자정(yyyy-mm-dd 11:59)전 까지</strong> 회신 부탁드립니다.</li>
+        <li><strong>금일 자정(  ${ v.confirmDate
+      ? escapeHtml(v.confirmDate)
+      : `<span style="color:#6b7280;">{날짜를 입력하세요}</span>` }
+</p>)전 까지</strong> 회신 부탁드립니다.</li>
         <li>해당 메일에 [전체 답장] 또는 recruit@featuring.in으로 제출해주시면 됩니다.</li>
   </ul>
 </div>
@@ -506,7 +509,7 @@
   <p style="margin:0 0 3px 0;">- 포지션 : ${roleHtml(v)}</p>
   <p style="margin:0 0 3px 0;">- 장소 : 서울 강남구 테헤란로 129, 빗썸금융타워 8층</p>
   <p style="margin:0 0 3px 0;">- 일시 : 아래 중 가능한 일정으로 회신 부탁드립니다.</p>
-  <div style="padding-left:14px; margin:0 0 14px 0;">
+  <div style="padding-left:28px; margin:0 0 14px 0;">
 ${ v.proposeDates.length
     ? `<ul style="margin:0 0 5px 3px; padding:0;">${v.proposeDates.map(d => `<li>${escapeHtml(d)}</li>`).join('')}</ul>`
     : `<p style="margin:0 0 14px 0; color:#6b7280;">{날짜를 입력하세요}</p>` }
@@ -532,7 +535,7 @@ ${ v.proposeDates.length
   <p style="margin:0 0 3px 0;">- 포지션 : ${roleHtml(v)}</p>
   <p style="margin:0 0 3px 0;">- 장소 : 서울 강남구 테헤란로 129, 빗썸금융타워 8층</p>
   <p style="margin:0 0 3px 0;">- 일시 : 아래 중 가능한 일정으로 회신바랍니다.</p>
-    <div style="padding-left:14px; margin:0 0 3px 0;">
+    <div style="padding-left:28px; margin:0 0 3px 0;">
 ${ v.proposeDates.length
     ? `<ul style="margin:0 0 5px 3px; padding:0;">${v.proposeDates.map(d => `<li>${escapeHtml(d)}</li>`).join('')}</ul>`
     : `<p style="margin:0 0 14px 0; color:#6b7280;">{날짜를 입력하세요}</p>` }
@@ -648,7 +651,7 @@ ${ v.proposeDates.length
     <div style="padding-left:5px; margin:0 0 3px 0;">
     <p style="margin:0 3px 3px 0;">- 피처링은 직함을 부르지 않고, 수평적인 조직문화를 지향하며 모두 닉네임(영어이름)을 사용하고 있습니다 (ex. 마틴, 포자, 얼, 해리 등)</p> 
     <p style="margin:0 3px 3px 0;">- 또한 해당 이름은 회사 개인계정으로 함께 사용 되고 있습니다. (ex. poza@featuring.in)</p>
-    <p style="margin:0 14px 3px 0; background-color:#FFFF00;"> 👉 닉네임을 정한 후 [영문/한글] 양식으로 회신 부탁드립니다. (ex. martin/마틴)</p>
+    <div style="padding-left:14px; margin:0 3px 3px 0; background-color:#FFFF00;"><p> 👉 닉네임을 정한 후 [영문/한글] 양식으로 회신 부탁드립니다. (ex. martin/마틴)</p> </div>
     <p style="margin:0 3px 14px 0; color:#666666; font-style:italic; font-size:12px;"> (*중복 또는 사용 불가한 닉네임일 수 있기에 2~3순위까지 고려해서 부탁드립니다.)</p>
   </div>  
   
@@ -674,7 +677,7 @@ ${ v.proposeDates.length
       <p style="margin:0 3px 3px 0;">- 랩탑 운영체제 선택 : ${ v.isIntern ? `개인장비 지참` : `LG그램(windows OS) or 맥북(MAC OS)` }</p>
       <p style="margin:0 3px 3px 0;">- 기본 장비 : ${ v.isIntern ? `모니터 1대, 모니터 연결 허브` : `랩탑, 모니터 1대, 모니터 연결 허브` }</p>
       <p style="margin:0 3px 3px 0; color:#666666; font-style:italic; font-size:12px;">(*나머지 악세사리 및 장비(마우스, 키보드 등)는 개인적으로 준비해주시기 바랍니다.) </p>
-      <p style="margin:0 14px 14px 0; background-color:#FFFF00;">${ v.isIntern ? `` : `👉 랩탑 종류 회신 부탁드리며, 필수 활용 SW가 있다면 미리 말씀부탁드립니다.` }</p>
+      <div style="padding-left:14px; margin:0 14px 14px 0; background-color:#FFFF00;"><p>${ v.isIntern ? `` : `👉 랩탑 종류 회신 부탁드리며, 필수 활용 SW가 있다면 미리 말씀부탁드립니다.` }</p> </div>
     </div>
 
   <p style="margin:0 0 14px 0;">입사 일정 및 관련하여 궁금한 점은 언제든 편하게 연락 부탁드립니다.</p>
