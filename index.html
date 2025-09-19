@@ -648,20 +648,21 @@ ${ v.proposeDates.length
     <div style="padding-left:5px; margin:0 0 3px 0;">
     <p style="margin:0 3px 3px 0;">- 피처링은 직함을 부르지 않고, 수평적인 조직문화를 지향하며 모두 닉네임(영어이름)을 사용하고 있습니다 (ex. 마틴, 포자, 얼, 해리 등)</p> 
     <p style="margin:0 3px 3px 0;">- 또한 해당 이름은 회사 개인계정으로 함께 사용 되고 있습니다. (ex. poza@featuring.in)</p>
-    <p style="margin:0 8px 3px 0; background-color:#FFFF00;">👉닉네임을 정한 후 [영문/한글] 양식으로 회신 부탁드립니다. (ex. martin/마틴)</p>
-    <p style="margin:0 3px 14px 0;">(*중복 또는 사용 불가한 닉네임일 수 있기에 2~3순위까지 고려해서 부탁드립니다.)</p>
+    <p style="margin:0 8px 3px 0; background-color:#FFFF00;"> 👉 닉네임을 정한 후 [영문/한글] 양식으로 회신 부탁드립니다. (ex. martin/마틴)</p>
+    <p style="margin:0 3px 14px 0; color:#666666; font-style:italic; font-size:12px;"> (*중복 또는 사용 불가한 닉네임일 수 있기에 2~3순위까지 고려해서 부탁드립니다.)</p>
   </div>  
   
    <p style="margin:0 0 3px 0;"><strong>4) 입사 전 제출서류</strong></p>
      <div style="padding-left:5px; margin:0 0 3px 0;">
     <p style="margin:0 3px 3px 0;">
       ${ v.isIntern ? `- 신분증 사본 1부<br />
-      - 주민등록등본 사본 1부 (등본상 현 거주지와 다르다면 실거주지 주소도 회신 부탁드립니다.) <br />
+      - 주민등록등본 사본 1부 (*등본상 현 거주지와 다르다면 실거주지 주소도 회신 부탁드립니다.) <br />
       - 통장 사본 1부<br />` : `- 신분증 사본 1부<br />
-      - 주민등록등본 사본 1부 (등본상 현 거주지와 다르다면 실거주지 주소도 회신 부탁드립니다.) <br />
-      - 통장 사본 1부<br /> 
-      (이하 이전 직장이 없는 이는 해당 없음.)<br />
-      - 최근 5년 내 직장 경력증명서 (발급이 어려운 경우 사유를 함께 적어서 회신 부탁드립니다.)<br />
+      - 주민등록등본 사본 1부 (*등본상 현 거주지와 다르다면 실거주지 주소도 회신 부탁드립니다.) <br />
+      - 통장 사본 1부</p>
+      <p style="margin:0 3px 3px 0; color:#666666; font-style:italic; font-size:12px;"><strong>(*이하 이전 직장이 없는 이는 해당 없음.)</strong></P>
+      <p style="margin:0 3px 14px 0;">
+      - 최근 5년 내 직장 경력증명서 (*발급이 어려운 경우 사유를 함께 적어서 회신 부탁드립니다.)<br />
       - 23년, 24년, 25년 원천징수영수증</p>` }
       
     <p style="margin:0 3px 14px 0; color:#666666; font-style:italic; font-size:12px;">
@@ -671,9 +672,9 @@ ${ v.proposeDates.length
    <p style="margin:0 0 3px 0;"><strong>5) 랩탑 및 장비, SW 관련</strong></p>
      <div style="padding-left:5px; margin:0 0 3px 0;">
       <p style="margin:0 3px 3px 0;">- 랩탑 운영체제 선택 : ${ v.isIntern ? `개인장비 지참` : `LG그램(windows OS) or 맥북(MAC OS)` }</p>
-      <p style="margin:0 3px 3px 0;">- 기본 장비 : ${ v.isIntern ? `모니터 1대, 모니터 연결 허브` : `랩탑, 모니터 1대, 모니터 연결 허브` }<br />
-      (*나머지 악세사리 및 장비(마우스, 키보드 등)는 개인적으로 준비해주시기 바랍니다. </p>
-      <p style="margin:0 3px 14px 0; background-color:#FFFF00;">${ v.isIntern ? `` : `👉랩탑 종류 회신 부탁드리며, 필수 활용 SW가 있다면 미리 말씀부탁드립니다.` }</p>
+      <p style="margin:0 3px 3px 0;">- 기본 장비 : ${ v.isIntern ? `모니터 1대, 모니터 연결 허브` : `랩탑, 모니터 1대, 모니터 연결 허브` }</p>
+      <p style="margin:0 3px 14px 0; color:#666666; font-style:italic; font-size:12px;">(*나머지 악세사리 및 장비(마우스, 키보드 등)는 개인적으로 준비해주시기 바랍니다.) </p>
+      <p style="margin:0 3px 14px 0; background-color:#FFFF00;">${ v.isIntern ? `` : `👉 랩탑 종류 회신 부탁드리며, 필수 활용 SW가 있다면 미리 말씀부탁드립니다.` }</p>
     </div>
 
   <p style="margin:0 0 14px 0;">입사 일정 및 관련하여 궁금한 점은 언제든 편하게 연락 부탁드립니다.</p>
@@ -764,9 +765,9 @@ ${ v.proposeDates.length
       interviewFinal: (v) => `[Featuring] ${subjectRole(v)} 1차 인터뷰 결과 안내드립니다.`,
       scheduleConfirm: (v) => `[Featuring] ${subjectRole(v)} 일정 확정 안내드립니다.`,
       reference: (v) => `[Featuring] 레퍼런스 체크 전형 안내드립니다.`,
-      finalNotice: (v) => `[Featuring] 최종 인터뷰 결과 안내드립니다.`,
-      onboarding: (v) => `[Featuring] ${subjectRole(v)} 입사 안내드립니다.`,
-      reject: (v) => `[Featuring] ${nameFull(v)}님 채용 전형 결과 안내드립니다.`
+      finalNotice: (v) => `[Featuring] ${nameFull(v)}님, 최종 인터뷰 결과 안내드립니다.`,
+      onboarding: (v) => `[Featuring] ${nameFull(v)}님, ${subjectRole(v)} 입사 안내드립니다.`,
+      reject: (v) => `[Featuring] ${nameFull(v)}님, 채용 전형 결과 안내드립니다.`
     };
 
     /* DOM refs */
