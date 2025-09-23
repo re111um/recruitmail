@@ -98,70 +98,6 @@
       .grid.dates{grid-template-columns:1fr;}
     }
 
-    
-    /* 과제 선택 트리거: 둥근 버튼형 + 케럿(▼/▲) */
-.dept .dept-trigger{
-  width:100%;
-  display:flex; align-items:center; gap:8px;
-  padding:12px 14px;
-  border:1px solid var(--line);
-  border-radius:9999px;
-  background:#fff; font-size:15px; font-weight:600; color:var(--ink);
-  text-align:left; cursor:pointer;
-  box-shadow:0 2px 0 rgba(17,17,17,.04);
-  transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease;
-}
-.dept .dept-trigger:hover{
-  transform:translateY(-1px);
-  box-shadow:0 6px 14px rgba(17,17,17,.06);
-}
-.dept .dept-trigger:focus{
-  outline:none; border-color:var(--accent);
-  box-shadow:0 0 0 4px rgba(109,40,217,.12);
-}
-/* 오른쪽 케럿 아이콘 */
-.dept .dept-trigger::after{
-  content:"";
-  margin-left:auto;
-  border-style:solid;
-  border-width:6px 6px 0 6px;         /* ▼ */
-  border-color:#9ca3af transparent transparent transparent;
-}
-.dept .dept-trigger[aria-expanded="true"]::after{
-  transform:rotate(180deg);           /* ▲ */
-}
- 
-.dept{ position:relative; }
-
-.dept .dropdown{
-  position:absolute; z-index:20; top:calc(100% + 6px); left:0; right:0;
-  background:#fff; border:1px solid #d1d5db; border-radius:10px;
-  max-height:260px; overflow-y:auto; overflow-x:hidden;
-  box-shadow:0 10px 20px rgba(0,0,0,.08); text-align:left;
-  padding:6px 8px 6px 5px; /* 좌측 5px */
-}
-.dept .dropdown[hidden]{ display:none; }
-.dept .dropdown ul{ margin:8px 0; padding:0; list-style:none; }
-.dept .dropdown li{ margin:0; padding:0; }
-
-/* [라디오 12px] [텍스트 1fr] + 사이 5px */
-.dept .dropdown label{
-  display:grid; grid-template-columns:12px 1fr; align-items:center;
-  column-gap:5px; width:100%; box-sizing:border-box;
-  padding:0 8px 0 0; line-height:1.2;
-  white-space:normal; word-break:keep-all; overflow-wrap:anywhere;
-  cursor:pointer;
-}
-.dept .dropdown label:hover{ background:#f5f5f5; }
-
-/* 라디오 크기(작게) */
-.dept .dropdown input[type="radio"]{
-  width:10px; height:10px; transform:scale(0.5);
-  margin:0; /* 기본 여백 제거 */
-}
-
-/* 옵션 텍스트 줄바꿈 안정화 */
-.dept .dropdown .opt{ min-width:0; color:#111; }
 
 .dates-after{
   display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:14px;
@@ -215,46 +151,15 @@
         <input id="position" type="text" placeholder="예: HR Manager" />
       </div>
 
-      <!-- 과제 선택(라디오 드롭다운) -->
-      <div class="field dept">
-        <label>과제 선택</label>
-        <input id="taskurl" type="hidden" />
-        <button type="button" id="taskSelectBtn" class="dept-trigger" aria-haspopup="listbox" aria-expanded="false">
-          과제 없음
-        </button>
-        <div class="dropdown" id="taskDropdown" role="listbox" aria-label="과제 선택" hidden>
-          <ul>
-            <li>
-              <label>
-                <input type="radio" name="taskurlOpt" value="">
-                <span class="opt">과제 없음</span>
-              </label>
-            </li>
-            <li>
-              <label>
-                <input type="radio" name="taskurlOpt"
-                  value="https://featuring-corp.atlassian.net/wiki/external/ZDAxNWM0NzUzMTE2NDllNmI0Mjc3MDVhYmRkNjdlMDI">
-                <span class="opt">DE 과제</span>
-              </label>
-            </li>
-            <li>
-              <label>
-                <input type="radio" name="taskurlOpt"
-                  value="https://featuring-corp.atlassian.net/wiki/external/NTQyZmZiMGIyM2YxNDk4ZDljZDczNjc4YmM2YzVkYTQ">
-                <span class="opt">BE 과제</span>
-              </label>
-            </li>
-            <li>
-              <label>
-                <input type="radio" name="taskurlOpt"
-                  value="https://featuring-corp.atlassian.net/wiki/external/NTU4ODQxZTc1MTQyNDM4OWEzYTEzZTdjNTcyNWM1M2U">
-                <span class="opt">AI 과제</span>
-              </label>
-            </li>
-          </ul>
-        </div>
+<div class="field">
+        <label for="taskurlSelect">과제 선택</label>
+        <select id="taskurlSelect" class="field input" style="padding: 14px 12px; height: auto;">
+          <option value="">과제 없음</option>
+          <option value="https://featuring-corp.atlassian.net/wiki/external/ZDAxNWM0NzUzMTE2NDllNmI0Mjc3MDVhYmRkNjdlMDI">DE 과제</option>
+          <option value="https://featuring-corp.atlassian.net/wiki/external/NTQyZmZiMGIyM2YxNDk4ZDljZDczNjc4YmM2YzVkYTQ">BE 과제</option>
+          <option value="https://featuring-corp.atlassian.net/wiki/external/NTU4ODQxZTc1MTQyNDM4OWEzYTEzZTdjNTcyNWM1M2U">AI 과제</option>
+        </select>
       </div>
-    </div>
 
     
 
@@ -800,24 +705,7 @@ ${ v.proposeDates.length
     let currentHtml = '';
     let currentSubject = '';
     
-// 과제 드롭다운
 
-  const taskSelectBtn = document.getElementById('taskSelectBtn');
-  const taskDropdown  = document.getElementById('taskDropdown');
-  const taskRadioEls  = document.querySelectorAll('input[name="taskurlOpt"]');
-
-  function getSelectedTaskLabel(){
-    const sel = document.querySelector('input[name="taskurlOpt"]:checked');
-    if(!sel) return '과제 없음';
-    const label = sel.closest('label');
-    const span = label ? label.querySelector('.opt') : null;
-    return span ? span.textContent.trim() : '과제 없음';
-  }
-  function toggleTaskDropdown(force){
-    const willOpen = (typeof force==='boolean') ? force : taskDropdown.hasAttribute('hidden');
-    if(willOpen){ taskDropdown.removeAttribute('hidden'); taskSelectBtn.setAttribute('aria-expanded','true'); }
-    else{ taskDropdown.setAttribute('hidden',''); taskSelectBtn.setAttribute('aria-expanded','false'); }
-  }
 
   // 이벤트 바인딩 & 초기화
   if (taskSelectBtn && taskDropdown) {
@@ -845,8 +733,7 @@ ${ v.proposeDates.length
 
 
     function buildVars(){
-      const rawUrl=(taskurlEl && taskurlEl.value ? taskurlEl.value : '').trim();
-      const normalizedUrl=normalizeUrl(rawUrl);
+      const normalizedUrl=(document.getElementById('taskurlSelect')?.value || '').trim();
       const propose=[readDate('p1'),readDate('p2'),readDate('p3')].filter(Boolean);
       const confirm=readDate('c1');
       return {
