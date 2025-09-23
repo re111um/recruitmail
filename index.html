@@ -141,7 +141,7 @@
     <h1>Featuring Recruit 메일 서식</h1>
     <p class="sub">아래 3가지만 입력한 뒤, 원하는 단계 버튼을 누르세요. 하단 미리보기에서 <strong>서식 복사</strong>를 클릭하면 Gmail 본문(HTML)으로 그대로 붙여넣을 수 있습니다.</p>
 
-    <div class="grid">
+  <div class="grid">
       <div class="field">
         <label for="name">지원자명</label>
         <input id="name" type="text" placeholder="예: 홍길동" />
@@ -150,8 +150,7 @@
         <label for="position">포지션명</label>
         <input id="position" type="text" placeholder="예: HR Manager" />
       </div>
-
-<div class="field">
+      <div class="field">
         <label for="taskurlSelect">과제 선택</label>
         <select id="taskurlSelect" class="field input" style="padding: 14px 12px; height: auto;">
           <option value="">과제 없음</option>
@@ -160,12 +159,8 @@
           <option value="https://featuring-corp.atlassian.net/wiki/external/NTU4ODQxZTc1MTQyNDM4OWEzYTEzZTdjNTcyNWM1M2U">AI 과제</option>
         </select>
       </div>
-
-    
-
-    <!-- 날짜 입력 -->
+    </div>
     <div class="grid dates">
-      <!-- 제안일자 -->
       <div class="field">
         <label>제안일자</label>
         <div class="datebox">
@@ -214,7 +209,6 @@
         </div>
       </div>
 
-      <!-- 확정일자 -->
       <div class="field field-confirm">
       <label>확정일자</label>
       <div class="datebox">
@@ -235,16 +229,12 @@
         </div>
       </div>
     </div>
-
-  <!-- ✅ 확정일자 박스 바로 아래 14px 간격으로 인턴십 -->
-  <div class="dates-after">  
-  <div class="intern-inline">
-    <label for="isIntern" class="intern-label">인턴십</label>
-    <input id="isIntern" type="checkbox" />
-  </div>
-</div>
-
-    <!-- 버튼/복사/미리보기: 기존 자리 유지 -->
+    <div class="dates-after">
+      <div class="intern-inline">
+        <label for="isIntern" class="intern-label">인턴십</label>
+        <input id="isIntern" type="checkbox" />
+      </div>
+    </div>
     <div class="btn-row" aria-label="단계 버튼">
       <button class="btn js-template" data-key="task">과제전형</button>
       <button class="btn js-template" data-key="interview1">1차 인터뷰</button>
