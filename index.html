@@ -695,33 +695,6 @@ ${ v.proposeDates.length
     let currentHtml = '';
     let currentSubject = '';
     
-
-
-  // 이벤트 바인딩 & 초기화
-  if (taskSelectBtn && taskDropdown) {
-    taskSelectBtn.addEventListener('click', ()=> toggleTaskDropdown());
-    taskRadioEls.forEach(radio=>{
-      radio.addEventListener('change', ()=>{
-        const v = (radio.value||'').trim();
-        taskurlEl.value = v ? normalizeUrl(v) : '';
-        taskSelectBtn.textContent = getSelectedTaskLabel();
-        toggleTaskDropdown(false);
-      });
-    });
-    document.addEventListener('click', (e)=>{
-      if(!e.target.closest('.dept')) toggleTaskDropdown(false);
-    });
-
-    // 기본 상태
-    const none = document.querySelector('input[name="taskurlOpt"][value=""]');
-    if (none) none.checked = true;
-    taskurlEl.value = '';
-    taskSelectBtn.textContent = getSelectedTaskLabel();
-    toggleTaskDropdown(false);
-  }
-
-
-
     function buildVars(){
       const normalizedUrl=(document.getElementById('taskurlSelect')?.value || '').trim();
       const propose=[readDate('p1'),readDate('p2'),readDate('p3')].filter(Boolean);
