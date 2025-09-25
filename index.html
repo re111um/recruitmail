@@ -282,7 +282,7 @@
 
   </div> <div id="toast" class="toast" role="status" aria-live="polite">클립보드에 복사했습니다.</div>
   <script>
-    /* ---------- 유틸 ---------- */
+ /* ---------- 유틸 ---------- */
   const brandLinkStyle = "color:#111111; text-decoration:underline;";
   function getHeaderImageSrc(){ try { return new URL('assets/process.png', window.location.href).href; } catch(e) { return 'assets/process.png'; } }
   function wrapEmail(contentHtml){ const header = '<div style="margin:0 0 20px 0; text-align:left;"><img src="' + getHeaderImageSrc() + '" width="760" height="98" alt="Featuring Recruit" style="display:block;margin:0;width:760px;height:98px;border:0;"/></div>'; const signoffRe = new RegExp('<p[^>]*>\\s*감사합니다\\.[\\s\\S]*?채용팀\\s*드림\\.?\\s*<\\/p>', 'i'); const injected = signoffRe.test(contentHtml) ? contentHtml.replace(signoffRe, header + '$&') : (header + contentHtml); return '<div style="font-family:Arial, Helvetica, \\"Apple SD Gothic Neo\\", \\"Noto Sans KR\\", \\"Malgun Gothic\\", sans-serif; font-size:14px; color:#111111; line-height:1.7;"><div style="padding:8px 0 16px 0">' + injected + '</div></div>'; }
@@ -303,6 +303,7 @@
   /* 숫자만 입력 */
   function enforceNumericForDateInputs(){ const maxLen={y:4,m:2,d:2,h:2,i:2}; const sel='.date-row input[placeholder]'; document.querySelectorAll(sel).forEach(el=>{ const cls=el.className.split(' ').find(c=>maxLen[c]); const max=maxLen[cls]||2; el.setAttribute('maxlength',String(max)); el.setAttribute('inputmode','numeric'); el.addEventListener('keydown',e=>{ const ok=['Backspace','Delete','ArrowLeft','ArrowRight','Tab','Home','End']; if(ok.includes(e.key)||e.ctrlKey||e.metaKey) return; if(!/^\d$/.test(e.key)) e.preventDefault(); }); el.addEventListener('input', ()=>{ const digits=(el.value||'').replace(/\D/g,'').slice(0,max); if(el.value!==digits) el.value=digits; }); }); }
   enforceNumericForDateInputs();
+
 
     /* 템플릿들 (문구 변경 없음) */
     const templates = {
@@ -638,7 +639,10 @@ ${ v.proposeDates.length
       reject: (v) => `[Featuring] ${nameFull(v)}님, 채용 전형 결과 안내드립니다.`
     };
 
-    /* DOM refs */
+  // ▼▼▼ [수정] 서식 버튼 이름을 쉽게 가져오기 위한 정보 추가 ▼▼▼
+  const templateKeys = { task: '과제전형', interview1: '1차 인터뷰', interviewFinal: '최종 인터뷰', scheduleConfirm: '일정 확정', reference: '레퍼런스 체크', finalNotice: '처우협의', onboarding: '입사 안내', reject: '불합격' };
+
+  /* DOM refs */
   const nameEl = document.getElementById('name');
   const positionEl = document.getElementById('position');
   const previewEl = document.getElementById('preview');
@@ -651,7 +655,7 @@ ${ v.proposeDates.length
 
   let currentHtml = '';
   let currentSubject = '';
-  let currentKey = '';
+  let currentKey = ''; // ▼▼▼ [추가] 현재 어떤 버튼을 눌렀는지 기억하는 변수
 
   function buildVars(){
     const normalizedUrl=(document.getElementById('taskurlSelect')?.value || '').trim();
@@ -663,8 +667,9 @@ ${ v.proposeDates.length
   function showPreview(html){ currentHtml=html; previewEl.innerHTML=html; copyBtn.disabled=!html; }
   function showToast(msg, withNote){ const note='날짜나 시간, 금액이나 비어있는 공간을 꼭 확인하여 발송 전 채워주세요.'; toast.innerHTML = withNote ? (escapeHtml(msg) + '<div class="note">' + escapeHtml(note) + '</div>') : escapeHtml(msg); toast.classList.add('show'); clearTimeout(toast._t); toast._t=setTimeout(()=> toast.classList.remove('show'), 3000); }
 
+  // ▼▼▼ [수정] renderTemplateByKey 함수에 현재 누른 버튼 키를 기억하는 기능 추가 ▼▼▼
   function renderTemplateByKey(key){
-    currentKey = key;
+    currentKey = key; // 사용자가 누른 버튼의 종류(예: 'interview1')를 기억합니다.
     const builder=templates[key];
     if(!builder){ return; }
     try{ const vars=buildVars(); const html=builder(vars); showPreview(html); const sb=subjectTemplates[key]; currentSubject = sb ? sb(vars) : '[Featuring] ' + (vars.position||''); subjectPreviewEl.textContent=currentSubject; copySubjectBtn.disabled=!currentSubject; }catch(err){ console.error('[템플릿 렌더 오류]', err); showPreview('<p style="margin:0;color:#b91c1c">서식을 표시하는 중 오류가 발생했습니다.</p>'); currentSubject=''; copySubjectBtn.disabled=true; subjectPreviewEl.textContent=''; }
@@ -672,41 +677,56 @@ ${ v.proposeDates.length
 
   function copySubject(){ if(!currentSubject) return; navigator.clipboard.writeText(currentSubject) .then(()=> showToast('제목을 복사했습니다. 발송 전 빈칸을 확인하세요.')) .catch(()=>{ const ta=document.createElement('textarea'); ta.value=currentSubject; document.body.appendChild(ta); ta.select(); try{ document.execCommand('copy'); showToast('제목을 텍스트로 복사했습니다.'); } finally{ document.body.removeChild(ta); } }); }
 
+  // ▼▼▼ [수정] copyHtml 함수에 히스토리를 저장하는 기능 추가 ▼▼▼
   async function copyHtml(){
     if(!currentHtml) return;
-    saveHistory(); // 히스토리 저장
+    saveHistory(); // ★★★ '서식 복사'를 누르면 히스토리를 저장하는 함수를 실행합니다! ★★★
     const blob=new Blob([currentHtml],{type:'text/html'});
     const item=new ClipboardItem({'text/html':blob});
     try{ await navigator.clipboard.write([item]); showToast('클립보드에 복사했습니다. Gmail 작성창에 붙여넣기(Ctrl/⌘+V) 하세요.', true); }catch(err){ const ta=document.createElement('textarea'); ta.value=currentHtml; document.body.appendChild(ta); ta.select(); try{ document.execCommand('copy'); showToast('HTML 복사 권한이 없어 텍스트로 복사했습니다.'); } catch(e){ alert('복사에 실패했습니다.'); } finally{ document.body.removeChild(ta); } }
   }
 
-  /* =================== 히스토리 기능 스크립트 추가 =================== */
-  const HISTORY_KEY = 'featuringRecruitHistory';
-  const MAX_HISTORY = 20;
+  /* =================== 히스토리 기능 스크립트 (최종 수정판) =================== */
+  const HISTORY_KEY = 'featuringRecruitHistory'; // 브라우저의 '영구 기억 저장소'에 사용할 이름표
+  const MAX_HISTORY = 10; // 최대 10개까지 저장
 
+  // '서식 복사' 버튼을 누르면 실행될 함수
   function saveHistory() {
     const vars = buildVars();
+    // 지원자 이름이 없으면 저장하지 않음
     if (!vars.name || vars.name === '지원자') return;
 
+    // 1. 현재 시간 기록하기 (타임스탬프)
     const now = new Date();
     const timestamp = `${now.getFullYear()}-${pad2(now.getMonth() + 1)}-${pad2(now.getDate())} ${pad2(now.getHours())}:${pad2(now.getMinutes())}`;
 
+    // 2. 저장할 내용(이름, 포지션, 서식 종류, 시간)을 하나의 묶음으로 만들기
     const historyItem = {
       name: vars.name,
       position: vars.position,
-      key: currentKey,
+      key: currentKey, // 아까 기억해둔 현재 서식 종류 (예: 'interview1')
       timestamp: timestamp,
     };
 
+    // 3. 기존에 저장된 히스토리 목록을 불러오기
     let history = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
-    history.unshift(historyItem); // 새 항목을 맨 앞에 추가
+    
+    // 4. 새로운 내역을 맨 앞에 추가하기 (최신순 정렬)
+    history.unshift(historyItem);
+    
+    // 5. 만약 10개가 넘어가면 가장 오래된 내역 삭제하기
     if (history.length > MAX_HISTORY) {
-      history = history.slice(0, MAX_HISTORY); // 최대 갯수 제한
+      history = history.slice(0, MAX_HISTORY);
     }
+    
+    // 6. 최종 목록을 브라우저의 '영구 기억 저장소'에 다시 저장하기
     localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
-    loadHistory(); // 목록 새로고침
+    
+    // 7. 화면에 히스토리 목록 새로고침하기
+    loadHistory();
   }
 
+  // 페이지가 열릴 때, 그리고 히스토리가 추가될 때 실행될 함수
   function loadHistory() {
     if (!historyListEl) return;
     let history = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
@@ -714,6 +734,7 @@ ${ v.proposeDates.length
       historyListEl.innerHTML = '<li class="history-item"><div class="meta">내역이 없습니다.</div></li>';
       return;
     }
+    // 저장된 목록을 화면에 예쁘게 표시하기
     historyListEl.innerHTML = history.map(item => `
       <li>
         <a class="history-item" data-name="${escapeHtml(item.name)}" data-position="${escapeHtml(item.position)}">
@@ -726,6 +747,7 @@ ${ v.proposeDates.length
     `).join('');
   }
 
+  // 히스토리 목록의 항목을 클릭했을 때 실행될 함수
   function recallHistoryItem(target) {
     const name = target.dataset.name;
     const position = target.dataset.position;
@@ -734,7 +756,7 @@ ${ v.proposeDates.length
     showToast(`${name}님의 정보를 불러왔습니다.`);
   }
 
-  /* 바인딩 */
+  /* 바인딩 (이벤트 연결) */
   document.querySelectorAll('.js-template').forEach(btn=>{ btn.addEventListener('click', ()=> renderTemplateByKey(btn.dataset.key)); });
   copyBtn.addEventListener('click', copyHtml);
   copySubjectBtn.addEventListener('click', copySubject);
@@ -747,7 +769,7 @@ ${ v.proposeDates.length
     });
   }
 
-  // 페이지 로드 시 히스토리 불러오기
+  // 페이지가 처음 열릴 때 히스토리를 한번 불러옵니다.
   loadHistory();
 </script>
 </body>
