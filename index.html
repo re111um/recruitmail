@@ -133,220 +133,176 @@
   display: inline-block; /* 라벨이 한 줄을 다 차지하지 않도록 변경합니다. */
   margin: 0; /* 라벨 아래쪽의 기존 여백을 제거합니다. */
 }
-    
+   /* =================== 히스토리 기능 CSS 추가 =================== */
+.main-wrapper {
+  display: flex;
+  gap: 24px;
+  max-width: 1500px;
+  margin: 0 auto;
+  align-items: flex-start;
+}
+.container {
+  flex: 1; /* 남는 공간을 모두 차지 */
+  min-width: 0;
+}
+.history-panel {
+  width: 320px;
+  flex-shrink: 0;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.03);
+  position: sticky; /* 스크롤してもついてくるように */
+  top: 24px;
+}
+.history-panel h2 {
+  margin: 0 0 16px;
+  font-size: 18px;
+}
+.history-panel ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+.history-panel li {
+  margin: 0;
+  padding: 0;
+}
+.history-panel .history-item {
+  display: block;
+  padding: 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--line);
+  transition: background .15s ease;
+}
+.history-panel .history-item:hover {
+  background: #f3f4f6;
+}
+.history-panel .history-item strong {
+  font-weight: 600;
+  color: var(--ink);
+  display: block;
+}
+.history-panel .history-item .meta {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+.history-panel .history-item .meta .key {
+  font-weight: 600;
+}
+
+@media (max-width: 1200px) {
+  .main-wrapper {
+    flex-direction: column;
+  }
+  .history-panel {
+    width: 100%;
+    position: static;
+  }
+} 
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Featuring Recruit 메일 서식</h1>
-    <p class="sub">아래 3가지만 입력한 뒤, 원하는 단계 버튼을 누르세요. 하단 미리보기에서 <strong>서식 복사</strong>를 클릭하면 Gmail 본문(HTML)으로 그대로 붙여넣을 수 있습니다.</p>
+  <div class="main-wrapper">
 
-  <div class="grid">
-      <div class="field">
-        <label for="name">지원자명</label>
-        <input id="name" type="text" placeholder="예: 홍길동" />
+    <div class="container">
+      <h1>Featuring Recruit 메일 서식</h1>
+      <p class="sub">아래 3가지만 입력한 뒤, 원하는 단계 버튼을 누르세요. 하단 미리보기에서 <strong>서식 복사</strong>를 클릭하면 Gmail 본문(HTML)으로 그대로 붙여넣을 수 있습니다.</p>
+
+      <div class="grid">
+        <div class="field">
+          <label for="name">지원자명</label>
+          <input id="name" type="text" placeholder="예: 홍길동" />
+        </div>
+        <div class="field">
+          <label for="position">포지션명</label>
+          <input id="position" type="text" placeholder="예: HR Manager" />
+        </div>
+        <div class="field">
+          <label for="taskurlSelect">과제 선택</label>
+          <select id="taskurlSelect" class="field input" style="padding: 14px 12px; height: auto;">
+            <option value="">과제 없음</option>
+            <option value="https://featuring-corp.atlassian.net/wiki/external/ZDAxNWM0NzUzMTE2NDllNmI0Mjc3MDVhYmRkNjdlMDI">DE 과제</option>
+            <option value="https://featuring-corp.atlassian.net/wiki/external/NTQyZmZiMGIyM2YxNDk4ZDljZDczNjc4YmM2YzVkYTQ">BE 과제</option>
+            <option value="https://featuring-corp.atlassian.net/wiki/external/NTU4ODQxZTc1MTQyNDM4OWEzYTEzZTdjNTcyNWM1M2U">AI 과제</option>
+          </select>
+        </div>
       </div>
-      <div class="field">
-        <label for="position">포지션명</label>
-        <input id="position" type="text" placeholder="예: HR Manager" />
-      </div>
-      <div class="field">
-        <label for="taskurlSelect">과제 선택</label>
-        <select id="taskurlSelect" class="field input" style="padding: 14px 12px; height: auto;">
-          <option value="">과제 없음</option>
-          <option value="https://featuring-corp.atlassian.net/wiki/external/ZDAxNWM0NzUzMTE2NDllNmI0Mjc3MDVhYmRkNjdlMDI">DE 과제</option>
-          <option value="https://featuring-corp.atlassian.net/wiki/external/NTQyZmZiMGIyM2YxNDk4ZDljZDczNjc4YmM2YzVkYTQ">BE 과제</option>
-          <option value="https://featuring-corp.atlassian.net/wiki/external/NTU4ODQxZTc1MTQyNDM4OWEzYTEzZTdjNTcyNWM1M2U">AI 과제</option>
-        </select>
-      </div>
-    </div>
-    <div class="grid dates">
-      <div class="field">
-        <label>제안일자</label>
-        <div class="datebox">
-          <div class="date-row">
-            <input id="p1y" class="y" inputmode="numeric" maxlength="4" placeholder="yyyy" />
-            <span class="sep">-</span>
-            <input id="p1m" class="m" inputmode="numeric" maxlength="2" placeholder="mm" />
-            <span class="sep">-</span>
-            <input id="p1d" class="d" inputmode="numeric" maxlength="2" placeholder="dd" />
-            <select id="p1w" class="w">
-              <option value="">(요일)</option><option>월</option><option>화</option><option>수</option>
-              <option>목</option><option>금</option><option>토</option><option>일</option>
-            </select>
-            <input id="p1h" class="h" inputmode="numeric" maxlength="2" placeholder="24" />
-            <span class="colon">:</span>
-            <input id="p1i" class="i" inputmode="numeric" maxlength="2" placeholder="00" />
+
+      <div class="grid dates">
+        <div class="field">
+          <label>제안일자</label>
+          <div class="datebox">
+            <div class="date-row"> <input id="p1y" class="y" placeholder="yyyy" /> <span class="sep">-</span> <input id="p1m" class="m" placeholder="mm" /> <span class="sep">-</span> <input id="p1d" class="d" placeholder="dd" /> <select id="p1w" class="w"> <option value="">(요일)</option><option>월</option><option>화</option><option>수</option> <option>목</option><option>금</option><option>토</option><option>일</option> </select> <input id="p1h" class="h" placeholder="24" /> <span class="colon">:</span> <input id="p1i" class="i" placeholder="00" /> </div>
+            <div class="date-row"> <input id="p2y" class="y" placeholder="yyyy" /> <span class="sep">-</span> <input id="p2m" class="m" placeholder="mm" /> <span class="sep">-</span> <input id="p2d" class="d" placeholder="dd" /> <select id="p2w" class="w"> <option value="">(요일)</option><option>월</option><option>화</option><option>수</option> <option>목</option><option>금</option><option>토</option><option>일</option> </select> <input id="p2h" class="h" placeholder="24" /> <span class="colon">:</span> <input id="p2i" class="i" placeholder="00" /> </div>
+            <div class="date-row"> <input id="p3y" class="y" placeholder="yyyy" /> <span class="sep">-</span> <input id="p3m" class="m" placeholder="mm" /> <span class="sep">-</span> <input id="p3d" class="d" placeholder="dd" /> <select id="p3w" class="w"> <option value="">(요일)</option><option>월</option><option>화</option><option>수</option> <option>목</option><option>금</option><option>토</option><option>일</option> </select> <input id="p3h" class="h" placeholder="24" /> <span class="colon">:</span> <input id="p3i" class="i" placeholder="00" /> </div>
           </div>
-          <div class="date-row">
-            <input id="p2y" class="y" inputmode="numeric" maxlength="4" placeholder="yyyy" />
-            <span class="sep">-</span>
-            <input id="p2m" class="m" inputmode="numeric" maxlength="2" placeholder="mm" />
-            <span class="sep">-</span>
-            <input id="p2d" class="d" inputmode="numeric" maxlength="2" placeholder="dd" />
-            <select id="p2w" class="w">
-              <option value="">(요일)</option><option>월</option><option>화</option><option>수</option>
-              <option>목</option><option>금</option><option>토</option><option>일</option>
-            </select>
-            <input id="p2h" class="h" inputmode="numeric" maxlength="2" placeholder="24" />
-            <span class="colon">:</span>
-            <input id="p2i" class="i" inputmode="numeric" maxlength="2" placeholder="00" />
-          </div>
-          <div class="date-row">
-            <input id="p3y" class="y" inputmode="numeric" maxlength="4" placeholder="yyyy" />
-            <span class="sep">-</span>
-            <input id="p3m" class="m" inputmode="numeric" maxlength="2" placeholder="mm" />
-            <span class="sep">-</span>
-            <input id="p3d" class="d" inputmode="numeric" maxlength="2" placeholder="dd" />
-            <select id="p3w" class="w">
-              <option value="">(요일)</option><option>월</option><option>화</option><option>수</option>
-              <option>목</option><option>금</option><option>토</option><option>일</option>
-            </select>
-            <input id="p3h" class="h" inputmode="numeric" maxlength="2" placeholder="24" />
-            <span class="colon">:</span>
-            <input id="p3i" class="i" inputmode="numeric" maxlength="2" placeholder="00" />
+        </div>
+        <div class="field field-confirm">
+          <label>확정일자</label>
+          <div class="datebox">
+            <div class="date-row"> <input id="c1y" class="y" placeholder="yyyy" /> <span class="sep">-</span> <input id="c1m" class="m" placeholder="mm" /> <span class="sep">-</span> <input id="c1d" class="d" placeholder="dd" /> <select id="c1w" class="w"> <option value="">(요일)</option><option>월</option><option>화</option><option>수</option> <option>목</option><option>금</option><option>토</option><option>일</option> </select> <input id="c1h" class="h" placeholder="24" /> <span class="colon">:</span> <input id="c1i" class="i" placeholder="00" /> </div>
           </div>
         </div>
       </div>
 
-      <div class="field field-confirm">
-      <label>확정일자</label>
-      <div class="datebox">
-          <div class="date-row">
-            <input id="c1y" class="y" inputmode="numeric" maxlength="4" placeholder="yyyy" />
-            <span class="sep">-</span>
-            <input id="c1m" class="m" inputmode="numeric" maxlength="2" placeholder="mm" />
-            <span class="sep">-</span>
-            <input id="c1d" class="d" inputmode="numeric" maxlength="2" placeholder="dd" />
-            <select id="c1w" class="w">
-              <option value="">(요일)</option><option>월</option><option>화</option><option>수</option>
-              <option>목</option><option>금</option><option>토</option><option>일</option>
-            </select>
-            <input id="c1h" class="h" inputmode="numeric" maxlength="2" placeholder="24" />
-            <span class="colon">:</span>
-            <input id="c1i" class="i" inputmode="numeric" maxlength="2" placeholder="00" />
-          </div>
+      <div class="dates-after">
+        <div class="intern-inline">
+          <label for="isIntern" class="intern-label">인턴십</label>
+          <input id="isIntern" type="checkbox" />
         </div>
       </div>
-    </div>
-    <div class="dates-after">
-      <div class="intern-inline">
-        <label for="isIntern" class="intern-label">인턴십</label>
-        <input id="isIntern" type="checkbox" />
+
+      <div class="btn-row" aria-label="단계 버튼">
+        <button class="btn js-template" data-key="task">과제전형</button> <button class="btn js-template" data-key="interview1">1차 인터뷰</button> <button class="btn js-template" data-key="interviewFinal">최종 인터뷰</button> <button class="btn js-template" data-key="scheduleConfirm">일정 확정</button> <button class="btn js-template" data-key="reference">레퍼런스 체크</button> <button class="btn js-template" data-key="finalNotice">처우협의 및 오퍼레터</button> <button class="btn js-template" data-key="onboarding">입사 안내</button> <button class="btn black js-template" data-key="reject">불합격</button>
+      </div>
+
+      <div class="actions">
+        <button id="copyBtn" class="btn primary" disabled>서식 복사</button>
+        <button id="copySubjectBtn" class="btn" disabled>제목 복사</button>
+        <span id="subjectPreview" class="hint" aria-live="polite"></span>
+      </div>
+
+      <div class="preview">
+        <h3>미리보기</h3>
+        <div id="preview" class="frame" aria-live="polite">아직 선택된 서식이 없습니다.</div>
       </div>
     </div>
-    <div class="btn-row" aria-label="단계 버튼">
-      <button class="btn js-template" data-key="task">과제전형</button>
-      <button class="btn js-template" data-key="interview1">1차 인터뷰</button>
-      <button class="btn js-template" data-key="interviewFinal">최종 인터뷰</button>
-      <button class="btn js-template" data-key="scheduleConfirm">일정 확정</button>
-      <button class="btn js-template" data-key="reference">레퍼런스 체크</button>
-      <button class="btn js-template" data-key="finalNotice">처우협의 및 오퍼레터</button>
-      <button class="btn js-template" data-key="onboarding">입사 안내</button>
-      <button class="btn black js-template" data-key="reject">불합격</button>
-    </div>
 
-    <div class="actions">
-      <button id="copyBtn" class="btn primary" disabled>서식 복사</button>
-      <button id="copySubjectBtn" class="btn" disabled>제목 복사</button>
-      <span id="subjectPreview" class="hint" aria-live="polite"></span>
-    </div>
+    <aside class="history-panel">
+      <h2>최근 내역 불러오기</h2>
+      <ul id="historyList">
+        </ul>
+    </aside>
 
-    <div class="preview">
-      <h3>미리보기</h3>
-      <div id="preview" class="frame" aria-live="polite">아직 선택된 서식이 없습니다.</div>
-    </div>
-
-  <div id="toast" class="toast" role="status" aria-live="polite">클립보드에 복사했습니다.</div>
-
+  </div> <div id="toast" class="toast" role="status" aria-live="polite">클립보드에 복사했습니다.</div>
   <script>
     /* ---------- 유틸 ---------- */
-    const brandLinkStyle = "color:#111111; text-decoration:underline;";
+  const brandLinkStyle = "color:#111111; text-decoration:underline;";
+  function getHeaderImageSrc(){ try { return new URL('assets/process.png', window.location.href).href; } catch(e) { return 'assets/process.png'; } }
+  function wrapEmail(contentHtml){ const header = '<div style="margin:0 0 20px 0; text-align:left;"><img src="' + getHeaderImageSrc() + '" width="760" height="98" alt="Featuring Recruit" style="display:block;margin:0;width:760px;height:98px;border:0;"/></div>'; const signoffRe = new RegExp('<p[^>]*>\\s*감사합니다\\.[\\s\\S]*?채용팀\\s*드림\\.?\\s*<\\/p>', 'i'); const injected = signoffRe.test(contentHtml) ? contentHtml.replace(signoffRe, header + '$&') : (header + contentHtml); return '<div style="font-family:Arial, Helvetica, \\"Apple SD Gothic Neo\\", \\"Noto Sans KR\\", \\"Malgun Gothic\\", sans-serif; font-size:14px; color:#111111; line-height:1.7;"><div style="padding:8px 0 16px 0">' + injected + '</div></div>'; }
+  function wrapEmailNoHeader(contentHtml){ return '<div style="font-family:Arial, Helvetica, \\"Apple SD Gothic Neo\\", \\"Noto Sans KR\\", \\"Malgun Gothic\\", sans-serif; font-size:14px; color:#111111; line-height:1.7;"><div style="padding:8px 0 16px 0">' + contentHtml + '</div></div>'; }
+  function escapeHtml(s){ return String(s||'').replace(/[&<>"]/g, t => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[t]||t)); }
+  function roleHtml(v){ const p=(v.position||'').trim(); return escapeHtml(p) + (v.isIntern ? ' (인턴십)' : ''); }
+  function subjectRole(v){ const p=(v.position||'').trim(); return p + (v.isIntern ? ' (인턴십)' : ''); }
+  function nameFull(v){ return escapeHtml((v.name||'').trim()); }
+  function nameBody(v){ const s=(v.name||'').trim(); if(!s) return ''; const space=s.indexOf(' '); const shown = space>0 ? s.slice(space+1) : (s.length>1 ? s.slice(1) : s); return escapeHtml(shown); }
+  function normalizeUrl(u){ if(!u) return ''; const s=u.trim(); if(/^(https?:)?\/\//i.test(s)) return s.startsWith('//') ? 'https:'+s : s; return 'https://'+s; }
+  function pad2(n){ n=String(n||''); return n.length===1?('0'+n):n; }
+  function readDate(prefix){ const y=(document.getElementById(prefix+'y')?.value||'').trim(); const m=(document.getElementById(prefix+'m')?.value||'').trim(); const d=(document.getElementById(prefix+'d')?.value||'').trim(); const w=(document.getElementById(prefix+'w')?.value||'').trim(); const h=(document.getElementById(prefix+'h')?.value||'').trim(); const i=(document.getElementById(prefix+'i')?.value||'').trim(); if(!(y&&m&&d&&w&&h&&i)) return ''; return `${y}-${pad2(m)}-${pad2(d)} (${w}) ${pad2(h)}:${pad2(i)}`; }
 
-    function getHeaderImageSrc(){
-      try { return new URL('assets/process.png', window.location.href).href; } catch(e) { return 'assets/process.png'; }
-    }
+  /* 과제 옵션 메타 */
+  const TASK_META = { "": { label: "과제 없음", topic: "" }, "https://featuring-corp.atlassian.net/wiki/external/ZDAxNWM0NzUzMTE2NDllNmI0Mjc3MDVhYmRkNjdlMDI": { label: "DE 과제", topic: "소셜 미디어 데이터 파이프라인 시스템 설계" }, "https://featuring-corp.atlassian.net/wiki/external/NTQyZmZiMGIyM2YxNDk4ZDljZDczNjc4YmM2YzVkYTQ": { label: "BE 과제", topic: "대량 DM/메일 전송 시스템 설계" }, "https://featuring-corp.atlassian.net/wiki/external/NTU4ODQxZTc1MTQyNDM4OWEzYTEzZTdjNTcyNWM1M2U": { label: "AI 과제", topic: "멀티모달 RAG 성능 최적화 시스템 구축" } };
+  function getTaskTopicByUrl(u){ if(!u) return ''; const k=normalizeUrl(u); return (TASK_META[k] && TASK_META[k].topic) ? TASK_META[k].topic : ''; }
 
-    function wrapEmail(contentHtml){
-      const header = '<div style="margin:0 0 20px 0; text-align:left;"><img src="' + getHeaderImageSrc() + '" width="760" height="98" alt="Featuring Recruit" style="display:block;margin:0;width:760px;height:98px;border:0;"/></div>';
-      const signoffRe = new RegExp('<p[^>]*>\\s*감사합니다\\.[\\s\\S]*?채용팀\\s*드림\\.?\\s*<\\/p>', 'i');
-      const injected = signoffRe.test(contentHtml) ? contentHtml.replace(signoffRe, header + '$&') : (header + contentHtml);
-      return '<div style="font-family:Arial, Helvetica, \\"Apple SD Gothic Neo\\", \\"Noto Sans KR\\", \\"Malgun Gothic\\", sans-serif; font-size:14px; color:#111111; line-height:1.7;"><div style="padding:8px 0 16px 0">' + injected + '</div></div>';
-    }
-    function wrapEmailNoHeader(contentHtml){
-      return '<div style="font-family:Arial, Helvetica, \\"Apple SD Gothic Neo\\", \\"Noto Sans KR\\", \\"Malgun Gothic\\", sans-serif; font-size:14px; color:#111111; line-height:1.7;"><div style="padding:8px 0 16px 0">' + contentHtml + '</div></div>';
-    }
-    function escapeHtml(s){
-      return String(s||'').replace(/[&<>"]/g, t => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[t]||t));
-    }
-    function roleHtml(v){
-      const p=(v.position||'').trim();
-      return escapeHtml(p) + (v.isIntern ? ' (인턴십)' : '');
-    }
-    function subjectRole(v){
-      const p=(v.position||'').trim();
-      return p + (v.isIntern ? ' (인턴십)' : '');
-    }
-    function nameFull(v){ return escapeHtml((v.name||'').trim()); }
-    function nameBody(v){
-      const s=(v.name||'').trim();
-      if(!s) return '';
-      const space=s.indexOf(' ');
-      const shown = space>0 ? s.slice(space+1) : (s.length>1 ? s.slice(1) : s);
-      return escapeHtml(shown);
-    }
-    function normalizeUrl(u){
-      if(!u) return '';
-      const s=u.trim();
-      if(/^(https?:)?\/\//i.test(s)) return s.startsWith('//') ? 'https:'+s : s;
-      return 'https://'+s;
-    }
-    function pad2(n){ n=String(n||''); return n.length===1?('0'+n):n; }
-    function readDate(prefix){
-      const y=(document.getElementById(prefix+'y')?.value||'').trim();
-      const m=(document.getElementById(prefix+'m')?.value||'').trim();
-      const d=(document.getElementById(prefix+'d')?.value||'').trim();
-      const w=(document.getElementById(prefix+'w')?.value||'').trim();
-      const h=(document.getElementById(prefix+'h')?.value||'').trim();
-      const i=(document.getElementById(prefix+'i')?.value||'').trim();
-      if(!(y&&m&&d&&w&&h&&i)) return '';
-      return `${y}-${pad2(m)}-${pad2(d)} (${w}) ${pad2(h)}:${pad2(i)}`;
-    }
-
-    /* 과제 옵션 메타 */
-    const TASK_META = {
-      "": { label: "과제 없음", topic: "" },
-      "https://featuring-corp.atlassian.net/wiki/external/ZDAxNWM0NzUzMTE2NDllNmI0Mjc3MDVhYmRkNjdlMDI": { label: "DE 과제", topic: "소셜 미디어 데이터 파이프라인 시스템 설계" },
-      "https://featuring-corp.atlassian.net/wiki/external/NTQyZmZiMGIyM2YxNDk4ZDljZDczNjc4YmM2YzVkYTQ": { label: "BE 과제", topic: "대량 DM/메일 전송 시스템 설계" },
-      "https://featuring-corp.atlassian.net/wiki/external/NTU4ODQxZTc1MTQyNDM4OWEzYTEzZTdjNTcyNWM1M2U": { label: "AI 과제", topic: "멀티모달 RAG 성능 최적화 시스템 구축" }
-    };
-    function getTaskTopicByUrl(u){
-      if(!u) return '';
-      const k=normalizeUrl(u);
-      return (TASK_META[k] && TASK_META[k].topic) ? TASK_META[k].topic : '';
-    }
-
-    /* 숫자만 입력 */
-    function enforceNumericForDateInputs(){
-      const maxLen={y:4,m:2,d:2,h:2,i:2};
-      const sel='.date-row input.y,.date-row input.m,.date-row input.d,.date-row input.h,.date-row input.i';
-      document.querySelectorAll(sel).forEach(el=>{
-        const cls=['y','m','d','h','i'].find(c=>el.classList.contains(c));
-        const max=maxLen[cls]||2;
-        el.setAttribute('maxlength',String(max));
-        el.setAttribute('inputmode','numeric');
-        el.addEventListener('keydown',e=>{
-          const ok=['Backspace','Delete','ArrowLeft','ArrowRight','Tab','Home','End'];
-          if(ok.includes(e.key)||e.ctrlKey||e.metaKey) return;
-          if(!/^\d$/.test(e.key)) e.preventDefault();
-        });
-        el.addEventListener('input', ()=>{
-          const digits=(el.value||'').replace(/\D/g,'').slice(0,max);
-          if(el.value!==digits) el.value=digits;
-        });
-      });
-    }
-    enforceNumericForDateInputs();
+  /* 숫자만 입력 */
+  function enforceNumericForDateInputs(){ const maxLen={y:4,m:2,d:2,h:2,i:2}; const sel='.date-row input[placeholder]'; document.querySelectorAll(sel).forEach(el=>{ const cls=el.className.split(' ').find(c=>maxLen[c]); const max=maxLen[cls]||2; el.setAttribute('maxlength',String(max)); el.setAttribute('inputmode','numeric'); el.addEventListener('keydown',e=>{ const ok=['Backspace','Delete','ArrowLeft','ArrowRight','Tab','Home','End']; if(ok.includes(e.key)||e.ctrlKey||e.metaKey) return; if(!/^\d$/.test(e.key)) e.preventDefault(); }); el.addEventListener('input', ()=>{ const digits=(el.value||'').replace(/\D/g,'').slice(0,max); if(el.value!==digits) el.value=digits; }); }); }
+  enforceNumericForDateInputs();
 
     /* 템플릿들 (문구 변경 없음) */
     const templates = {
@@ -670,6 +626,7 @@ ${ v.proposeDates.length
 `)
     };
 
+    
     const subjectTemplates = {
       task: (v) => `[Featuring] ${subjectRole(v)} 과제 전형 진행 안내드립니다.`,
       interview1: (v) => `[Featuring] ${subjectRole(v)} 1차 인터뷰 제안드립니다.`,
@@ -682,104 +639,116 @@ ${ v.proposeDates.length
     };
 
     /* DOM refs */
-    const nameEl = document.getElementById('name');
-    const positionEl = document.getElementById('position');
-    const taskurlEl = document.getElementById('taskurl');
-    const previewEl = document.getElementById('preview');
-    const copyBtn = document.getElementById('copyBtn');
-    const toast = document.getElementById('toast');
-    const isInternEl = document.getElementById('isIntern');
-    const copySubjectBtn = document.getElementById('copySubjectBtn');
-    const subjectPreviewEl = document.getElementById('subjectPreview');
+  const nameEl = document.getElementById('name');
+  const positionEl = document.getElementById('position');
+  const previewEl = document.getElementById('preview');
+  const copyBtn = document.getElementById('copyBtn');
+  const toast = document.getElementById('toast');
+  const isInternEl = document.getElementById('isIntern');
+  const copySubjectBtn = document.getElementById('copySubjectBtn');
+  const subjectPreviewEl = document.getElementById('subjectPreview');
+  const historyListEl = document.getElementById('historyList');
 
-    let currentHtml = '';
-    let currentSubject = '';
-    
-    function buildVars(){
-      const normalizedUrl=(document.getElementById('taskurlSelect')?.value || '').trim();
-      const propose=[readDate('p1'),readDate('p2'),readDate('p3')].filter(Boolean);
-      const confirm=readDate('c1');
-      return {
-        name:(nameEl.value||'').trim()||'지원자',
-        position:(positionEl.value||'').trim()||'포지션',
-        taskurl:normalizedUrl,
-        taskTopic:getTaskTopicByUrl(normalizedUrl),
-        proposeDates:propose,
-        confirmDate:confirm,
-        isIntern:!!(isInternEl && isInternEl.checked)
-      };
+  let currentHtml = '';
+  let currentSubject = '';
+  let currentKey = '';
+
+  function buildVars(){
+    const normalizedUrl=(document.getElementById('taskurlSelect')?.value || '').trim();
+    const propose=[readDate('p1'),readDate('p2'),readDate('p3')].filter(Boolean);
+    const confirm=readDate('c1');
+    return { name:(nameEl.value||'').trim()||'지원자', position:(positionEl.value||'').trim()||'포지션', taskurl:normalizedUrl, taskTopic:getTaskTopicByUrl(normalizedUrl), proposeDates:propose, confirmDate:confirm, isIntern:!!(isInternEl && isInternEl.checked) };
+  }
+
+  function showPreview(html){ currentHtml=html; previewEl.innerHTML=html; copyBtn.disabled=!html; }
+  function showToast(msg, withNote){ const note='날짜나 시간, 금액이나 비어있는 공간을 꼭 확인하여 발송 전 채워주세요.'; toast.innerHTML = withNote ? (escapeHtml(msg) + '<div class="note">' + escapeHtml(note) + '</div>') : escapeHtml(msg); toast.classList.add('show'); clearTimeout(toast._t); toast._t=setTimeout(()=> toast.classList.remove('show'), 3000); }
+
+  function renderTemplateByKey(key){
+    currentKey = key;
+    const builder=templates[key];
+    if(!builder){ return; }
+    try{ const vars=buildVars(); const html=builder(vars); showPreview(html); const sb=subjectTemplates[key]; currentSubject = sb ? sb(vars) : '[Featuring] ' + (vars.position||''); subjectPreviewEl.textContent=currentSubject; copySubjectBtn.disabled=!currentSubject; }catch(err){ console.error('[템플릿 렌더 오류]', err); showPreview('<p style="margin:0;color:#b91c1c">서식을 표시하는 중 오류가 발생했습니다.</p>'); currentSubject=''; copySubjectBtn.disabled=true; subjectPreviewEl.textContent=''; }
+  }
+
+  function copySubject(){ if(!currentSubject) return; navigator.clipboard.writeText(currentSubject) .then(()=> showToast('제목을 복사했습니다. 발송 전 빈칸을 확인하세요.')) .catch(()=>{ const ta=document.createElement('textarea'); ta.value=currentSubject; document.body.appendChild(ta); ta.select(); try{ document.execCommand('copy'); showToast('제목을 텍스트로 복사했습니다.'); } finally{ document.body.removeChild(ta); } }); }
+
+  async function copyHtml(){
+    if(!currentHtml) return;
+    saveHistory(); // 히스토리 저장
+    const blob=new Blob([currentHtml],{type:'text/html'});
+    const item=new ClipboardItem({'text/html':blob});
+    try{ await navigator.clipboard.write([item]); showToast('클립보드에 복사했습니다. Gmail 작성창에 붙여넣기(Ctrl/⌘+V) 하세요.', true); }catch(err){ const ta=document.createElement('textarea'); ta.value=currentHtml; document.body.appendChild(ta); ta.select(); try{ document.execCommand('copy'); showToast('HTML 복사 권한이 없어 텍스트로 복사했습니다.'); } catch(e){ alert('복사에 실패했습니다.'); } finally{ document.body.removeChild(ta); } }
+  }
+
+  /* =================== 히스토리 기능 스크립트 추가 =================== */
+  const HISTORY_KEY = 'featuringRecruitHistory';
+  const MAX_HISTORY = 20;
+
+  function saveHistory() {
+    const vars = buildVars();
+    if (!vars.name || vars.name === '지원자') return;
+
+    const now = new Date();
+    const timestamp = `${now.getFullYear()}-${pad2(now.getMonth() + 1)}-${pad2(now.getDate())} ${pad2(now.getHours())}:${pad2(now.getMinutes())}`;
+
+    const historyItem = {
+      name: vars.name,
+      position: vars.position,
+      key: currentKey,
+      timestamp: timestamp,
+    };
+
+    let history = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+    history.unshift(historyItem); // 새 항목을 맨 앞에 추가
+    if (history.length > MAX_HISTORY) {
+      history = history.slice(0, MAX_HISTORY); // 최대 갯수 제한
     }
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+    loadHistory(); // 목록 새로고침
+  }
 
-    function showPreview(html){
-      currentHtml=html;
-      previewEl.innerHTML=html;
-      copyBtn.disabled=!html;
+  function loadHistory() {
+    if (!historyListEl) return;
+    let history = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+    if (history.length === 0) {
+      historyListEl.innerHTML = '<li class="history-item"><div class="meta">내역이 없습니다.</div></li>';
+      return;
     }
+    historyListEl.innerHTML = history.map(item => `
+      <li>
+        <a class="history-item" data-name="${escapeHtml(item.name)}" data-position="${escapeHtml(item.position)}">
+          <strong>${escapeHtml(item.name)} / ${escapeHtml(item.position)}</strong>
+          <div class="meta">
+            ${item.timestamp} / <span class="key">[${templateKeys[item.key] || item.key}]</span>
+          </div>
+        </a>
+      </li>
+    `).join('');
+  }
 
-    function showToast(msg, withNote){
-      const note='날짜나 시간, 금액이나 비어있는 공간을 꼭 확인하여 발송 전 채워주세요.';
-      toast.innerHTML = withNote
-        ? (escapeHtml(msg) + '<div class="note">' + escapeHtml(note) + '</div>')
-        : escapeHtml(msg);
-      toast.classList.add('show');
-      clearTimeout(toast._t);
-      toast._t=setTimeout(()=> toast.classList.remove('show'), 3000);
-    }
+  function recallHistoryItem(target) {
+    const name = target.dataset.name;
+    const position = target.dataset.position;
+    if (name) nameEl.value = name;
+    if (position) positionEl.value = position;
+    showToast(`${name}님의 정보를 불러왔습니다.`);
+  }
 
-    function renderTemplateByKey(key){
-      const builder=templates[key];
-      if(!builder){ return; }
-      try{
-        const vars=buildVars();
-        const html=builder(vars);
-        showPreview(html);
-        const sb=subjectTemplates[key];
-        currentSubject = sb ? sb(vars) : '[Featuring] ' + (vars.position||'');
-        subjectPreviewEl.textContent=currentSubject;
-        copySubjectBtn.disabled=!currentSubject;
-      }catch(err){
-        console.error('[템플릿 렌더 오류]', err);
-        showPreview('<p style="margin:0;color:#b91c1c">서식을 표시하는 중 오류가 발생했습니다.</p>');
-        currentSubject='';
-        copySubjectBtn.disabled=true;
-        subjectPreviewEl.textContent='';
+  /* 바인딩 */
+  document.querySelectorAll('.js-template').forEach(btn=>{ btn.addEventListener('click', ()=> renderTemplateByKey(btn.dataset.key)); });
+  copyBtn.addEventListener('click', copyHtml);
+  copySubjectBtn.addEventListener('click', copySubject);
+  if(historyListEl) {
+    historyListEl.addEventListener('click', (e) => {
+      const item = e.target.closest('.history-item');
+      if (item) {
+        recallHistoryItem(item);
       }
-    }
-
-    function copySubject(){
-      if(!currentSubject) return;
-      navigator.clipboard.writeText(currentSubject)
-        .then(()=> showToast('제목을 복사했습니다. 발송 전 빈칸을 확인하세요.'))
-        .catch(()=>{
-          const ta=document.createElement('textarea'); ta.value=currentSubject;
-          document.body.appendChild(ta); ta.select();
-          try{ document.execCommand('copy'); showToast('제목을 텍스트로 복사했습니다.'); }
-          finally{ document.body.removeChild(ta); }
-        });
-    }
-
-    async function copyHtml(){
-      if(!currentHtml) return;
-      const blob=new Blob([currentHtml],{type:'text/html'});
-      const item=new ClipboardItem({'text/html':blob});
-      try{
-        await navigator.clipboard.write([item]);
-        showToast('클립보드에 복사했습니다. Gmail 작성창에 붙여넣기(Ctrl/⌘+V) 하세요.', true);
-      }catch(err){
-        const ta=document.createElement('textarea'); ta.value=currentHtml;
-        document.body.appendChild(ta); ta.select();
-        try{ document.execCommand('copy'); showToast('HTML 복사 권한이 없어 텍스트로 복사했습니다.'); }
-        catch(e){ alert('복사에 실패했습니다.'); }
-        finally{ document.body.removeChild(ta); }
-      }
-    }
-
-    /* 바인딩 */
-    document.querySelectorAll('.js-template').forEach(btn=>{
-      btn.addEventListener('click', ()=> renderTemplateByKey(btn.dataset.key));
     });
-    copyBtn.addEventListener('click', copyHtml);
-    copySubjectBtn.addEventListener('click', copySubject);
-  </script>
+  }
+
+  // 페이지 로드 시 히스토리 불러오기
+  loadHistory();
+</script>
 </body>
 </html>
