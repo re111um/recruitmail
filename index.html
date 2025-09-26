@@ -205,6 +205,19 @@
     position: static;
   }
 } 
+  /* ▼▼▼ [추가] 자동화 버튼 스타일 ▼▼▼ */
+    .schedule-button { 
+      display: inline-block; 
+      background-color: #5E51FF; 
+      color: #ffffff; 
+      padding: 12px 20px; 
+      margin: 16px 0; 
+      font-size: 16px; 
+      font-weight: bold; 
+      text-decoration: none; 
+      border-radius: 8px; 
+      text-align: center; 
+    }
   </style>
 </head>
 <body>
@@ -282,6 +295,7 @@
 
   </div> <div id="toast" class="toast" role="status" aria-live="polite">클립보드에 복사했습니다.</div>
   <script>
+  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyIEreuZke10Bl_G1yiZjnOYySDh7Y75KJas2-TFjkR1eSI916-XX-DuTCdOgYTpGsS/exec";
  /* ---------- 유틸 ---------- */
   const brandLinkStyle = "color:#111111; text-decoration:underline;";
   function getHeaderImageSrc(){ try { return new URL('assets/process.png', window.location.href).href; } catch(e) { return 'assets/process.png'; } }
@@ -303,7 +317,32 @@
   /* 숫자만 입력 */
   function enforceNumericForDateInputs(){ const maxLen={y:4,m:2,d:2,h:2,i:2}; const sel='.date-row input[placeholder]'; document.querySelectorAll(sel).forEach(el=>{ const cls=el.className.split(' ').find(c=>maxLen[c]); const max=maxLen[cls]||2; el.setAttribute('maxlength',String(max)); el.setAttribute('inputmode','numeric'); el.addEventListener('keydown',e=>{ const ok=['Backspace','Delete','ArrowLeft','ArrowRight','Tab','Home','End']; if(ok.includes(e.key)||e.ctrlKey||e.metaKey) return; if(!/^\d$/.test(e.key)) e.preventDefault(); }); el.addEventListener('input', ()=>{ const digits=(el.value||'').replace(/\D/g,'').slice(0,max); if(el.value!==digits) el.value=digits; }); }); }
   enforceNumericForDateInputs();
+ // ▼▼▼ [추가] '개인화된 초대장 링크'와 버튼을 만드는 새로운 기능 ▼▼▼
+    function generateScheduleLink(vars, key) {
+      if (WEB_APP_URL.includes("여기에")) {
+        return '#error-url-not-set'; // URL이 설정되지 않았을 때의 임시 링크
+      }
+      const params = new URLSearchParams({
+        name: vars.name,
+        position: vars.position,
+        stage: templateKeys[key] || key,
+        dates: vars.proposeDates.join(',')
+      });
+      return `${WEB_APP_URL}?${params.toString()}`;
+    }
 
+    function getScheduleButtonHtml(vars, key) {
+      // '1차 인터뷰' 또는 '최종 인터뷰'이고 제안 일자가 있을 때만 버튼을 보여줍니다.
+      if ((key === 'interview1' || key === 'interviewFinal') && vars.proposeDates.length > 0) {
+        const link = generateScheduleLink(vars, key);
+        if (link === '#error-url-not-set') {
+          return '<p style="color:red; font-weight:bold;">[오류] 스크립트 상단의 WEB_APP_URL을 먼저 입력해주세요!</p>';
+        }
+        return `<p>아래 버튼을 눌러 가능한 인터뷰 일정을 선택해주세요.</p>
+                <a href="${link}" target="_blank" class="schedule-button">🗓️ 가능 일정 선택하기</a>`;
+      }
+      return ''; // 그 외의 경우에는 버튼을 보여주지 않습니다.
+    }
 
     /* 템플릿들 (문구 변경 없음) */
     const templates = {
@@ -345,7 +384,7 @@
   <p style="margin:0;">감사합니다.<br />피처링 채용팀 드림.</p>
 `); },
 
-      interview1: (v) => wrapEmail(`
+      interview1: (v,k) => wrapEmail(`
   <p style="margin:0 0 3px 0;"><strong>[Featuring]</strong></p>
   <p style="margin:0 0 3px 0;">안녕하세요, ${nameFull(v)}님.</p>
   <p style="margin:0 0 14px 0;">피처링 채용팀입니다.</p>
@@ -360,20 +399,16 @@
   <p style="margin:0 0 3px 0;">- 유형 : 1차 인터뷰 (실무진 참여)</p>
   <p style="margin:0 0 3px 0;">- 포지션 : ${roleHtml(v)}</p>
   <p style="margin:0 0 3px 0;">- 장소 : 서울 강남구 테헤란로 129, 빗썸금융타워 8층</p>
-  <p style="margin:0 0 3px 0;">- 일시 : 아래 중 가능한 일정으로 회신 부탁드립니다.</p>
-  <div style="padding-left:28px; margin:0 0 14px 0;">
-${ v.proposeDates.length
-    ? `<ul style="margin:0 0 5px 3px; padding:0;">${v.proposeDates.map(d => `<li>${escapeHtml(d)}</li>`).join('')}</ul>`
-    : `<p style="margin:0 0 14px 0; color:#6b7280;">{날짜를 입력하세요}</p>` }
-  </div>
-</div>
+  <p style="margin:0 0 3px 0;">- 일시 : 하단 버튼을 눌러 가능한 일정을 제출해주세요.</p> 
+  <div style="padding-left:8px; margin:0 0 14px 0;"> ${ v.proposeDates.length ? `<ul style="margin:0 0 5px 3px; padding:0;">${v.proposeDates.map(d => `<li>${escapeHtml(d)}</li>`).join('')}</ul>` : `<p style="margin:0 0 14px 0; color:#6b7280;">{날짜를 입력하세요}</p>` } </div></div>
+  ${getScheduleButtonHtml(v, k)}
   <p style="margin:0 0 3px 0;">혹시 해당 일시 및 시간대가 어려우시다면, 가능한 시간을 2~3개 일정정도 함께 공유해 주시면 조율하여 진행하도록 하겠습니다.</p>
   <p style="margin:0 0 14px 0;">추가로 인터뷰에 앞서 준비해야 할 사항이나 궁금한 점이 있으시다면 언제든지 편하게 연락 부탁 드립니다. :)</p>
   
   <p style="margin:0;">감사합니다.<br />피처링 채용팀 드림.</p>
 `),
 
-      interviewFinal: (v) => wrapEmail(`
+      interviewFinal: (v,k) => wrapEmail(`
   <p style="margin:0 0 3px 0;"><strong>[Featuring]</strong></p>
   <p style="margin:0 0 3px 0;">안녕하세요, ${nameFull(v)}님.</p>
   <p style="margin:0 0 14px 0;">피처링 채용팀입니다.</p>
@@ -386,14 +421,9 @@ ${ v.proposeDates.length
   <p style="margin:0 0 3px 0;">- 유형 : 2차(최종) 인터뷰 (C-level 참여)</p>
   <p style="margin:0 0 3px 0;">- 포지션 : ${roleHtml(v)}</p>
   <p style="margin:0 0 3px 0;">- 장소 : 서울 강남구 테헤란로 129, 빗썸금융타워 8층</p>
-  <p style="margin:0 0 3px 0;">- 일시 : 아래 중 가능한 일정으로 회신바랍니다.</p>
-    <div style="padding-left:28px; margin:0 0 3px 0;">
-${ v.proposeDates.length
-    ? `<ul style="margin:0 0 5px 3px; padding:0;">${v.proposeDates.map(d => `<li>${escapeHtml(d)}</li>`).join('')}</ul>`
-    : `<p style="margin:0 0 14px 0; color:#6b7280;">{날짜를 입력하세요}</p>` }
-    </div>
-  </div>
-       
+  <p style="margin:0 0 3px 0;">- 일시 : 하단 버튼을 눌러 가능한 일정을 제출해주세요.</p> 
+  <div style="padding-left:8px; margin:0 0 3px 0;"> ${ v.proposeDates.length ? `<ul style="margin:0 0 5px 3px; padding:0;">${v.proposeDates.map(d => `<li>${escapeHtml(d)}</li>`).join('')}</ul>` : `<p style="margin:0 0 14px 0; color:#6b7280;">{날짜를 입력하세요}</p>` } </div> </div>
+  ${getScheduleButtonHtml(v, k)}
   <p style="margin:0 0 3px 0;">지난번처럼 혹시 해당 일시 및 시간대가 어려우시다면, 가능한 시간을 함께 공유해 주시면 조율하여 진행하도록 하겠습니다.</p>
   <p style="margin:0 0 14px 0;">${nameFull(v)}님의 뛰어난 역량을 더 깊게 알아가 볼 수 있을 자리가 될 것 같아 기쁘게 생각하고 있습니다. :)</p>
 
@@ -672,7 +702,7 @@ ${ v.proposeDates.length
     currentKey = key; // 사용자가 누른 버튼의 종류(예: 'interview1')를 기억합니다.
     const builder=templates[key];
     if(!builder){ return; }
-    try{ const vars=buildVars(); const html=builder(vars); showPreview(html); const sb=subjectTemplates[key]; currentSubject = sb ? sb(vars) : '[Featuring] ' + (vars.position||''); subjectPreviewEl.textContent=currentSubject; copySubjectBtn.disabled=!currentSubject; }catch(err){ console.error('[템플릿 렌더 오류]', err); showPreview('<p style="margin:0;color:#b91c1c">서식을 표시하는 중 오류가 발생했습니다.</p>'); currentSubject=''; copySubjectBtn.disabled=true; subjectPreviewEl.textContent=''; }
+    try{ const vars=buildVars(); const html=builder(vars, key); showPreview(html); const sb=subjectTemplates[key]; currentSubject = sb ? sb(vars) : '[Featuring] ' + (vars.position||''); subjectPreviewEl.textContent=currentSubject; copySubjectBtn.disabled=!currentSubject; }catch(err){ console.error('[템플릿 렌더 오류]', err); showPreview('<p style="margin:0;color:#b91c1c">서식을 표시하는 중 오류가 발생했습니다.</p>'); currentSubject=''; copySubjectBtn.disabled=true; subjectPreviewEl.textContent=''; }
   }
 
   function copySubject(){ if(!currentSubject) return; navigator.clipboard.writeText(currentSubject) .then(()=> showToast('제목을 복사했습니다. 발송 전 빈칸을 확인하세요.')) .catch(()=>{ const ta=document.createElement('textarea'); ta.value=currentSubject; document.body.appendChild(ta); ta.select(); try{ document.execCommand('copy'); showToast('제목을 텍스트로 복사했습니다.'); } finally{ document.body.removeChild(ta); } }); }
