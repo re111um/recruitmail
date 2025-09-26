@@ -315,21 +315,20 @@
   function getTaskTopicByUrl(u){ if(!u) return ''; const k=normalizeUrl(u); return (TASK_META[k] && TASK_META[k].topic) ? TASK_META[k].topic : ''; }
 
   /* 숫자만 입력 */
-  function enforceNumericForDateInputs(){ const maxLen={y:4,m:2,d:2,h:2,i:2}; const sel='.date-row input[placeholder]'; document.querySelectorAll(sel).forEach(el=>{ const cls=el.className.split(' ').find(c=>maxLen[c]); const max=maxLen[cls]||2; el.setAttribute('maxlength',String(max)); el.setAttribute('inputmode','numeric'); el.addEventListener('keydown',e=>{ const ok=['Backspace','Delete','ArrowLeft','ArrowRight','Tab','Home','End']; if(ok.includes(e.key)||e.ctrlKey||e.metaKey) return; if(!/^\d$/.test(e.key)) e.preventDefault(); }); el.addEventListener('input', ()=>{ const digits=(el.value||'').replace(/\D/g,'').slice(0,max); if(el.value!==digits) el.value=digits; }); }); }
-  enforceNumericForDateInputs();
- // ▼▼▼ [추가] '개인화된 초대장 링크'와 버튼을 만드는 새로운 기능 ▼▼▼
-    function generateScheduleLink(vars, key) {
-      if (WEB_APP_URL.includes("여기에")) {
-        return '#error-url-not-set'; // URL이 설정되지 않았을 때의 임시 링크
-      }
-      const params = new URLSearchParams({
-        name: vars.name,
-        position: vars.position,
-        stage: templateKeys[key] || key,
-        dates: vars.proposeDates.join(',')
-      });
-      return `${WEB_APP_URL}?${params.toString()}`;
+function getScheduleButtonHtml(vars, key) {
+  // '1차 인터뷰' 또는 '최종 인터뷰'이고 제안 일자가 있을 때만 버튼을 보여줍니다.
+  if ((key === 'interview1' || key === 'interviewFinal') && vars.proposeDates.length > 0) {
+    const link = generateScheduleLink(vars, key);
+    if (link === '#error-url-not-set') {
+      return '<p style="color:red; font-weight:bold;">[오류] 스크립트 상단의 WEB_APP_URL을 먼저 입력해주세요!</p>';
     }
+    
+    // ★★★ 바로 아래 a 태그에 style="..." 속성을 직접 추가했습니다! ★★★
+    return `<p>아래 버튼을 눌러 가능한 인터뷰 일정을 선택해주세요.</p>
+            <a href="${link}" target="_blank" style="display: inline-block; background-color: #5E51FF; color: #ffffff; padding: 12px 20px; margin: 16px 0; font-size: 16px; font-weight: bold; text-decoration: none; border-radius: 8px; text-align: center;">🗓️ 가능 일정 선택하기</a>`;
+  }
+  return ''; // 그 외의 경우에는 버튼을 보여주지 않습니다.
+}
 
     function getScheduleButtonHtml(vars, key) {
       // '1차 인터뷰' 또는 '최종 인터뷰'이고 제안 일자가 있을 때만 버튼을 보여줍니다.
