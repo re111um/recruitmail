@@ -314,7 +314,19 @@
   const TASK_META = { "": { label: "과제 없음", topic: "" }, "https://featuring-corp.atlassian.net/wiki/external/ZDAxNWM0NzUzMTE2NDllNmI0Mjc3MDVhYmRkNjdlMDI": { label: "DE 과제", topic: "소셜 미디어 데이터 파이프라인 시스템 설계" }, "https://featuring-corp.atlassian.net/wiki/external/NTQyZmZiMGIyM2YxNDk4ZDljZDczNjc4YmM2YzVkYTQ": { label: "BE 과제", topic: "대량 DM/메일 전송 시스템 설계" }, "https://featuring-corp.atlassian.net/wiki/external/NTU4ODQxZTc1MTQyNDM4OWEzYTEzZTdjNTcyNWM1M2U": { label: "AI 과제", topic: "멀티모달 RAG 성능 최적화 시스템 구축" } };
   function getTaskTopicByUrl(u){ if(!u) return ''; const k=normalizeUrl(u); return (TASK_META[k] && TASK_META[k].topic) ? TASK_META[k].topic : ''; }
 
-  /* 숫자만 입력 */
+function generateScheduleLink(vars, key) {
+  if (WEB_APP_URL.includes("여기에")) {
+    return '#error-url-not-set'; // URL이 설정되지 않았을 때의 임시 링크
+  }
+  const params = new URLSearchParams({
+    name: vars.name,
+    position: vars.position,
+    stage: templateKeys[key] || key,
+    dates: vars.proposeDates.join(',')
+  });
+  return `${WEB_APP_URL}?${params.toString()}`;
+}
+
 function getScheduleButtonHtml(vars, key) {
   // '1차 인터뷰' 또는 '최종 인터뷰'이고 제안 일자가 있을 때만 버튼을 보여줍니다.
   if ((key === 'interview1' || key === 'interviewFinal') && vars.proposeDates.length > 0) {
@@ -323,26 +335,11 @@ function getScheduleButtonHtml(vars, key) {
       return '<p style="color:red; font-weight:bold;">[오류] 스크립트 상단의 WEB_APP_URL을 먼저 입력해주세요!</p>';
     }
     
-    // ★★★ 바로 아래 a 태그에 style="..." 속성을 직접 추가했습니다! ★★★
-    return `<p>아래 버튼을 눌러 가능한 인터뷰 일정을 선택해주세요.</p>
-            <a href="${link}" target="_blank" style="display: inline-block; background-color: #5E51FF; color: #ffffff; padding: 12px 20px; margin: 16px 0; font-size: 16px; font-weight: bold; text-decoration: none; border-radius: 8px; text-align: center;">🗓️ 가능 일정 선택하기</a>`;
+    // style 속성을 직접 추가하여 버튼 디자인을 이메일에서도 유지합니다.
+    return `<a href="${link}" target="_blank" style="display: inline-block; background-color: #6d28d9; color: #ffffff; padding: 12px 20px; margin: 16px 0; font-size: 16px; font-weight: bold; text-decoration: none; border-radius: 8px; text-align: center;">🗓️ 가능 일정 선택하기</a>`;
   }
   return ''; // 그 외의 경우에는 버튼을 보여주지 않습니다.
 }
-
-    function getScheduleButtonHtml(vars, key) {
-      // '1차 인터뷰' 또는 '최종 인터뷰'이고 제안 일자가 있을 때만 버튼을 보여줍니다.
-      if ((key === 'interview1' || key === 'interviewFinal') && vars.proposeDates.length > 0) {
-        const link = generateScheduleLink(vars, key);
-        if (link === '#error-url-not-set') {
-          return '<p style="color:red; font-weight:bold;">[오류] 스크립트 상단의 WEB_APP_URL을 먼저 입력해주세요!</p>';
-        }
-        return `<p>아래 버튼을 눌러 가능한 인터뷰 일정을 선택해주세요.</p>
-                <a href="${link}" target="_blank" class="schedule-button">🗓️ 가능 일정 선택하기</a>`;
-      }
-      return ''; // 그 외의 경우에는 버튼을 보여주지 않습니다.
-    }
-
     /* 템플릿들 (문구 변경 없음) */
     const templates = {
       task: (v) => { const role = roleHtml(v); return wrapEmail(`
