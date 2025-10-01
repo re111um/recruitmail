@@ -240,9 +240,10 @@
           <label for="taskurlSelect">과제 선택</label>
           <select id="taskurlSelect" class="field input" style="padding: 14px 12px; height: auto;">
             <option value="">과제 없음</option>
-            <option value="https://featuring-corp.atlassian.net/wiki/external/ZDAxNWM0NzUzMTE2NDllNmI0Mjc3MDVhYmRkNjdlMDI">DE 과제</option>
-            <option value="https://featuring-corp.atlassian.net/wiki/external/NTQyZmZiMGIyM2YxNDk4ZDljZDczNjc4YmM2YzVkYTQ">BE 과제</option>
-            <option value="https://featuring-corp.atlassian.net/wiki/external/NTU4ODQxZTc1MTQyNDM4OWEzYTEzZTdjNTcyNWM1M2U">AI 과제</option>
+            <option value="https://featuring-corp.atlassian.net/wiki/external/ODc0OTc2ODRlNGExNGY0YjhkZWY4ZGEzNzNiNTA0Y2Q">DE 과제</option>
+            <option value="https://featuring-corp.atlassian.net/wiki/external/M2E4MzhlMGNhYTUzNDAwNmI2MTkyZmZiOGQxZTZkYTU">BE (Jr) 과제</option>
+            <option value="https://featuring-corp.atlassian.net/wiki/external/OTZmYzQ0ZWNiMWJiNDk1MDliMWI2N2YzN2IzZGQ1NTc">BE (Mid&Sr) 과제</option>   
+            <option value="https://featuring-corp.atlassian.net/wiki/external/NTU4ODQxZTc1MTQyNDM4OWEzYTEzZTdjNTcyNWM1M2U">AI 과제</option>         
           </select>
         </div>
       </div>
@@ -311,7 +312,12 @@
   function readDate(prefix){ const y=(document.getElementById(prefix+'y')?.value||'').trim(); const m=(document.getElementById(prefix+'m')?.value||'').trim(); const d=(document.getElementById(prefix+'d')?.value||'').trim(); const w=(document.getElementById(prefix+'w')?.value||'').trim(); const h=(document.getElementById(prefix+'h')?.value||'').trim(); const i=(document.getElementById(prefix+'i')?.value||'').trim(); if(!(y&&m&&d&&w&&h&&i)) return ''; return `${y}-${pad2(m)}-${pad2(d)} (${w}) ${pad2(h)}:${pad2(i)}`; }
 
   /* 과제 옵션 메타 */
-  const TASK_META = { "": { label: "과제 없음", topic: "" }, "https://featuring-corp.atlassian.net/wiki/external/ZDAxNWM0NzUzMTE2NDllNmI0Mjc3MDVhYmRkNjdlMDI": { label: "DE 과제", topic: "소셜 미디어 데이터 파이프라인 시스템 설계" }, "https://featuring-corp.atlassian.net/wiki/external/NTQyZmZiMGIyM2YxNDk4ZDljZDczNjc4YmM2YzVkYTQ": { label: "BE 과제", topic: "대량 DM/메일 전송 시스템 설계" }, "https://featuring-corp.atlassian.net/wiki/external/NTU4ODQxZTc1MTQyNDM4OWEzYTEzZTdjNTcyNWM1M2U": { label: "AI 과제", topic: "멀티모달 RAG 성능 최적화 시스템 구축" } };
+  const TASK_META = { "": { label: "과제 없음", topic: "" }, 
+                     "https://featuring-corp.atlassian.net/wiki/external/ODc0OTc2ODRlNGExNGY0YjhkZWY4ZGEzNzNiNTA0Y2Q": { label: "DE 과제", topic: "소셜 미디어 데이터 파이프라인 시스템 설계" }, 
+                     "https://featuring-corp.atlassian.net/wiki/external/M2E4MzhlMGNhYTUzNDAwNmI2MTkyZmZiOGQxZTZkYTU": { label: "BE 과제", topic: "대량 DM/메일 전송 시스템 설계" }, 
+                     "https://featuring-corp.atlassian.net/wiki/external/NTU4ODQxZTc1MTQyNDM4OWEzYTEzZTdjNTcyNWM1M2U": { label: "AI 과제", topic: "멀티모달 RAG 성능 최적화 시스템 구축" },
+                     "https://featuring-corp.atlassian.net/wiki/external/OTZmYzQ0ZWNiMWJiNDk1MDliMWI2N2YzN2IzZGQ1NTc": { label: "BE 과제", topic: "대량 DM/메일 전송 시스템 설계" }                    
+                    };
   function getTaskTopicByUrl(u){ if(!u) return ''; const k=normalizeUrl(u); return (TASK_META[k] && TASK_META[k].topic) ? TASK_META[k].topic : ''; }
 
 function generateScheduleLink(vars, key) {
