@@ -364,13 +364,7 @@ function getScheduleButtonHtml(vars, key) {
   // 조건에 맞지 않으면 빈 문자열 반환
   return '';
 }
-// ▲▲▲ 여기까지 교체 ▲▲▲
-    
-    // 이메일 클라이언트 호환성을 위해 스타일을 직접 입력합니다.
-    return `<a href="${link}" target="_blank" style="display: inline-block; background-color: #5E51FF; color: #ffffff; padding: 12px 20px; margin: 16px 0; font-size: 16px; font-weight: bold; text-decoration: none; border-radius: 8px; text-align: center;">🗓️ 가능 일정 선택하기</a>`;
-  }
-  return '';
-}
+// ▲▲▲ 여기까지 교체 ▲▲
     /* 템플릿들 (문구 변경 없음) */
     const templates = {
     assignment_schedule: (v, k) => wrapEmail(`
