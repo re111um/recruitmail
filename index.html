@@ -334,12 +334,16 @@ function generateScheduleLink(vars, key) {
   if (WEB_APP_URL.includes("여기에")) {
     return '#error-url-not-set';
   }
+  
   const params = new URLSearchParams({
     name: vars.name,
     position: vars.position,
     stage: templateKeys[key] || key,
-    dates: vars.proposeDates.join(',')
+    dates: vars.proposeDates.join(','),
+    // ★ [추가] v 파라미터에 현재 시간을 넣어 매번 다른 주소를 생성합니다.
+    v: new Date().getTime() 
   });
+  
   return `${WEB_APP_URL}?${params.toString()}`;
 }
 
