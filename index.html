@@ -340,28 +340,31 @@ function generateScheduleLink(vars, key) {
     position: vars.position,
     stage: templateKeys[key] || key,
     dates: vars.proposeDates.join(','),
-    // ★ [추가] v 파라미터에 현재 시간을 넣어 매번 다른 주소를 생성합니다.
     v: new Date().getTime() 
   });
   
   return `${WEB_APP_URL}?${params.toString()}`;
 }
 
+// ▼▼▼ 이 함수 부분을 아래 내용으로 완전히 새로 교체하세요 ▼▼▼
 function getScheduleButtonHtml(vars, key) {
-  // ★ 조건문에 'assignment_schedule'을 추가했습니다.
-  if ((key === 'interview1' || key === 'interviewFinal' || key === 'assignment_schedule') && vars.proposeDates.length > 0) {
+  // 1차, 최종 인터뷰 및 과제 일정일 때만 버튼을 생성합니다.
+  if (['interview1', 'interviewFinal', 'assignment_schedule'].includes(key) && vars.proposeDates.length > 0) {
     const link = generateScheduleLink(vars, key);
     
-    // 주소 미설정 시 에러 메시지 출력 로직 (보내주신 코드 유지)
+    // URL 설정 체크
     if (link === '#error-url-not-set') {
       return '<p style="color:red; font-weight:bold;">[오류] 스크립트 상단의 WEB_APP_URL을 먼저 입력해주세요!</p>';
     }
     
-    // 최종 버튼 HTML 반환 (기존 스타일 유지)
+    // 버튼 HTML 반환
     return `<a href="${link}" target="_blank" style="display: inline-block; background-color: #5E51FF; color: #ffffff; padding: 12px 20px; margin: 16px 0; font-size: 16px; font-weight: bold; text-decoration: none; border-radius: 8px; text-align: center;">🗓️ 가능 일정 선택하기</a>`;
   }
+  
+  // 조건에 맞지 않으면 빈 문자열 반환
   return '';
 }
+// ▲▲▲ 여기까지 교체 ▲▲▲
     
     // 이메일 클라이언트 호환성을 위해 스타일을 직접 입력합니다.
     return `<a href="${link}" target="_blank" style="display: inline-block; background-color: #5E51FF; color: #ffffff; padding: 12px 20px; margin: 16px 0; font-size: 16px; font-weight: bold; text-decoration: none; border-radius: 8px; text-align: center;">🗓️ 가능 일정 선택하기</a>`;
