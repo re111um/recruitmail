@@ -274,7 +274,15 @@
       </div>
 
       <div class="btn-row" aria-label="단계 버튼">
-        <button class="btn js-template" data-key="task">과제전형</button> <button class="btn js-template" data-key="interview1">1차 인터뷰</button> <button class="btn js-template" data-key="interviewFinal">최종 인터뷰</button> <button class="btn js-template" data-key="scheduleConfirm">일정 확정</button> <button class="btn js-template" data-key="reference">레퍼런스 체크</button> <button class="btn js-template" data-key="finalNotice">처우협의 및 오퍼레터</button> <button class="btn js-template" data-key="onboarding">입사 안내</button> <button class="btn black js-template" data-key="reject">불합격</button>
+        <button class="btn js-template" data-key="assignment_schedule">과제 일정</button>
+        <button class="btn js-template" data-key="task">과제전형</button> 
+        <button class="btn js-template" data-key="interview1">1차 인터뷰</button> 
+        <button class="btn js-template" data-key="interviewFinal">최종 인터뷰</button> 
+        <button class="btn js-template" data-key="scheduleConfirm">일정 확정</button> 
+        <button class="btn js-template" data-key="reference">레퍼런스 체크</button> 
+        <button class="btn js-template" data-key="finalNotice">처우협의 및 오퍼레터</button> 
+        <button class="btn js-template" data-key="onboarding">입사 안내</button> 
+        <button class="btn black js-template" data-key="reject">불합격</button>
       </div>
 
       <div class="actions">
@@ -336,11 +344,20 @@ function generateScheduleLink(vars, key) {
 }
 
 function getScheduleButtonHtml(vars, key) {
-  if ((key === 'interview1' || key === 'interviewFinal') && vars.proposeDates.length > 0) {
+  // ★ 조건문에 'assignment_schedule'을 추가했습니다.
+  if ((key === 'interview1' || key === 'interviewFinal' || key === 'assignment_schedule') && vars.proposeDates.length > 0) {
     const link = generateScheduleLink(vars, key);
+    
+    // 주소 미설정 시 에러 메시지 출력 로직 (보내주신 코드 유지)
     if (link === '#error-url-not-set') {
       return '<p style="color:red; font-weight:bold;">[오류] 스크립트 상단의 WEB_APP_URL을 먼저 입력해주세요!</p>';
     }
+    
+    // 최종 버튼 HTML 반환 (기존 스타일 유지)
+    return `<a href="${link}" target="_blank" style="display: inline-block; background-color: #5E51FF; color: #ffffff; padding: 12px 20px; margin: 16px 0; font-size: 16px; font-weight: bold; text-decoration: none; border-radius: 8px; text-align: center;">🗓️ 가능 일정 선택하기</a>`;
+  }
+  return '';
+}
     
     // 이메일 클라이언트 호환성을 위해 스타일을 직접 입력합니다.
     return `<a href="${link}" target="_blank" style="display: inline-block; background-color: #5E51FF; color: #ffffff; padding: 12px 20px; margin: 16px 0; font-size: 16px; font-weight: bold; text-decoration: none; border-radius: 8px; text-align: center;">🗓️ 가능 일정 선택하기</a>`;
@@ -349,6 +366,29 @@ function getScheduleButtonHtml(vars, key) {
 }
     /* 템플릿들 (문구 변경 없음) */
     const templates = {
+    assignment_schedule: (v, k) => wrapEmail(`
+      <p style="margin:0 0 3px 0;"><strong>[Featuring]</strong></p>
+      <p style="margin:0 0 3px 0;">안녕하세요, ${nameFull(v)}님.</p>
+      <p style="margin:0 0 14px 0;">피처링 채용팀입니다.</p>
+
+    <p style="margin:0 0 3px 0;">먼저 저희 회사와  ${ v.isIntern ? `인턴십 프로그램` : `${escapeHtml(v.position)} 포지션` }에 관심 가져주시고 지원해주셔서 감사합니다.</p>
+    <p style="margin:0 0 3px 0;">제출해 주신 이력서와 경력 사항을 검토한 결과,</p> 
+    <p style="margin:0 0 3px 0;">${nameBody(v)}님의 역량과 경험이 해당 포지션에 적합하다고 판단되어 과제 전형을 진행하고자 합니다.</p>
+    <p style="margin:0 0 14px 0;">과제는 진행 당일 유의 사항과 함께 안내 되며, 가능한 일정 확인을 위해 메일로 연락드리게 되었습니다.</p>
+  
+      <p style="margin:0 0 3px 0;"><strong>[진행 안내]</strong></p>
+      <div style="padding-left:5px; margin:0 0 3px 0;">
+        <p style="margin:0 0 3px 0;">- 유형 : 과제 전형</p>
+        <p style="margin:0 0 3px 0;">- 포지션 : ${roleHtml(v)}</p>
+        <p style="margin:0 0 3px 0;">- 일시 : 하단 버튼을 눌러 가능한 일정을 제출해주세요.</p> 
+    </div>
+    ${getScheduleButtonHtml(v, k)}
+    <p style="margin:0 0 3px 0;">혹시 안내드린 버튼을 통한 일정 선택이 어려우시다면, 본 메일로 가능한 시간대를 회신 부탁드립니다.</p>
+    <p style="margin:0 0 14px 0;">감사합니다. :)</p>
+    
+    <p style="margin:0;">피처링 채용팀 드림.</p>
+  `),
+      
       task: (v) => { const role = roleHtml(v); return wrapEmail(`
         <p style="margin:0 0 3px 0;"><strong>[Featuring]</strong></p>
         <p style="margin:0 0 3px 0;">안녕하세요. ${nameFull(v)}님. :)</p>
@@ -659,6 +699,7 @@ function getScheduleButtonHtml(vars, key) {
 
     
     const subjectTemplates = {
+      assignment_schedule: (v) => `[Featuring] ${subjectRole(v)} 과제 전형 일정 제안드립니다.`,
       task: (v) => `[Featuring] ${subjectRole(v)} 과제 전형 진행 안내드립니다.`,
       interview1: (v) => `[Featuring] ${subjectRole(v)} 1차 인터뷰 제안드립니다.`,
       interviewFinal: (v) => `[Featuring] ${subjectRole(v)} 1차 인터뷰 결과 안내드립니다.`,
@@ -670,7 +711,7 @@ function getScheduleButtonHtml(vars, key) {
     };
 
   // ▼▼▼ [수정] 서식 버튼 이름을 쉽게 가져오기 위한 정보 추가 ▼▼▼
-  const templateKeys = { task: '과제전형', interview1: '1차 인터뷰', interviewFinal: '최종 인터뷰', scheduleConfirm: '일정 확정', reference: '레퍼런스 체크', finalNotice: '처우협의', onboarding: '입사 안내', reject: '불합격' };
+  const templateKeys = { assignment_schedule: '과제 일정', task: '과제전형', interview1: '1차 인터뷰', interviewFinal: '최종 인터뷰', scheduleConfirm: '일정 확정', reference: '레퍼런스 체크', finalNotice: '처우협의', onboarding: '입사 안내', reject: '불합격' };
 
   /* DOM refs */
   const nameEl = document.getElementById('name');
