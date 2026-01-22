@@ -387,9 +387,9 @@ function getScheduleButtonHtml(vars, key) {
     </div>
     ${getScheduleButtonHtml(v, k)}
     <p style="margin:0 0 3px 0;">혹시 안내드린 버튼을 통한 일정 선택이 어려우시다면, 본 메일로 가능한 시간대를 회신 부탁드립니다.</p>
-    <p style="margin:0 0 14px 0;">감사합니다. :)</p>
+    <p style="margin:0 0 14px 0;">감사합니다.<br />피처링 채용팀 드림.</p>
     
-    <p style="margin:0;">피처링 채용팀 드림.</p>
+    
   `),
       
       task: (v) => { const role = roleHtml(v); return wrapEmail(`
@@ -486,14 +486,14 @@ function getScheduleButtonHtml(vars, key) {
        <p style="margin:0 5px 3px 0;">✅ L(로비)층에 도착하시어 아래 연락처로 연락주시면 담당자가 직접 안내 도와드리겠습니다.</p>
        <p style="margin:0 5px 3px 0;">❓ L층은 정문으로 방문하시게 될 경우, 에스컬레이터를 타고 한 층 올라오셔야 합니다.</p>    
        <p style="margin:0 5px 3px 0;">🙋 담당자 연락처 : 010-7376-0490</p>
-      <div style="padding-left:8px; margin:0 0 3px 0;">   
+      <div style="padding-left:5px; margin:0 0 3px 0;">   
     <p style="margin:0 0 3px 0;">
   - 일시 :
   ${ v.confirmDate
       ? escapeHtml(v.confirmDate)
       : `<span style="color:#6b7280;">{날짜를 입력하세요}</span>` }
 </p>
-<p style="margin:0 0 14px 0;">- 진행 시간 : 약 1시간 30분 소요 예정</p>
+<p style="margin:0 0 13x 0;">- 진행 시간 : 약 1시간 ~ 소요 예정</p>
       </div>
     </div>
   </div>
