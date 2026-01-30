@@ -59,6 +59,10 @@
   const qs = new URLSearchParams(window.location.search);
   if (qs.get("page") === "confirm") {
     document.getElementById("openHr").style.display = "block";
+    // ✅ 후보자 페이지(=confirm 아님)는 자동으로 바로 열기
+  if (qs.get("page") !== "confirm") {
+  setTimeout(openDirect, 200);
+}
   }
 
   document.getElementById("openDirect").addEventListener("click", openDirect);
