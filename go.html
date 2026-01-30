@@ -55,14 +55,16 @@
   document.getElementById('destBox').textContent =
     "링크가 계속 안 열리면 아래 주소를 복사해 브라우저 주소창에 붙여넣어 주세요:\n" + dest;
 
-  // confirm(page=confirm)인 경우에만 HR 버튼 표시
-  const qs = new URLSearchParams(window.location.search);
-  if (qs.get("page") === "confirm") {
-    document.getElementById("openHr").style.display = "block";
-    // ✅ 후보자 페이지(=confirm 아님)는 자동으로 바로 열기
-  if (qs.get("page") !== "confirm") {
+const qs = new URLSearchParams(window.location.search);
+
+// confirm(page=confirm)인 경우에만 HR 버튼 표시
+if (qs.get("page") === "confirm") {
+  document.getElementById("openHr").style.display = "block";
+} else {
+  // ✅ 후보자 페이지는 자동으로 바로 열기 (0.2초 후 이동)
   setTimeout(openDirect, 200);
 }
+
   }
 
   document.getElementById("openDirect").addEventListener("click", openDirect);
