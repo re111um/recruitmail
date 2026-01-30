@@ -338,17 +338,31 @@ function generateScheduleLink(vars, key) {
   if (WEB_APP_URL.includes("여기에")) {
     return '#error-url-not-set';
   }
-  
+
+  // ✅ 링크 1개당 고유값(중복 제출 방지용)
+  const rid = (crypto && crypto.randomUUID) ? crypto.randomUUID()
+            : ('rid_' + Date.now() + '_' + Math.random().toString(16).slice(2));
+
   const params = new URLSearchParams({
     name: vars.name,
     position: vars.position,
     stage: templateKeys[key] || key,
     dates: vars.proposeDates.join(','),
-    v: new Date().getTime() 
+    rid: rid,                // ✅ 추가
+    v: new Date().getTime()
   });
-  
-  return `${WEB_APP_URL}?${params.toString()}`;
+
+  const destUrl = `${WEB_APP_URL}?${params.toString()}`;
+
+  // ✅ 계정 선택 화면 먼저 띄우기
+  const chooserUrl =
+    "https://accounts.google.com/AccountChooser" +
+    "?continue=" + encodeURIComponent(destUrl) +
+    "&prompt=select_account";
+
+  return chooserUrl;
 }
+
 
 // ▼▼▼ 이 함수 부분을 아래 내용으로 완전히 새로 교체하세요 ▼▼▼
 // vars 데이터를 받아서 버튼 HTML을 만드는 함수
