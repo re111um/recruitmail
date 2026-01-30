@@ -3,34 +3,66 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Redirecting…</title>
-  <meta http-equiv="referrer" content="no-referrer" />
+  <title>Featuring 일정 페이지로 이동</title>
   <style>
-    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;margin:0;display:flex;align-items:center;justify-content:center;min-height:100vh;background:#f3f4f6;color:#111}
-    .card{background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:20px 18px;max-width:520px;width:92%;box-shadow:0 10px 30px rgba(0,0,0,.07)}
-    .muted{color:#6b7280;font-size:13px;margin-top:10px;line-height:1.5}
-    a{color:#5E51FF}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;
+      background:#f3f4f6; margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px; box-sizing:border-box;}
+    .card{background:#fff; width:100%; max-width:520px; border-radius:16px; padding:22px; box-shadow:0 10px 25px rgba(0,0,0,.08)}
+    h1{margin:0 0 8px; font-size:18px}
+    p{margin:8px 0; color:#374151; font-size:14px; line-height:1.5}
+    .btn{display:block; width:100%; border:0; border-radius:10px; padding:12px 14px; margin-top:10px;
+      background:#5E51FF; color:#fff; font-weight:700; font-size:15px; cursor:pointer}
+    .btn.gray{background:#111827}
+    .url{margin-top:12px; font-size:12px; color:#6b7280; word-break:break-all; background:#f9fafb; padding:10px; border-radius:10px; border:1px solid #e5e7eb}
   </style>
 </head>
 <body>
   <div class="card">
-    <div>페이지로 이동 중입니다…</div>
-    <div class="muted">
-      자동으로 이동하지 않으면 <a id="manual" href="#">여기</a>를 눌러주세요.
-    </div>
+    <h1>일정 페이지로 이동합니다</h1>
+    <p>메일 앱/구글 내부 미리보기에서 링크가 깨지는 경우가 있어, 한 번 거쳐서 열도록 구성했습니다.</p>
+
+    <button class="btn" id="openDirect">바로 열기</button>
+    <button class="btn gray" id="openHr" style="display:none;">recruit@featuring.in 계정으로 열기</button>
+
+    <div class="url" id="destBox"></div>
   </div>
 
 <script>
-  // ✅ 실제 Apps Script 웹앱 /exec (지금 쓰는 PUBLIC_WEB_APP_URL)
-  const TARGET_BASE = "https://script.google.com/macros/s/AKfycbz7PjwzvrDR9Vo-jtjih35O27tM7oVMBNg8bRfcne5dkp4Hzfo5CROh9JTCf0_73qK4/exec";
+  // ✅ ks.gs의 PUBLIC_WEB_APP_URL과 동일하게 맞추세요.
+  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz7PjwzvrDR9Vo-jtjih35O27tM7oVMBNg8bRfcne5dkp4Hzfo5CROh9JTCf0_73qK4/exec";
+  const HR_EMAIL = "recruit@featuring.in";
 
-  const qs = window.location.search || "";
-  const target = TARGET_BASE + qs;
+  function getDestUrl(){
+    return WEB_APP_URL + window.location.search; // 쿼리 그대로 전달
+  }
 
-  document.getElementById('manual').href = target;
+  function openDirect(){
+    location.href = getDestUrl();
+  }
 
-  // replace로 히스토리 깔끔 + 앱내 웹뷰에서도 비교적 안정
-  window.location.replace(target);
+  function openAsHr(){
+    const dest = getDestUrl();
+    // 메일 안에서 바로 AccountChooser를 쓰면 400이 나는 케이스가 있어 "여기서" 실행
+    const u =
+      "https://accounts.google.com/AccountChooser" +
+      "?Email=" + encodeURIComponent(HR_EMAIL) +
+      "&continue=" + encodeURIComponent(dest) +
+      "&prompt=select_account";
+    location.href = u;
+  }
+
+  const dest = getDestUrl();
+  document.getElementById('destBox').textContent =
+    "링크가 계속 안 열리면 아래 주소를 복사해 브라우저 주소창에 붙여넣어 주세요:\n" + dest;
+
+  // confirm(page=confirm)인 경우에만 HR 버튼 표시
+  const qs = new URLSearchParams(window.location.search);
+  if (qs.get("page") === "confirm") {
+    document.getElementById("openHr").style.display = "block";
+  }
+
+  document.getElementById("openDirect").addEventListener("click", openDirect);
+  document.getElementById("openHr").addEventListener("click", openAsHr);
 </script>
 </body>
 </html>
