@@ -68,8 +68,11 @@
       padding:14px 18px; opacity:0; transition:all .2s ease;
       text-align:center; z-index:9999; box-shadow:0 10px 30px rgba(0,0,0,.25);
       max-width:86vw;
+      visibility:hidden;
+      pointer-events:none;
     }
-    .toast.show{opacity:1; transform:translate(-50%,-50%) scale(1)}
+    .toast.show{opacity:1; transform:translate(-50%,-50%) scale(1)
+               visibility:visible;}
     .toast .note{margin-top:8px; font-size:12px; color:#d1d5db; line-height:1.4}
 
     .hr{height:1px; background:var(--line); margin:18px 0}
@@ -275,15 +278,15 @@
       </div>
 
       <div class="btn-row" aria-label="단계 버튼">
-        <button class="btn js-template" data-key="assignment_schedule">과제 일정</button>
-        <button class="btn js-template" data-key="task">과제전형</button> 
-        <button class="btn js-template" data-key="interview1">1차 인터뷰</button> 
-        <button class="btn js-template" data-key="interviewFinal">최종 인터뷰</button> 
-        <button class="btn js-template" data-key="scheduleConfirm">일정 확정</button> 
-        <button class="btn js-template" data-key="reference">레퍼런스 체크</button> 
-        <button class="btn js-template" data-key="finalNotice">처우협의 및 오퍼레터</button> 
-        <button class="btn js-template" data-key="onboarding">입사 안내</button> 
-        <button class="btn black js-template" data-key="reject">불합격</button>
+        <button type="button" button class="btn js-template" data-key="assignment_schedule">과제 일정</button>
+        <button type="button" button class="btn js-template" data-key="task">과제전형</button> 
+        <button type="button" button class="btn js-template" data-key="interview1">1차 인터뷰</button> 
+        <button type="button" button class="btn js-template" data-key="interviewFinal">최종 인터뷰</button> 
+        <button type="button" button class="btn js-template" data-key="scheduleConfirm">일정 확정</button> 
+        <button type="button" button class="btn js-template" data-key="reference">레퍼런스 체크</button> 
+        <button type="button" button class="btn js-template" data-key="finalNotice">처우협의 및 오퍼레터</button> 
+        <button type="button" button class="btn js-template" data-key="onboarding">입사 안내</button> 
+        <button type="button" button class="btn black js-template" data-key="reject">불합격</button>
       </div>
 
       <div class="actions">
