@@ -221,6 +221,41 @@
       border-radius: 8px; 
       text-align: center; 
     }
+
+    /* 과제 선택 옆 초기화 버튼 */
+.select-with-reset{
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+.select-with-reset select{
+  flex:1;
+  min-width:0;
+}
+
+.icon-btn{
+  width:var(--control-h);
+  height:var(--control-h);
+  border:1px solid var(--line);
+  background:#fff;
+  border-radius:12px;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 2px 0 rgba(17,17,17,.04);
+  transition:all .15s ease;
+}
+.icon-btn:hover{
+  transform:translateY(-1px);
+  box-shadow:0 6px 14px rgba(17,17,17,.06);
+}
+.icon-btn img{
+  width:18px;
+  height:18px;
+  opacity:.9;
+}
+
   </style>
 </head>
 <body>
@@ -241,6 +276,7 @@
         </div>
         <div class="field">
           <label for="taskurlSelect">과제 선택</label>
+          <div class="select-with-reset">
           <select id="taskurlSelect" class="field input" style="padding: 14px 12px; height: auto;">
             <option value="">과제 없음</option>
             <option value="https://featuring-corp.atlassian.net/wiki/external/ODc0OTc2ODRlNGExNGY0YjhkZWY4ZGEzNzNiNTA0Y2Q">DE 과제</option>
@@ -249,7 +285,11 @@
             <option value="https://featuring-corp.atlassian.net/wiki/external/NTU4ODQxZTc1MTQyNDM4OWEzYTEzZTdjNTcyNWM1M2U">AI 과제</option>
             <option value="https://featuring-corp.atlassian.net/wiki/external/OTFkOTQ3YmFhZGI4NGM1ZWJhYmFlOTUwZTAzMWVjM2U">PM 과제</option>
             <option value="https://featuring-corp.atlassian.net/wiki/external/OTAzZThhODIxZmM5NGIyZmE2ODc3MWU2NDQwMjAwMjQ">FE 과제</option>
-          </select>
+    </select>
+    <button type="button" id="resetBtn" class="icon-btn" aria-label="입력값 초기화">
+      <img src="assets/reset.png" alt="" />
+    </button>
+  </div>
         </div>
       </div>
 
@@ -760,6 +800,7 @@ function getScheduleButtonHtml(vars, key) {
   const copySubjectBtn = document.getElementById('copySubjectBtn');
   const subjectPreviewEl = document.getElementById('subjectPreview');
   const historyListEl = document.getElementById('historyList');
+    const resetBtn = document.getElementById('resetBtn');
 
   let currentHtml = '';
   let currentSubject = '';
@@ -793,6 +834,44 @@ function getScheduleButtonHtml(vars, key) {
     const item=new ClipboardItem({'text/html':blob});
     try{ await navigator.clipboard.write([item]); showToast('클립보드에 복사했습니다. Gmail 작성창에 붙여넣기(Ctrl/⌘+V) 하세요.', true); }catch(err){ const ta=document.createElement('textarea'); ta.value=currentHtml; document.body.appendChild(ta); ta.select(); try{ document.execCommand('copy'); showToast('HTML 복사 권한이 없어 텍스트로 복사했습니다.'); } catch(e){ alert('복사에 실패했습니다.'); } finally{ document.body.removeChild(ta); } }
   }
+
+    function resetAllFields(){
+  // 기본 텍스트 입력
+  if (nameEl) nameEl.value = '';
+  if (positionEl) positionEl.value = '';
+
+  // 과제 선택
+  const taskSelect = document.getElementById('taskurlSelect');
+  if (taskSelect) taskSelect.value = '';
+
+  // 날짜/시간 입력들 한번에 초기화
+  const ids = [
+    'p1y','p1m','p1d','p1w','p1h','p1i',
+    'p2y','p2m','p2d','p2w','p2h','p2i',
+    'p3y','p3m','p3d','p3w','p3h','p3i',
+    'c1y','c1m','c1d','c1w','c1h','c1i'
+  ];
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+
+  // 인턴십 체크
+  if (isInternEl) isInternEl.checked = false;
+
+  // 미리보기/복사 상태 초기화
+  currentHtml = '';
+  currentSubject = '';
+  currentKey = '';
+
+  previewEl.innerHTML = '아직 선택된 서식이 없습니다.';
+  copyBtn.disabled = true;
+  copySubjectBtn.disabled = true;
+  subjectPreviewEl.textContent = '';
+
+  showToast('입력값을 초기화했습니다.');
+}
+
 
   /* =================== 히스토리 기능 스크립트 (최종 수정판) =================== */
   const HISTORY_KEY = 'featuringRecruitHistory'; // 브라우저의 '영구 기억 저장소'에 사용할 이름표
@@ -868,6 +947,7 @@ function getScheduleButtonHtml(vars, key) {
   document.querySelectorAll('.js-template').forEach(btn=>{ btn.addEventListener('click', ()=> renderTemplateByKey(btn.dataset.key)); });
   copyBtn.addEventListener('click', copyHtml);
   copySubjectBtn.addEventListener('click', copySubject);
+  if(resetBtn) resetBtn.addEventListener('click', resetAllFields);  
   if(historyListEl) {
     historyListEl.addEventListener('click', (e) => {
       const item = e.target.closest('.history-item');
