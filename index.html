@@ -4,9 +4,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Featuring Recruit 메일 서식</title>
-  <link rel="icon" href="./favicon.ico?v=2" sizes="any">
-  <link rel="icon" type="image/png" href="./favicon-32.png?v=2" sizes="32x32">
-  <link rel="apple-touch-icon" href="./apple-touch-icon.png?v=2">
+  <link rel="icon" href="/recruitmail/assets/favicon.ico?v=2" sizes="any">
+  <link rel="icon" type="image/png" href="/recruitmail/assets/favicon-32.png?v=2" sizes="32x32">
+  <link rel="apple-touch-icon" href="/recruitmail/assets/apple-touch-icon.png?v=2">
 
   <style>
     :root{
@@ -716,7 +716,7 @@ const titleText = v.isIntern
       </div>
     `
     : `
-      <div style="margin:0 0 6px 0;">✅ <시용기간: 3개월</div>
+      <div style="margin:0 0 6px 0;">✅ 시용기간: 3개월</div>
       <div style="margin:10px 0 0 0; color:#4b5563; font-size:13px; line-height:1.7;">
         1) 시용기간 종료 후, 사내 규정에 의거한 평가 및 쌍방 협의를 통해 수습 해제 절차를 진행합니다.<br />
            이에 근무형태와 무관하게 모든 임직원의 첫 계약은 만 3개월 시용 계약직으로 계약 후, 정규직 계약으로 전환하고 있습니다.<br />
@@ -1025,7 +1025,7 @@ const titleText = v.isIntern
   </tr>
 </table>
   `;
-},
+};
     
     const subjectTemplates = {
       assignment_schedule: (v) => `[Featuring] ${subjectRole(v)} 과제 전형 일정 제안드립니다.`,
@@ -1037,7 +1037,6 @@ const titleText = v.isIntern
       finalNotice: (v) => `[Featuring] ${nameFull(v)}님, 최종 인터뷰 결과 안내드립니다.`,
       onboarding: (v) => `[Featuring] ${nameFull(v)}님, ${subjectRole(v)} 입사 안내드립니다.`,
       reject: (v) => `[Featuring] ${nameFull(v)}님, 채용 전형 결과 안내드립니다.`
-      },
     };
 
   // ▼▼▼ [수정] 서식 버튼 이름을 쉽게 가져오기 위한 정보 추가 ▼▼▼
