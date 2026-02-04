@@ -361,7 +361,9 @@
 
  /* ---------- 유틸 ---------- */
   const brandLinkStyle = "color:#111111; text-decoration:underline;";
-  function getHeaderImageSrc(){ try { return new URL('assets/process.png', window.location.href).href; } catch(e) { return 'assets/process.png'; } }
+  function getHeaderImageSrc(){
+  return PAGES_BASE + 'assets/process.png?v=2';
+}
   function wrapEmail(contentHtml){ const header = '<div style="margin:0 0 20px 0; text-align:left;"><img src="' + getHeaderImageSrc() + '" width=848" height="135" alt="Featuring Recruit" style="display:block;margin:0;width:848px;height:135px;border:0;"/></div>'; const signoffRe = new RegExp('<p[^>]*>\\s*감사합니다\\.[\\s\\S]*?채용팀\\s*드림\\.?\\s*<\\/p>', 'i'); const injected = signoffRe.test(contentHtml) ? contentHtml.replace(signoffRe, header + '$&') : (header + contentHtml); return '<div style="font-family:Arial, Helvetica, \\"Apple SD Gothic Neo\\", \\"Noto Sans KR\\", \\"Malgun Gothic\\", sans-serif; font-size:14px; color:#111111; line-height:1.7;"><div style="padding:8px 0 16px 0">' + injected + '</div></div>'; }
   function wrapEmailNoHeader(contentHtml){ return '<div style="font-family:Arial, Helvetica, \\"Apple SD Gothic Neo\\", \\"Noto Sans KR\\", \\"Malgun Gothic\\", sans-serif; font-size:14px; color:#111111; line-height:1.7;"><div style="padding:8px 0 16px 0">' + contentHtml + '</div></div>'; }
   function escapeHtml(s){ return String(s||'').replace(/[&<>"]/g, t => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[t]||t)); }
@@ -375,11 +377,8 @@
   const ASSET_BASE = 'https://raw.githubusercontent.com/re111um/recruitmail/main/';
 
   function getLogoImageSrc(){
-    return ASSET_BASE + 'assets/Symbol_BG_Transparent.png?v=2';
-  }
-  function getHeaderImageSrc(){
-    return ASSET_BASE + 'assets/process.png?v=2';
-  }
+  return PAGES_BASE + 'assets/Symbol_BG_Transparent.png?v=2';
+}
     
   /* 과제 옵션 메타 */
   const TASK_META = { "": { label: "과제 없음", topic: "" }, 
@@ -827,7 +826,7 @@ const titleText = v.isIntern
                 </td>
 
             <td align="right" valign="top" style="width:48px; padding:0;">
-  <div style="width:40px; height:40px; border-radius:14px; background-color:rgba(94,81,255,0.12); overflow:hidden;">
+<div style="width:40px; height:40px; border-radius:14px; background-color:transparent; display:flex; align-items:center; justify-content:center;">
     <img
       src="${getLogoImageSrc()}"
       width="40" height="40"
