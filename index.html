@@ -372,13 +372,14 @@
   function normalizeUrl(u){ if(!u) return ''; const s=u.trim(); if(/^(https?:)?\/\//i.test(s)) return s.startsWith('//') ? 'https:'+s : s; return 'https://'+s; }
   function pad2(n){ n=String(n||''); return n.length===1?('0'+n):n; }
   function readDate(prefix){ const y=(document.getElementById(prefix+'y')?.value||'').trim(); const m=(document.getElementById(prefix+'m')?.value||'').trim(); const d=(document.getElementById(prefix+'d')?.value||'').trim(); const w=(document.getElementById(prefix+'w')?.value||'').trim(); const h=(document.getElementById(prefix+'h')?.value||'').trim(); const i=(document.getElementById(prefix+'i')?.value||'').trim(); if(!(y&&m&&d&&w&&h&&i)) return ''; return `${y}-${pad2(m)}-${pad2(d)} (${w}) ${pad2(h)}:${pad2(i)}`; }
+  const ASSET_BASE = 'https://raw.githubusercontent.com/re111um/recruitmail/main/';
+
   function getLogoImageSrc(){
-  try { 
-    return new URL('assets/Symbol_BG_Transparent.png', window.location.href).href; 
-  } catch(e) { 
-    return 'assets/Symbol_BG_Transparent.png'; 
+    return ASSET_BASE + 'assets/Symbol_BG_Transparent.png?v=2';
   }
-}
+  function getHeaderImageSrc(){
+    return ASSET_BASE + 'assets/process.png?v=2';
+  }
     
   /* 과제 옵션 메타 */
   const TASK_META = { "": { label: "과제 없음", topic: "" }, 
