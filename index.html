@@ -354,7 +354,8 @@
   </div> <div id="toast" class="toast" role="status" aria-live="polite">클립보드에 복사했습니다.</div>
   <script>
   const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz7PjwzvrDR9Vo-jtjih35O27tM7oVMBNg8bRfcne5dkp4Hzfo5CROh9JTCf0_73qK4/exec";
-  const ONBOARDING_FORM_URL = "https://forms.google.com/your-form-url"; // 입사 필수 정보/서류 제출 폼 링크
+  const ONBOARDING_FORM_URL_INTERN = "https://tally.so/r/eqRpbQ";
+  const ONBOARDING_FORM_URL_REGULAR = "https://tally.so/r/jaPpr6";
   const CULTURE_GUIDE_URL = "https://teamfeaturing.notion.site/Featuring-Culture-Guide-df09fd30889a42e3845c7802d316b184?source=copy_link"; // 문화 소개서 링크 (원하면 실제 링크로 교체)
 
 
@@ -702,9 +703,13 @@ reject: (v) => wrapEmail(`
           ? escapeHtml(v.confirmDate.replace(/\s+\d{2}:\d{2}\s*$/, ''))   // 뒤 "HH:MM" 제거
           : `<span style="color:#6b7280;">{입사일자}</span>`;
 
-        const formUrl = (typeof ONBOARDING_FORM_URL !== 'undefined' && ONBOARDING_FORM_URL)
-          ? ONBOARDING_FORM_URL
-          : "https://forms.google.com/your-form-url";
+        const formUrl = v.isIntern
+        ? ((typeof ONBOARDING_FORM_URL_INTERN !== 'undefined' && ONBOARDING_FORM_URL_INTERN)
+        ? ONBOARDING_FORM_URL_INTERN
+        : "https://tally.so/r/eqRpbQ")
+        : ((typeof ONBOARDING_FORM_URL_REGULAR !== 'undefined' && ONBOARDING_FORM_URL_REGULAR)
+        ? ONBOARDING_FORM_URL_REGULAR
+          : "https://tally.so/r/jaPpr6");
 
         const cultureUrl = (typeof CULTURE_GUIDE_URL !== 'undefined' && CULTURE_GUIDE_URL)
           ? CULTURE_GUIDE_URL
