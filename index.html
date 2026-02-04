@@ -717,8 +717,8 @@ reject: (v) => wrapEmail(`
           : "https://teamfeaturing.notion.site/Featuring-Culture-Guide-df09fd30889a42e3845c7802d316b184?source=copy_link";
     
 const titleText = v.isIntern
-    ? `${nameFull(v)}님, 피처링의 인턴십 합류를<br />진심으로 축하하고 환영합니다.`
-    : `${nameFull(v)}님, 피처링의 새로운 구성원이 되신 것을<br />진심으로 축하하고 환영합니다.`;
+    ? `${nameFull(v)}님, <br />피처링의 인턴십 합류를<br />진심으로 축하하고 환영합니다.`
+    : `${nameFull(v)}님, <br />피처링의 새로운 구성원이 되신 것을<br />진심으로 축하하고 환영합니다.`;
 
   const periodBlock = v.isIntern
     ? `
@@ -729,7 +729,7 @@ const titleText = v.isIntern
       </div>
     `
     : `
-      <div style="margin:0 0 6px 0;">✅ 시용기간: 3개월</div>
+      <div style="margin:0 0 6px 0;">✅ 시용기간 : 3개월</div>
       <div style="margin:10px 0 0 0; color:#4b5563; font-size:11px; line-height:1.6;">
         1) 시용기간 종료 후, 사내 규정에 의거한 평가 및 쌍방 협의를 통해 수습 해제 절차를 진행합니다.<br />
            이에 근무형태와 무관하게 모든 임직원의 첫 계약은 만 3개월 시용 계약직으로 계약 후, 정규직 계약으로 전환하고 있습니다.<br />
@@ -826,7 +826,7 @@ const titleText = v.isIntern
                       ${escapeHtml(v.position)}
                     </span>
                     <span style="display:inline-block; margin-left:8px;">
-                      ${nameBody(v)}님, 아래 내용을 확인 부탁드립니다.
+                      ${nameBody(v)}님, 아래 내용을 자세하게 확인 후 최하단 버튼을 눌러 필요 정보 제출 바랍니다.
                     </span>
                   </div>
                 </td>
@@ -852,20 +852,20 @@ const titleText = v.isIntern
             <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:18px 0 0 0;">
               <tr>
                 <td valign="top" style="width:34px; padding:0 10px 0 0;">
-                  <div style="width:28px; height:28px; border-radius:999px; background-color:#5e51ff; color:#ffffff; text-align:center; line-height:28px; font-weight:800;">✓</div>
+                  <div style="width:28px; height:28px; border-radius:999px; background-color:#5e51ff; color:#ffffff; text-align:center; line-height:28px; font-weight:800;">1</div>
                 </td>
                 <td valign="top" style="padding:0;">
                   <div style="font-size:16px; font-weight:800; margin:0 0 8px 0;">출근 안내</div>
 
                   <div style="font-size:14px; line-height:1.7; color:#111111;">
-                    <div style="margin:0 0 6px 0;">✅ <strong>첫 출근일</strong>:   ${ v.confirmDate? escapeHtml(v.confirmDate): `<span style="color:#6b7280;">{날짜를 입력하세요}</span>` } / 첫 출근시간: 10:00</div>
-                    <div style="margin:0 0 6px 0;">✅ <strong>주소</strong>: 서울시 강남구 테헤란로 129, 빗썸금융타워 L층</div>
+                    <div style="margin:0 0 6px 0;">✅ <strong>첫 출근일</strong> :   ${ v.confirmDate? escapeHtml(v.confirmDate): `<span style="color:#6b7280;">{날짜를 입력하세요}</span>` } / 출근시간 : 10:00</div>
+                    <div style="margin:0 0 6px 0;">✅ <strong>주소</strong> : 서울시 강남구 테헤란로 129, 빗썸금융타워 8층</div>
                     <div style="margin:0 0 10px 0;">
-                      📞 <strong>로비 도착 후</strong>
-                      <span style="color:#5e51ff; font-weight:900; text-decoration:underline;">채용담당자 (010-7376-0490)</span>에게 연락 주시면 안내드리겠습니다.
+                      📞 <strong>L층 도착 후</strong>
+                      <span style="color:#5e51ff; font-weight:900; text-decoration:underline;">채용담당자 (010-7376-0490)</span>에게 연락 주시면 안내드리겠습니다.<br />
+                      🥼 출근 복장은 정해진 것 없이 자율복장 입니다.<br/>
+                      📧 입사 당일, 개인 이메일로 사내 네트워크/사내 사용 메일 안내를 드릴 예정입니다. :)
                     </div>
-                    <div style="margin:0 0 6px 0;">출근 복장은 정해진 것 없이 자율복장 입니다.</div>
-                    <div style="margin:0;">입사 당일, 개인 이메일로 사내 네트워크/사내 사용 메일 안내를 드릴 예정입니다. :)</div>
                   </div>
                 </td>
               </tr>
@@ -879,13 +879,13 @@ const titleText = v.isIntern
             <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:18px 0 0 0;">
               <tr>
                 <td valign="top" style="width:34px; padding:0 10px 0 0;">
-                  <div style="width:28px; height:28px; border-radius:999px; background-color:#5e51ff; color:#ffffff; text-align:center; line-height:28px; font-weight:800;">₩</div>
+                  <div style="width:28px; height:28px; border-radius:999px; background-color:#5e51ff; color:#ffffff; text-align:center; line-height:28px; font-weight:800;">2</div>
                 </td>
                 <td valign="top" style="padding:0;">
                   <div style="font-size:16px; font-weight:800; margin:0 0 8px 0;">연봉 및 기간 안내</div>
 
                   <div style="font-size:14px; line-height:1.7; color:#111111;">
-                    <div style="margin:0 0 6px 0;">✅ <strong>연봉 최종안</strong>: 승낙한 제안과 동일합니다.</div>
+                    <div style="margin:0 0 6px 0;">✅ <strong>연봉 최종안</strong> : 승낙한 제안과 동일합니다.</div>
                     ${periodBlock}
                   </div>
                 </td>
@@ -900,7 +900,7 @@ const titleText = v.isIntern
             <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:18px 0 0 0;">
               <tr>
                 <td valign="top" style="width:34px; padding:0 10px 0 0;">
-                  <div style="width:28px; height:28px; border-radius:999px; background-color:#5e51ff; color:#ffffff; text-align:center; line-height:28px; font-weight:800;">📄</div>
+                  <div style="width:28px; height:28px; border-radius:999px; background-color:#5e51ff; color:#ffffff; text-align:center; line-height:28px; font-weight:800;">3</div>
                 </td>
                 <td valign="top" style="padding:0;">
                   <div style="font-size:16px; font-weight:800; margin:0 0 6px 0;">필수 제출 서류 안내</div>
@@ -954,7 +954,7 @@ const titleText = v.isIntern
             <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:18px 0 0 0;">
               <tr>
                 <td valign="top" style="width:34px; padding:0 10px 0 0;">
-                  <div style="width:28px; height:28px; border-radius:999px; background-color:#5e51ff; color:#ffffff; text-align:center; line-height:28px; font-weight:800;">👥</div>
+                  <div style="width:28px; height:28px; border-radius:999px; background-color:#5e51ff; color:#ffffff; text-align:center; line-height:28px; font-weight:800;">4</div>
                 </td>
                 <td valign="top" style="padding:0;">
                   <div style="font-size:16px; font-weight:800; margin:0 0 6px 0;">추가 필수 제출 정보</div>
@@ -987,11 +987,11 @@ const titleText = v.isIntern
 
                   <div style="font-size:14px; font-weight:900; color:#5e51ff; margin:0 0 6px 0;">3. 피처링 문화 소개서</div>
                   <div style="font-size:13px; line-height:1.7; color:#111111;">
-                    서류 제출 및 필수 정보 제출 후, 최하단에 링크된 피처링 문화 소개서를 통해 합류 전에 피처링을 먼저 만나보세요!
+                    서류 제출 및 필수 정보 제출 후, <br />최하단에 링크된 피처링 문화 소개서를 통해 합류 전에 피처링을 먼저 만나보세요!
                   </div>
                   <div style="margin:10px 0 0 0; font-size:13px; line-height:1.7;">
                  <a href="${cultureUrl}" style="color:#5e51ff; text-decoration:underline; font-weight:800;">
-                   Featuring Culture Guide
+                   ▶ Featuring Culture Guide
                     </a>
                  </div>
                 </td>
