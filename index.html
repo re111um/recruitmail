@@ -350,6 +350,9 @@
   </div> <div id="toast" class="toast" role="status" aria-live="polite">클립보드에 복사했습니다.</div>
   <script>
   const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz7PjwzvrDR9Vo-jtjih35O27tM7oVMBNg8bRfcne5dkp4Hzfo5CROh9JTCf0_73qK4/exec";
+  const ONBOARDING_FORM_URL = "https://forms.google.com/your-form-url"; // 입사 필수 정보/서류 제출 폼 링크
+  const CULTURE_GUIDE_URL = "https://teamfeaturing.notion.site/Featuring-Culture-Guide-df09fd30889a42e3845c7802d316b184?source=copy_link"; // 문화 소개서 링크 (원하면 실제 링크로 교체)
+
 
 
  /* ---------- 유틸 ---------- */
@@ -609,171 +612,346 @@ function getScheduleButtonHtml(vars, key) {
   <p style="margin:0;">감사합니다.<br />피처링 채용팀 드림.</p>
 `),
 
-      onboarding: (v) => { const role = roleHtml(v); return wrapEmailNoHeader(`
-  <p style="margin:0 0 3px 0;">
-  <strong>[Featuring]</strong></p>
-  <p style="margin:0 0 14px 0;">
-  안녕하세요, ${nameFull(v)}님.</br> 
-  피처링 채용팀입니다.</p>
+      onboarding: (v) => {
+        const name = escapeHtml((v.name || '').trim());
+        const position = escapeHtml((v.position || '').trim());
 
-  <p style="margin:0 0 14px 0;">
-  오퍼레터에 회신 주셔서 감사드립니다. </br>
-  우선 회사를 대표하여 당사의 ${ v.isIntern ? `인턴십 프로그램 선별 프로세스` : `채용 프로세스` }를 진행해주시고, 최종 합류 결정에 대해서 환영과 깊은 감사를 전합니다.</br>
-  입사와 관련된 필요한 내용을 아래와 같이 안내드리며, 회신이 필요한 부분은 확인 후 꼭 전달 부탁드립니다.</p>
+          // 확정일자(c1)에서 "YYYY-MM-DD (요일)"까지만 보여주고, 시간은 10시로 고정 표기
+        const startDate = v.confirmDate
+          ? escapeHtml(v.confirmDate.replace(/\s+\d{2}:\d{2}\s*$/, ''))   // 뒤 "HH:MM" 제거
+          : `<span style="color:#6b7280;">{입사일자}</span>`;
 
-  <p style="margin:0 0 3px 0;">
-  <strong>1) 입사 및 주요 일정 안내</strong></p>
-    <div style="padding-left:5px; margin:0 0 3px 0;">
-    <p style="margin:0 0 3px 0;">
-  - 예정일자 : ${ v.confirmDate ? escapeHtml(v.confirmDate) : `<span style="color:#6b7280;">{날짜를 입력하세요}</span>` }
-</p>
-      <p style="margin:0 3px 3px 0;">
-      - 출근 장소 : 서울 강남구 테헤란로 129, 빗썸금융타워 8층</p> 
-      <div style="padding-left:8px; margin:0 0 3px 0;">
-      <p style="margin:0 8px 3px 0;">
-      ✅ L(로비)층에 도착하시어 아래 연락처로 연락주시면 담당자가 직접 안내 도와드리겠습니다.</p> 
-      <p style="margin:0 8px 3px 0;">
-      ❓ L층은 정문으로 방문하시게 될 경우, 에스컬레이터를 타고 한 층 올라오셔야 합니다.</p> 
-      <p style="margin:0 8px 14px 0;">
-      🙋 담당자 연락처 : 010-7376-0490, 박찬형(Thomas)</p>
-    </div>
-  </div>
+        const formUrl = (typeof ONBOARDING_FORM_URL !== 'undefined' && ONBOARDING_FORM_URL)
+          ? ONBOARDING_FORM_URL
+          : "https://forms.google.com/your-form-url";
 
-  <p style="margin:0 0 3px 0;">
-    <strong>2) 연봉 및 시용기간 안내</strong></p>
-    <div style="padding-left:5px; margin:0 0 3px 0;">
-    <p style="margin:0 3px 3px 0;">
-    - ${ v.isIntern ? `지급 보수 : 프로그램 규정에 따름.` : `최종안 : 승낙한 오퍼레터와 동일`}</p>
-    <p style="margin:0 3px 3px 0;">
-    - ${ v.isIntern ? `인턴십 기간 : n개월/n주` : `시용기간 : 3개월` }</p>
-    <p style="margin:0 3px 14px 0; color:#666666; font-style:italic; font-size:12px;">
-    ${ v.isIntern ? `인턴십 기간 종료 후, 당사의 평가 및 방침에 따라 후보자 분께 정규직 제안을 드릴 수 있습니다.
-    <br />(*모든 인사규정은 최초입사일 기준으로 진행됩니다.)` : `*시용기간 종료 후, 사내 규정에 의거한 평가와 쌍방 협의를 통해 정규직 전환 계약을 진행하고 있습니다.
-    <br />이에 근무형태와 무관하게 모든 임직원의 첫 계약은 만 3개월 계약직으로 계약한 후, 정규직 계약으로 전환하고 있습니다.
-    <br />(*모든 인사규정은 최초입사일 기준으로 진행됩니다.)`}</p>
+        const cultureUrl = (typeof CULTURE_GUIDE_URL !== 'undefined' && CULTURE_GUIDE_URL)
+          ? CULTURE_GUIDE_URL
+          : "https://teamfeaturing.notion.site/Featuring-Culture-Guide-df09fd30889a42e3845c7802d316b184?source=copy_link";
+    
+const titleText = v.isIntern
+    ? `${nameFull(v)}님, 피처링의 인턴십 합류를<br />진심으로 축하하고 환영합니다.`
+    : `${nameFull(v)}님, 피처링의 새로운 구성원이 되신 것을<br />진심으로 축하하고 환영합니다.`;
+
+  const periodBlock = v.isIntern
+    ? `
+      <div style="margin:0 0 6px 0;">✅ 인턴십 기간 : 3개월</div>
+      <div style="margin:10px 0 0 0; color:#4b5563; font-size:13px; line-height:1.7;">
+        1) 인턴십 종료 후, 사내 규정에 의거한 평가 및 쌍방 협의를 통해 정규직 전환 계약을 진행할 수 있습니다.<br />
+        2) 모든 인사규정은 최초입사일 기준으로 진행됩니다.
+      </div>
+    `
+    : `
+      <div style="margin:0 0 6px 0;">✅ <시용기간: 3개월</div>
+      <div style="margin:10px 0 0 0; color:#4b5563; font-size:13px; line-height:1.7;">
+        1) 시용기간 종료 후, 사내 규정에 의거한 평가 및 쌍방 협의를 통해 수습 해제 절차를 진행합니다.<br />
+           이에 근무형태와 무관하게 모든 임직원의 첫 계약은 만 3개월 시용 계약직으로 계약 후, 정규직 계약으로 전환하고 있습니다.<br />
+        2) 모든 인사규정은 최초입사일 기준으로 진행됩니다.
+      </div>
+    `;
+
+  const extraDocsBlock = v.isIntern
+    ? '' // 인턴은 해당 인원 서류 섹션 자체 제거
+    : `
+      <div style="height:14px; line-height:14px; font-size:0;">&nbsp;</div>
+
+      <div style="font-size:15px; font-weight:800; margin:0 0 10px 0;">해당 인원 서류 안내</div>
+
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="width:100%; border:1px solid #e7e9f3; border-radius:12px; overflow:hidden;">
+        <tr>
+          <td style="padding:10px 12px; background-color:rgba(94,81,255,0.14); font-weight:800; font-size:13px; color:#111111; border-bottom:1px solid #e7e9f3;">구비 서류</td>
+          <td style="padding:10px 12px; background-color:rgba(94,81,255,0.14); font-weight:800; font-size:13px; color:#111111; border-bottom:1px solid #e7e9f3;">원본/사본</td>
+          <td style="padding:10px 12px; background-color:rgba(94,81,255,0.14); font-weight:800; font-size:13px; color:#111111; border-bottom:1px solid #e7e9f3;">부수</td>
+          <td style="padding:10px 12px; background-color:rgba(94,81,255,0.14); font-weight:800; font-size:13px; color:#111111; border-bottom:1px solid #e7e9f3;">비고</td>
+        </tr>
+
+        <tr>
+          <td style="padding:12px; font-size:13px; border-bottom:1px solid #eef0f7;">☐ 경력증명서</td>
+          <td style="padding:12px; font-size:13px; border-bottom:1px solid #eef0f7;">원본</td>
+          <td style="padding:12px; font-size:13px; border-bottom:1px solid #eef0f7;">각 1</td>
+          <td style="padding:12px; font-size:12px; color:#4b5563; border-bottom:1px solid #eef0f7;">
+            최근 5년 내 직장 직인 필요<br />
+            <span style="color:#5e51ff; font-weight:800;">*발급이 어려운 경우 사유와 함께 제출</span>
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding:12px; font-size:13px; border-bottom:1px solid #eef0f7;">☐ 근로소득원천징수영수증</td>
+          <td style="padding:12px; font-size:13px; border-bottom:1px solid #eef0f7;">원본</td>
+          <td style="padding:12px; font-size:13px; border-bottom:1px solid #eef0f7;">각 1</td>
+          <td style="padding:12px; font-size:12px; color:#4b5563; border-bottom:1px solid #eef0f7;">직전 근무지, 당해연도 포함 3년치</td>
+        </tr>
+
+        <tr>
+          <td style="padding:12px; font-size:13px;">☐ 가족관계증명서 (상세)</td>
+          <td style="padding:12px; font-size:13px;">원본</td>
+          <td style="padding:12px; font-size:13px;">1</td>
+          <td style="padding:12px; font-size:12px; color:#4b5563;">
+            부양가족 등록이 필요한 경우<br />
+            <span style="color:#5e51ff; font-weight:800;">*주민번호 뒷자리 포함 필수</span>
+          </td>
+        </tr>
+      </table>
+    `;
+
+  const deviceBlock = v.isIntern
+    ? `
+      <div style="margin:0 0 8px 0; padding:10px 12px; border-radius:12px; background-color:#fff1f2; border:1px solid #fecdd3; color:#b91c1c; font-weight:900; font-size:13px; line-height:1.7;">
+        인턴십 참여자에게는 랩탑이 지원되지 않습니다. (개인 랩탑 지참 필수)
+      </div>
+      <div style="font-size:13px; line-height:1.7; color:#111111;">
+        - <strong>개인 랩탑 지참</strong>: Windows/Mac 무관<br />
+        - <strong>기본 지원 장비</strong>: 모니터 1대, 모니터 연결 허브(MAC)<br />
+        <span style="color:#6b7280; font-size:12px;">(*마우스, 키보드 등 개인 장비는 지참 부탁드립니다.)</span>
+      </div>
+    `
+    : `
+      <div style="font-size:13px; line-height:1.7; color:#111111;">
+        - <strong>기본 지원 장비</strong>: 랩탑 1대, 모니터 1대, 모니터 연결 허브(MAC)<br />
+        - <strong>운영체제 선택</strong>: Windows 또는 Mac<br />
+        <span style="color:#6b7280; font-size:12px;">(*나머지 악세사리 및 장비(마우스, 키보드 등)는 개인적으로 준비해주시기 바랍니다.)</span>
+      </div>
+    `;
+
+  // 최종 HTML 반환 (이 HTML이 그대로 복사되어 Gmail 본문에 붙습니다)
+  return `
+<div style="display:none; max-height:0px; overflow:hidden; opacity:0; color:transparent; mso-hide:all;">
+  입사 일정, 제출 서류, 계정/장비 셋업 안내 및 필수 제출 링크 안내드립니다.
 </div>
 
-  <p style="margin:0 0 3px 0;">
-    <strong>3) 호칭 및 계정 생성</strong></p>
-    <div style="padding-left:5px; margin:0 0 3px 0;">
-    <p style="margin:0 0 0 0;">- 피처링은 직함을 부르지 않고, 수평적인 조직문화를 지향하며 모두 닉네임(영어이름)을 사용하고 있습니다 (ex. 마틴, 포자, 얼, 해리 등)</p> 
-    <p style="margin:0 0 2px 0;">- 또한 해당 이름은 회사 개인계정으로 함께 사용 되고 있습니다. (ex. poza@featuring.in)</p>
-    <div style="padding-left:14px; margin:0 0 14px 0;">
-      <span style="background-color:#FFFF00;">👉 닉네임을 정한 후 [영문/한글] 양식으로 회신 부탁드립니다. (ex. martin/마틴)</span><br>
-      <span style="color:#666666; font-style:italic; font-size:12px;">(*중복 또는 사용 불가한 닉네임일 수 있기에 2~3순위까지 고려해서 부탁드립니다.)</span>
-    </div>
-    
-   <p style="margin:0 0 3px 0;"><strong>4) 입사 전 제출서류</strong></p>
-     <div style="padding-left:5px; margin:0 0 3px 0;">
-    <p style="margin:0 3px 3px 0;">
-      ${ v.isIntern ? `<strong>[필수]</strong><br />- 신분증 사본 1부<br />
-      - 주민등록등본 사본 1부 (*등본상 현 거주지와 다르다면 실거주지 주소도 회신 부탁드립니다.) <br />
-      - 통장 사본 1부<br />` : `- 신분증 사본 1부<br />
-      - 주민등록등본 사본 1부 (*등본상 현 거주지와 다르다면 실거주지 주소도 회신 부탁드립니다.) <br />
-      - 통장 사본 1부<br />
-      <strong>[해당자만]</strong></p>
-      <p style="margin:0 0 0 0; color:#666666; font-style:italic; font-size:12px;">
-      (*이하 이전 직장이 없는 이는 해당 없음.)</P>
-      <p style="margin:0 3px 3px 0;">
-      - 최근 5년 내 직장 경력증명서 (*발급이 어려운 경우 사유를 함께 적어서 회신 부탁드립니다.)<br />
-      - 23년, 24년, 25년 원천징수영수증</p>` } 
-    <p style="margin:0 3px 14px 0; color:#666666; font-style:italic; font-size:12px;">
-    *하드카피(출력본)는 가져오실 필요 없고, 이메일로 파일 회신 부탁드립니다.</p>
-    </div>
-    
-   <p style="margin:0 0 3px 0;">
-   <strong>5) 랩탑 및 장비, SW 관련</strong></p>
-     <div style="padding-left:5px; margin:0 0 0 0;">
-      <p style="margin:0 3px 3px 0;">- 랩탑 운영체제 선택 : ${ v.isIntern ? `개인장비 지참` : `LG그램(windows OS) or 맥북(MAC OS)` }</p>
-      <p style="margin:0 3px 3px 0;">- 기본 장비 : ${ v.isIntern ? `모니터 1대, 모니터 연결 허브` : `랩탑, 모니터 1대, 모니터 연결 허브` }</p>
-      <p style="margin:0 3px 3px 0; color:#666666; font-style:italic; font-size:12px;">(*나머지 악세사리 및 장비(마우스, 키보드 등)는 개인적으로 준비해주시기 바랍니다.) </p>
-       <div style="padding-left:14px; margin:0 3px 14px 0;">
-      <span style="background-color:#FFFF00;">${ v.isIntern ? `` : `👉 랩탑 종류 회신 부탁드리며, 필수 활용 SW가 있다면 미리 말씀부탁드립니다.` }</span>
-    </div>
-    </div>
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:0; padding:0; width:100%; background-color:#f6f7fb;">
+  <tr>
+    <td align="center" style="padding:24px 12px; background-color:#f6f7fb;">
 
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" style="width:600px; max-width:600px; background-color:#ffffff; border:1px solid #e7e9f3; border-radius:16px; box-shadow:0 10px 28px rgba(17,17,17,0.08);">
+        <tr>
+          <td style="padding:28px 24px 18px 24px; font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic','Segoe UI',Arial,sans-serif; color:#111111;">
 
-  <p style="margin:0 0 3px 0;">입사 일정 및 관련하여 조율이 필요하시거나 궁금한 점은 언제든 편하게 연락 부탁드립니다.</p>
-  <p style="margin:0;">감사합니다.<br />피처링 채용팀 드림.</p>
-`); },
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="width:100%;">
+              <tr>
+                <td valign="top" style="padding:0;">
+                  <div style="font-size:26px; font-weight:800; line-height:1.25; letter-spacing:-0.02em; margin:0 0 10px 0;">
+                    ${titleText}
+                  </div>
 
-      reject: (v) => wrapEmailNoHeader(`
-  <p style="margin:0 0 3px 0;"><strong>[Featuring]</strong></p>
-  <p style="margin:0 0 3px 0;">안녕하세요, ${nameFull(v)}님.</p>
-  <p style="margin:0 0 14px 0;">피처링 채용팀입니다.</p>
+                  <div style="font-size:14px; line-height:1.6; color:#4b5563;">
+                    <span style="display:inline-block; padding:6px 10px; border-radius:999px; background-color:rgba(94,81,255,0.10); color:#3f35ff; font-weight:700;">
+                      ${escapeHtml(v.position)}
+                    </span>
+                    <span style="display:inline-block; margin-left:8px;">
+                      ${nameBody(v)}님, 아래 내용을 확인 부탁드립니다.
+                    </span>
+                  </div>
+                </td>
 
-  <p style="margin:0 0 3px 0;">먼저 피처링에 지원해주셔서 감사합니다.</p>
-  <p style="margin:0 0 14px 0;">혹시 채용 프로세스가 진행되는 중 저희가 의도치 않게 불편을 드린 점은 없었는지 여러모로 마음이 쓰입니다.</p>
-  
-  <p style="margin:0 0 14px 0;">${nameBody(v)}님께는 안타깝게도 이번 지원에서는 전형 합격의 기쁜 소식을 전해드리지 못하게 되었습니다.</p>
+                <td align="right" valign="top" style="width:48px; padding:0;">
+                  <div style="width:40px; height:40px; border-radius:14px; background-color:rgba(94,81,255,0.12); text-align:center; line-height:40px; font-size:30px; font-weight:900; color:#5e51ff;">
+                    *
+                  </div>
+                </td>
+              </tr>
+            </table>
 
-  <p style="margin:0 0 14px 0;">언젠가부터 취업과 이직 그 자체가 목적이고 꿈이 되어버린 삭막한 취업 환경 가운데 매일을 고군분투하며 자신과의 싸움을 이겨내는 여러분들께 그 어떤 말로도 온전한 위로를 건넬 수 없다는 것을 익히 알고 있습니다.</p>
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:18px 0 0 0;">
+              <tr><td style="border-top:1px solid #e5e7eb; font-size:0; line-height:0;">&nbsp;</td></tr>
+            </table>
 
-  <p style="margin:0 0 14px 0;">비록 이번 전형을 통해 ${nameBody(v)}님과 좋은 인연으로 함께 하지는 못하지만,<br />스스로 꿈꾸는 밝은 미래는 반드시 실현되리라 믿으며 진심 어린 응원의 마음을 전해드립니다.</p>
+            <!-- 출근 안내 -->
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:18px 0 0 0;">
+              <tr>
+                <td valign="top" style="width:34px; padding:0 10px 0 0;">
+                  <div style="width:28px; height:28px; border-radius:999px; background-color:#5e51ff; color:#ffffff; text-align:center; line-height:28px; font-weight:800;">✓</div>
+                </td>
+                <td valign="top" style="padding:0;">
+                  <div style="font-size:16px; font-weight:800; margin:0 0 8px 0;">출근 안내</div>
 
-  <p style="margin:0 0 14px 0;">향후 또 다른 경로로 ${nameBody(v)}님을 다시 만나 뵐 수 있기를 바라며 앞으로 펼쳐질 삶에 성장과 행복이 함께하기를 기원합니다.</p>
+                  <div style="font-size:14px; line-height:1.7; color:#111111;">
+                    <div style="margin:0 0 6px 0;">✅ <strong>첫 출근일</strong>:   ${ v.confirmDate? escapeHtml(v.confirmDate): `<span style="color:#6b7280;">{날짜를 입력하세요}</span>` } / 첫 출근시간: 10:00</div>
+                    <div style="margin:0 0 6px 0;">✅ <strong>주소</strong>: 서울시 강남구 테헤란로 129, 빗썸금융타워 L층</div>
+                    <div style="margin:0 0 10px 0;">
+                      📞 <strong>로비 도착 후</strong>
+                      <span style="color:#5e51ff; font-weight:900; text-decoration:underline;">채용담당자 (010-7376-0490)</span>에게 연락 주시면 안내드리겠습니다.
+                    </div>
+                    <div style="margin:0 0 6px 0;">출근 복장은 정해진 것 없이 자율복장 입니다.</div>
+                    <div style="margin:0;">입사 당일, 개인 이메일로 사내 네트워크/사내 사용 메일 안내를 드릴 예정입니다. :)</div>
+                  </div>
+                </td>
+              </tr>
+            </table>
 
-  <p style="margin:0 0 14px 0;"></p>
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:18px 0 0 0;">
+              <tr><td style="border-top:1px solid #e5e7eb; font-size:0; line-height:0;">&nbsp;</td></tr>
+            </table>
 
-  <p style="margin:0 0 3px 0;">언제나 건강 유의하시고, 빛나는 하루 되시기 바랍니다.<br />언젠가 인연이 닿아 다시 뵐 수 있을 날을 고대하며, ${nameBody(v)}님의 앞길에 꽃길만이 가득하길 기원합니다.</p>
-  <p style="margin:0;">감사합니다.<br />피처링 채용팀 드림.</p>
-`),
+            <!-- 연봉/기간 -->
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:18px 0 0 0;">
+              <tr>
+                <td valign="top" style="width:34px; padding:0 10px 0 0;">
+                  <div style="width:28px; height:28px; border-radius:999px; background-color:#5e51ff; color:#ffffff; text-align:center; line-height:28px; font-weight:800;">₩</div>
+                </td>
+                <td valign="top" style="padding:0;">
+                  <div style="font-size:16px; font-weight:800; margin:0 0 8px 0;">연봉 및 기간 안내</div>
 
-      finalNotice: (v) => wrapEmailNoHeader(`
-  <p style="margin:0 0 3px 0;"><strong>[Featuring]</strong></p>
-  <p style="margin:0 0 3px 0;">안녕하세요, ${nameFull(v)}님.</p>
-  <p style="margin:0 0 14px 0;">피처링 채용팀입니다.</p>
+                  <div style="font-size:14px; line-height:1.7; color:#111111;">
+                    <div style="margin:0 0 6px 0;">✅ <strong>연봉 최종안</strong>: 승낙한 제안과 동일합니다.</div>
+                    ${periodBlock}
+                  </div>
+                </td>
+              </tr>
+            </table>
 
-  <p style="margin:0 0 3px 0;">길었던 피처링의 채용 프로세스에 적극 응해주시고, 흔쾌히 대면 인터뷰에 참석해주시어 감사드립니다.</p>
-  <p style="margin:0 0 3px 0;">최종 인터뷰 결과, <strong>합격을 안내드리며 동시에 오퍼 레터 전달</strong>드립니다.</p>
-  <p style="margin:0 0 14px 0;">🎉 최종 합격을 진심으로 축하드립니다. :)</p>
-  <p style="margin:0 3px 14px 0; color:#666666; font-style:italic; font-size:12px;">
-  *아래 오퍼레터에 승낙하지 않으면 입사 확정된 것으로 간주하지 않습니다. 상호 협의 하에 아래 내용이 변경될 수 있습니다.</p>
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:18px 0 0 0;">
+              <tr><td style="border-top:1px solid #e5e7eb; font-size:0; line-height:0;">&nbsp;</td></tr>
+            </table>
 
-  <p style="margin:0 0 3px 0;"><strong>[제안 내용 및 안내 사항]</strong></p>
-  <p style="margin:0 0 3px 0;"><strong>1) 제안 연봉</strong></p>
-  <div style="padding-left:5px; margin:0 0 3px 0;">
-  <p style="margin:0 3px 3px 0;">${ v.isIntern ? `- 지급 보수 : 프로그램 규정에 따름.` : `- 처우안 : 연봉 {$,$$$}만원(세전)`}</p>
-  </div>
+            <!-- 제출 서류 -->
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:18px 0 0 0;">
+              <tr>
+                <td valign="top" style="width:34px; padding:0 10px 0 0;">
+                  <div style="width:28px; height:28px; border-radius:999px; background-color:#5e51ff; color:#ffffff; text-align:center; line-height:28px; font-weight:800;">📄</div>
+                </td>
+                <td valign="top" style="padding:0;">
+                  <div style="font-size:16px; font-weight:800; margin:0 0 6px 0;">필수 제출 서류 안내</div>
+                  <div style="font-size:13px; line-height:1.7; color:#4b5563; margin:0 0 12px 0;">
+                    입사 전까지 아래 서류를 <strong>PDF 파일</strong>로 제출 바랍니다. <span style="color:#6b7280;">(*하드카피는 불필요합니다.)</span>
+                  </div>
 
-  <p style="margin:0 0 3px 0;"><strong>2) 입사 일자</strong></p>
-  <div style="padding-left:5px; margin:0 0 3px 0;">
-  <p style="margin:0 0 3px 0;">
-  - 예정일자 :
-  ${ v.confirmDate
-      ? escapeHtml(v.confirmDate)
-      : `<span style="color:#6b7280;">{날짜를 입력하세요}</span>` }
-</p>
-  <p style="margin:0 3px 3px 0;">${ v.isIntern ? `` : `- 개인 상황에 따라 상호 협의 가능한 사항입니다.`}</p>
-  <p style="margin:0 3px 3px 0;">${ v.isIntern ? `` : `- 피처링은 시용기간 3개월이 있으며, 급여는 100% 지급됩니다.`}</p>
-  <p style="margin:0 0 14px 0;">${ v.isIntern ? `- 인턴십 프로그램 종료 후 당사의 방침 및 평가에 따라 정규직 전환을 제안드릴 수 있습니다.` : `- 고용형태와 무관하게 모든 임직원의 첫 계약은 시용기간 3개월 계약직 계약 후, 시용 통과 후 정규직 계약으로 전환하고 있는 점 참고 부탁드립니다.`}<br />
-  (*모든 인사는 최초입사일을 기준으로 산정됩니다.)</p>
-  </div>
+                  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="width:100%; border:1px solid #e7e9f3; border-radius:12px; overflow:hidden;">
+                    <tr>
+                      <td style="padding:10px 12px; background-color:rgba(94,81,255,0.14); font-weight:800; font-size:13px; color:#111111; border-bottom:1px solid #e7e9f3;">구비 서류</td>
+                      <td style="padding:10px 12px; background-color:rgba(94,81,255,0.14); font-weight:800; font-size:13px; color:#111111; border-bottom:1px solid #e7e9f3;">원본/사본</td>
+                      <td style="padding:10px 12px; background-color:rgba(94,81,255,0.14); font-weight:800; font-size:13px; color:#111111; border-bottom:1px solid #e7e9f3;">부수</td>
+                      <td style="padding:10px 12px; background-color:rgba(94,81,255,0.14); font-weight:800; font-size:13px; color:#111111; border-bottom:1px solid #e7e9f3;">비고</td>
+                    </tr>
 
-  <p style="margin:0 0 3px 0;"><strong>3) 소속 부서 및 업무 안내</strong></p>
-    <div style="padding-left:5px; margin:0 0 3px 0;">
-  <p style="margin:0 3px 3px 0;">- 소속 : </p>
-  <p style="margin:0 3px 3px 0;">- 주요 업무 : ${ v.isIntern ? `(인턴십)` : ``}</p>
-    <div style="padding-left:8px; margin:0 0 3px 0;">
-    <p style="margin:0 8px 3px 0;">①</p>
-    <p style="margin:0 8px 3px 0;">②</p>
-    <p style="margin:0 8px 3px 0;">③</p>
-    <p style="margin:0 8px 14px 0;">④</p>
-  </div>
-</div>
+                    <tr>
+                      <td style="padding:12px; font-size:13px; border-bottom:1px solid #eef0f7;">☐ 주민등록등본</td>
+                      <td style="padding:12px; font-size:13px; border-bottom:1px solid #eef0f7;">원본</td>
+                      <td style="padding:12px; font-size:13px; border-bottom:1px solid #eef0f7;">1</td>
+                      <td style="padding:12px; font-size:12px; color:#4b5563; border-bottom:1px solid #eef0f7;">
+                        www.gov.kr<br />
+                        <span style="color:#5e51ff; font-weight:800;">*주민번호 뒷자리 포함 필수</span>
+                      </td>
+                    </tr>
 
-  <p style="margin:0 0 3px 0;">4) 피처링 가이드 자료<strong></strong></p>
-    <div style="padding-left:5px; margin:0 0 3px 0;">
-  <p style="margin:0 3px 14px 0;">- <a href="https://teamfeaturing.notion.site/Featuring-Employee-Experience-df09fd30889a42e3845c7802d316b184" style="${brandLinkStyle}"><span style="color:#3d85c6">첨부 링크</span></a> 참고 바랍니다.</p>
-  </div>
+                    <tr>
+                      <td style="padding:12px; font-size:13px; border-bottom:1px solid #eef0f7;">☐ 신분증</td>
+                      <td style="padding:12px; font-size:13px; border-bottom:1px solid #eef0f7;">사본</td>
+                      <td style="padding:12px; font-size:13px; border-bottom:1px solid #eef0f7;">1</td>
+                      <td style="padding:12px; font-size:12px; color:#4b5563; border-bottom:1px solid #eef0f7;">-</td>
+                    </tr>
 
-  <p style="margin:0 0 3px 0;">해당 오퍼레터에 동의 및 합류 여부 회신 부탁드리며, 이후 안내 사항은 별도로 메일 보내드리겠습니다 :)</p>
-  <p style="margin:0 3px 14px 0;">궁금하신 부분은 언제든 편하게 말씀 부탁드리며, 함께 만들어 갈 성장을 기대하고 있겠습니다.</p>
-    
-  <p style="margin:0;">감사합니다.<br />피처링 채용팀 드림.</p>
-`)
-    };
+                    <tr>
+                      <td style="padding:12px; font-size:13px;">☐ 통장사본</td>
+                      <td style="padding:12px; font-size:13px;">사본</td>
+                      <td style="padding:12px; font-size:13px;">1</td>
+                      <td style="padding:12px; font-size:12px; color:#4b5563;">-</td>
+                    </tr>
+                  </table>
 
+                  ${extraDocsBlock}
+                </td>
+              </tr>
+            </table>
+
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:18px 0 0 0;">
+              <tr><td style="border-top:1px solid #e5e7eb; font-size:0; line-height:0;">&nbsp;</td></tr>
+            </table>
+
+            <!-- 추가 필수 정보 -->
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:18px 0 0 0;">
+              <tr>
+                <td valign="top" style="width:34px; padding:0 10px 0 0;">
+                  <div style="width:28px; height:28px; border-radius:999px; background-color:#5e51ff; color:#ffffff; text-align:center; line-height:28px; font-weight:800;">👥</div>
+                </td>
+                <td valign="top" style="padding:0;">
+                  <div style="font-size:16px; font-weight:800; margin:0 0 6px 0;">추가 필수 제출 정보</div>
+                  <div style="font-size:13px; line-height:1.7; color:#4b5563; margin:0 0 12px 0;">
+                    추가로 입사 전 확인 및 셋업이 필요한 사항이 있어 안내드립니다.
+                  </div>
+
+                  <div style="font-size:14px; font-weight:900; color:#5e51ff; margin:0 0 6px 0;">1. 호칭 및 계정 생성</div>
+                  <div style="font-size:13px; line-height:1.7; color:#111111;">
+                    - 피처링은 수평적인 조직문화를 지향하며 모든 닉네임(영어이름)을 사용하고 있습니다.<br />
+                    - 또한 해당 이름은 회사 개인계정으로 함께 사용됩니다. (예: poza@featuring.in)
+                  </div>
+                  <div style="margin:8px 0 0 0; padding:10px 12px; border-radius:12px; background-color:#fff7ed; border:1px solid #fde68a; font-size:13px; line-height:1.7;">
+                    👉 닉네임을 정한 후 <strong>[영문/한글]</strong> 형식으로 회신 부탁드립니다.
+                    <div style="margin-top:4px; color:#6b7280; font-size:12px;">
+                      예: {닉네임_영문}/{닉네임_한글} &nbsp;|&nbsp; 중복/사용 불가 대비 2~3순위까지 고려 부탁드립니다.
+                    </div>
+                  </div>
+
+                  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:12px 0;">
+                    <tr><td style="border-top:1px solid #eef0f7; font-size:0; line-height:0;">&nbsp;</td></tr>
+                  </table>
+
+                  <div style="font-size:14px; font-weight:900; color:#5e51ff; margin:0 0 6px 0;">2. 장비 안내 및 사용</div>
+                  ${deviceBlock}
+
+                  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:12px 0;">
+                    <tr><td style="border-top:1px solid #eef0f7; font-size:0; line-height:0;">&nbsp;</td></tr>
+                  </table>
+
+                  <div style="font-size:14px; font-weight:900; color:#5e51ff; margin:0 0 6px 0;">3. 피처링 문화 소개서</div>
+                  <div style="font-size:13px; line-height:1.7; color:#111111;">
+                    서류 제출 및 필수 정보 제출 후, 최하단에 링크된 피처링 문화 소개서를 통해 합류 전에 피처링을 먼저 만나보세요!
+                  </div>
+                  <div style="margin:10px 0 0 0; font-size:13px; line-height:1.7;">
+                    링크: <a href="${cultureUrl}" style="color:#5e51ff; text-decoration:underline; font-weight:800;">${cultureUrl}</a>
+                  </div>
+                </td>
+              </tr>
+            </table>
+
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:18px 0 0 0;">
+              <tr><td style="border-top:1px solid #e5e7eb; font-size:0; line-height:0;">&nbsp;</td></tr>
+            </table>
+
+            <!-- CTA -->
+            <div style="margin:18px 0 0 0;">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="width:100%;">
+                <tr>
+                  <td align="center" style="padding:0;">
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="width:100%;">
+                      <tr>
+                        <td align="center" bgcolor="#5e51ff" style="border-radius:12px;">
+                          <a href="${formUrl}" target="_blank"
+                             style="display:block; padding:14px 16px; font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic','Segoe UI',Arial,sans-serif; font-size:16px; font-weight:900; color:#ffffff; text-decoration:none;">
+                            입사 필수 정보 및 서류 제출하기
+                          </a>
+                        </td>
+                      </tr>
+                    </table>
+                    <div style="margin:10px 0 0 0; font-size:12px; line-height:1.6; color:#6b7280;">
+                      버튼이 열리지 않으면 아래 URL을 복사해 브라우저에 붙여넣어 주세요.<br />
+                      <span style="color:#111111;">${formUrl}</span>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </div>
+
+            <div style="margin:18px 0 0 0; font-size:13px; line-height:1.7; color:#111111;">
+              궁금하신 점이 있으시면 언제든 편하게 회신 부탁드립니다.<br />
+              감사합니다.<br />
+              피처링 채용팀 드림
+            </div>
+
+          </td>
+        </tr>
+      </table>
+
+      <div style="height:10px; line-height:10px; font-size:0;">&nbsp;</div>
+      <div style="font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic','Segoe UI',Arial,sans-serif; font-size:11px; line-height:1.6; color:#9ca3af; text-align:center;">
+        © Featuring. This email contains onboarding information.
+      </div>
+
+    </td>
+  </tr>
+</table>
+  `;
+},
     
     const subjectTemplates = {
       assignment_schedule: (v) => `[Featuring] ${subjectRole(v)} 과제 전형 일정 제안드립니다.`,
