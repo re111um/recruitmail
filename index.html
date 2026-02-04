@@ -4,6 +4,10 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Featuring Recruit 메일 서식</title>
+  <link rel="icon" href="./favicon.ico?v=2" sizes="any">
+  <link rel="icon" type="image/png" href="./favicon-32.png?v=2" sizes="32x32">
+  <link rel="apple-touch-icon" href="./apple-touch-icon.png?v=2">
+
   <style>
     :root{
       --bg:#fafafa;
@@ -609,6 +613,76 @@ function getScheduleButtonHtml(vars, key) {
 
   <p style="margin:0 0 14px 0;">관련하여 궁금한 점은 언제든 편하게 해당 메일을 통해 문의 부탁드립니다.</p> 
   
+  <p style="margin:0;">감사합니다.<br />피처링 채용팀 드림.</p>
+`),
+      finalNotice: (v) => wrapEmail(`
+      <p style="margin:0 0 3px 0;"><strong>[Featuring]</strong></p>
+      <p style="margin:0 0 3px 0;">안녕하세요, ${nameFull(v)}님.</p>
+      <p style="margin:0 0 14px 0;">피처링 채용팀입니다.</p>
+
+      <p style="margin:0 0 3px 0;">길었던 피처링의 채용 프로세스에 적극 응해주시고, 흔쾌히 대면 인터뷰에 참석해주시어 감사드립니다.</p>
+      <p style="margin:0 0 3px 0;">최종 인터뷰 결과, <strong>합격을 안내드리며 동시에 오퍼 레터 전달</strong>드립니다.</p>
+      <p style="margin:0 0 14px 0;">🎉 최종 합격을 진심으로 축하드립니다. :)</p>
+      <p style="margin:0 3px 14px 0; color:#666666; font-style:italic; font-size:12px;">
+        *아래 오퍼레터에 승낙하지 않으면 입사 확정된 것으로 간주하지 않습니다. 상호 협의 하에 아래 내용이 변경될 수 있습니다.</p>
+
+      <p style="margin:0 0 3px 0;"><strong>[제안 내용 및 안내 사항]</strong></p>
+      <p style="margin:0 0 3px 0;"><strong>1) 제안 연봉</strong></p>
+      <div style="padding-left:5px; margin:0 0 3px 0;">
+      <p style="margin:0 3px 3px 0;">${ v.isIntern ? `- 지급 보수 : 프로그램 규정에 따름.` : `- 처우안 : 연봉 {$,$$$}만원(세전)`}</p>
+      </div>
+
+      <p style="margin:0 0 3px 0;"><strong>2) 입사 일자</strong></p>
+      <div style="padding-left:5px; margin:0 0 3px 0;">
+      <p style="margin:0 0 3px 0;">
+      - 예정일자 :
+    ${ v.confirmDate
+      ? escapeHtml(v.confirmDate)
+      : `<span style="color:#6b7280;">{날짜를 입력하세요}</span>` }
+</p>
+  <p style="margin:0 3px 3px 0;">${ v.isIntern ? `` : `- 개인 상황에 따라 상호 협의 가능한 사항입니다.`}</p>
+  <p style="margin:0 3px 3px 0;">${ v.isIntern ? `` : `- 피처링은 시용기간 3개월이 있으며, 급여는 100% 지급됩니다.`}</p>
+  <p style="margin:0 0 14px 0;">${ v.isIntern ? `- 인턴십 프로그램 종료 후 당사의 방침 및 평가에 따라 정규직 전환을 제안드릴 수 있습니다.` : `- 고용형태와 무관하게 모든 임직원의 첫 계약은 시용기간 3개월 계약직 계약 후, 시용 통과 후 정규직 계약으로 전환하고 있는 점 참고 부탁드립니다.`}<br />
+  (*모든 인사는 최초입사일을 기준으로 산정됩니다.)</p>
+  </div>
+
+  <p style="margin:0 0 3px 0;"><strong>3) 소속 부서 및 업무 안내</strong></p>
+    <div style="padding-left:5px; margin:0 0 3px 0;">
+  <p style="margin:0 3px 3px 0;">- 소속 : </p>
+  <p style="margin:0 3px 3px 0;">- 주요 업무 : ${ v.isIntern ? `(인턴십)` : ``}</p>
+    <div style="padding-left:8px; margin:0 0 3px 0;">
+    <p style="margin:0 8px 3px 0;">①</p>
+    <p style="margin:0 8px 3px 0;">②</p>
+    <p style="margin:0 8px 3px 0;">③</p>
+    <p style="margin:0 8px 14px 0;">④</p>
+  </div>
+</div>
+
+  <p style="margin:0 0 3px 0;">해당 오퍼레터에 동의 및 합류 여부 회신 부탁드리며, 이후 안내 사항은 별도로 메일 보내드리겠습니다 :)</p>
+  <p style="margin:0 3px 14px 0;">궁금하신 부분은 언제든 편하게 말씀 부탁드리며, 함께 만들어 갈 성장을 기대하고 있겠습니다.</p>
+    
+  <p style="margin:0;">감사합니다.<br />피처링 채용팀 드림.</p>
+`),
+
+reject: (v) => wrapEmail(`
+ <p style="margin:0 0 3px 0;"><strong>[Featuring]</strong></p>
+  <p style="margin:0 0 3px 0;">안녕하세요, ${nameFull(v)}님.</p>
+  <p style="margin:0 0 14px 0;">피처링 채용팀입니다.</p>
+
+  <p style="margin:0 0 3px 0;">먼저 피처링에 지원해주셔서 감사합니다.</p>
+  <p style="margin:0 0 14px 0;">혹시 채용 프로세스가 진행되는 중 저희가 의도치 않게 불편을 드린 점은 없었는지 여러모로 마음이 쓰입니다.</p>
+  
+  <p style="margin:0 0 14px 0;">${nameBody(v)}님께는 안타깝게도 이번 지원에서는 전형 합격의 기쁜 소식을 전해드리지 못하게 되었습니다.</p>
+
+  <p style="margin:0 0 14px 0;">언젠가부터 취업과 이직 그 자체가 목적이고 꿈이 되어버린 삭막한 취업 환경 가운데 매일을 고군분투하며 자신과의 싸움을 이겨내는 여러분들께 그 어떤 말로도 온전한 위로를 건넬 수 없다는 것을 익히 알고 있습니다.</p>
+
+  <p style="margin:0 0 14px 0;">비록 이번 전형을 통해 ${nameBody(v)}님과 좋은 인연으로 함께 하지는 못하지만,<br />스스로 꿈꾸는 밝은 미래는 반드시 실현되리라 믿으며 진심 어린 응원의 마음을 전해드립니다.</p>
+
+  <p style="margin:0 0 14px 0;">향후 또 다른 경로로 ${nameBody(v)}님을 다시 만나 뵐 수 있기를 바라며 앞으로 펼쳐질 삶에 성장과 행복이 함께하기를 기원합니다.</p>
+
+  <p style="margin:0 0 14px 0;"></p>
+
+  <p style="margin:0 0 3px 0;">언제나 건강 유의하시고, 빛나는 하루 되시기 바랍니다.<br />언젠가 인연이 닿아 다시 뵐 수 있을 날을 고대하며, ${nameBody(v)}님의 앞길에 꽃길만이 가득하길 기원합니다.</p>
   <p style="margin:0;">감사합니다.<br />피처링 채용팀 드림.</p>
 `),
 
