@@ -353,7 +353,7 @@
 
   </div> <div id="toast" class="toast" role="status" aria-live="polite">클립보드에 복사했습니다.</div>
   <script>
-  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz7PjwzvrDR9Vo-jtjih35O27tM7oVMBNg8bRfcne5dkp4Hzfo5CROh9JTCf0_73qK4/exec";
+  const WEB_APP_URL = "https://re111um.github.io/interviewsc/";
   const ONBOARDING_FORM_URL_INTERN = "https://tally.so/r/eqRpbQ";
   const ONBOARDING_FORM_URL_REGULAR = "https://tally.so/r/jaPpr6";
   const CULTURE_GUIDE_URL = "https://teamfeaturing.notion.site/Featuring-Culture-Guide-df09fd30889a42e3845c7802d316b184?source=copy_link"; // 문화 소개서 링크 (원하면 실제 링크로 교체)
@@ -394,7 +394,8 @@
   function getTaskTopicByUrl(u){ if(!u) return ''; const k=normalizeUrl(u); return (TASK_META[k] && TASK_META[k].topic) ? TASK_META[k].topic : ''; }
 
 function generateScheduleLink(vars, key) {
-  if (WEB_APP_URL.includes("여기에")) {
+  // 주소가 설정되지 않았을 때 방어
+  if (!WEB_APP_URL || WEB_APP_URL.includes("여기에")) {
     return '#error-url-not-set';
   }
 
@@ -402,26 +403,19 @@ function generateScheduleLink(vars, key) {
   const rid = (crypto && crypto.randomUUID) ? crypto.randomUUID()
             : ('rid_' + Date.now() + '_' + Math.random().toString(16).slice(2));
 
+  // 파라미터 생성 (GitHub가 읽을 수 있도록)
   const params = new URLSearchParams({
     name: vars.name,
     position: vars.position,
     stage: templateKeys[key] || key,
     dates: vars.proposeDates.join(','),
-    rid: rid,                // ✅ 추가
-    v: new Date().getTime()
+    rid: rid, 
+    // v: new Date().getTime() // GitHub는 캐싱 이슈가 적으므로 굳이 안 넣어도 되지만, 있어도 무방합니다.
   });
 
-  const destUrl = `${WEB_APP_URL}?${params.toString()}`;
-
-  // ✅ 계정 선택 화면 먼저 띄우기
-  const chooserUrl =
-    "https://accounts.google.com/AccountChooser" +
-    "?continue=" + encodeURIComponent(destUrl) +
-    "&prompt=select_account";
-
-  return chooserUrl;
+  // ✅ [핵심 수정] AccountChooser 제거하고 바로 GitHub 주소로 연결
+  return `${WEB_APP_URL}?${params.toString()}`;
 }
-
 
 // ▼▼▼ 이 함수 부분을 아래 내용으로 완전히 새로 교체하세요 ▼▼▼
 // vars 데이터를 받아서 버튼 HTML을 만드는 함수
