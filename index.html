@@ -393,27 +393,28 @@
                     };
   function getTaskTopicByUrl(u){ if(!u) return ''; const k=normalizeUrl(u); return (TASK_META[k] && TASK_META[k].topic) ? TASK_META[k].topic : ''; }
 
+// ▼▼▼ [수정] 기존 generateScheduleLink 함수를 이걸로 통째로 교체하세요 ▼▼▼
 function generateScheduleLink(vars, key) {
-  // 주소가 설정되지 않았을 때 방어
-  if (!WEB_APP_URL || WEB_APP_URL.includes("https://re111um.github.io/interviewsc/")) {
+  // 1. URL이 비어있거나 제대로 설정되지 않았을 때 에러 처리
+  if (!WEB_APP_URL || WEB_APP_URL.trim() === "" || WEB_APP_URL.includes("여기에")) {
     return '#error-url-not-set';
   }
 
-  // ✅ 링크 1개당 고유값(중복 제출 방지용)
+  // 2. 링크 1개당 고유값(중복 제출 방지용)
   const rid = (crypto && crypto.randomUUID) ? crypto.randomUUID()
             : ('rid_' + Date.now() + '_' + Math.random().toString(16).slice(2));
 
-  // 파라미터 생성 (GitHub가 읽을 수 있도록)
+  // 3. 파라미터 생성 (GitHub가 읽을 수 있도록)
   const params = new URLSearchParams({
     name: vars.name,
     position: vars.position,
     stage: templateKeys[key] || key,
     dates: vars.proposeDates.join(','),
     rid: rid, 
-    // v: new Date().getTime() // GitHub는 캐싱 이슈가 적으므로 굳이 안 넣어도 되지만, 있어도 무방합니다.
+    v: new Date().getTime() // 캐시 방지용
   });
 
-  // ✅ [핵심 수정] AccountChooser 제거하고 바로 GitHub 주소로 연결
+  // 4. GitHub 주소로 연결
   return `${WEB_APP_URL}?${params.toString()}`;
 }
 
