@@ -702,16 +702,63 @@ function getScheduleButtonHtml(vars, key) {
   <p style="margin:0;">감사합니다.<br />피처링 채용팀 드림.</p>
 `),
       
-   finalNotice: (v) => {
+  finalNotice: (v) => {
   const titleText = `${nameFull(v)}님, 최종 합격을 진심으로 축하드립니다! 🎉`;
-  const salaryHtml = v.salary
-  ? escapeHtml(v.salary)
-  : `<span style="color:#6b7280;">{금액}</span>`;
-  // 확정일자(c1): "YYYY-MM-DD (요일)"까지만 보여주고, 시간은 10시 고정 표기
+
+  // 포지션 라벨(온보딩 pill 스타일 계승)
+  const positionPill = escapeHtml((v.position || '').trim()) + (v.isIntern ? ' (인턴십)' : '');
+
+  // 확정일자: "YYYY-MM-DD (요일)"까지만 보여주기 (시간 제거)
   const startDateOnly = v.confirmDate
     ? escapeHtml(v.confirmDate.replace(/\s+\d{2}:\d{2}\s*$/, ''))
-    : `<span style="color:#6b7280;">{확정일자}</span>`;
+    : `<span style="color:#6b7280;">{확정 일자}</span>`;
 
+  // 연봉(만원) 표시용
+  const salaryHtml = (v.salary && String(v.salary).trim())
+    ? escapeHtml(String(v.salary).trim())
+    : `<span style="color:#6b7280;">{금액}</span>`;
+
+  // 부서
+  const deptHtml = (v.dept && String(v.dept).trim())
+    ? escapeHtml(String(v.dept).trim())
+    : `<span style="color:#6b7280;">{부서명}</span>`;
+
+  // 업무 리스트: 줄바꿈 -> li
+  function dutiesListHtml(raw){
+    const lines = String(raw || '')
+      .split(/\r?\n/)
+      .map(s => s.trim())
+      .filter(Boolean);
+
+    if (!lines.length) {
+      return `<li style="margin:0; color:#6b7280;">{업무내용}</li>`;
+    }
+
+    return lines.map((t, idx) => {
+      const mb = idx === lines.length - 1 ? '0' : '6px';
+      return `<li style="margin:0 0 ${mb} 0;">${escapeHtml(t)}</li>`;
+    }).join('');
+  }
+
+  // Section 1(연봉) 블록
+  const salaryBlock = v.isIntern
+    ? `
+      <div style="font-size:14px; line-height:1.7; color:#111111;">
+        인턴십 보수는 프로그램 규정에 따릅니다.
+      </div>
+    `
+    : `
+      <div style="font-size:14px; line-height:1.7; color:#111111;">
+        <div style="margin:0 0 6px 0;">
+          <span style="display:block; font-size:22px; font-weight:900; color:#5e51ff; letter-spacing:-0.02em;">
+            연봉 ${salaryHtml}만원
+          </span>
+          <span style="display:block; margin-top:2px; color:#4b5563;">(세전)</span>
+        </div>
+      </div>
+    `;
+
+  // Section 2(일정/형태) 라인들 (시간 표기 제거)
   const section2Lines = v.isIntern
     ? `
       <div style="margin:0 0 6px 0;">✅ <strong>입사(시작) 예정일</strong> : ${startDateOnly}</div>
@@ -726,23 +773,14 @@ function getScheduleButtonHtml(vars, key) {
       <div style="margin:0 0 6px 0; color:#374151;">- 모든 임직원은 3개월 시용 계약 후 평가를 통해 정규직 전환됩니다.</div>
     `;
 
- const salaryBlock = v.isIntern
-  ? `
-    <div style="font-size:14px; line-height:1.7; color:#111111;">
-      인턴십 보수는 프로그램 규정에 따릅니다.
-    </div>
-  `
-  : `
-    <div style="font-size:14px; line-height:1.7; color:#111111;">
-      <div style="margin:0 0 6px 0;">
-        <span style="display:block; font-size:22px; font-weight:900; color:#5e51ff; letter-spacing:-0.02em;">
-          연봉 ${salaryHtml}만원
-        </span>
-        <span style="display:block; margin-top:2px; color:#4b5563;">(세전)</span>
-      </div>
-    </div>
-  `;
+  // mailto (HTML attribute에서는 & -> &amp;)
+  const mailtoHref =
+    "mailto:recruit@featuring.in?subject=%EC%98%A4%ED%8D%BC%EB%A0%88%ED%84%B0%20%EC%88%98%EB%9D%BD%ED%95%A9%EB%8B%88%EB%8B%A4&body=%EB%82%B4%EC%9A%A9%EC%9D%84%20%EC%9E%85%EB%A0%A5%ED%95%B4%EC%A3%BC%EC%84%B8%EC%9A%94".replace(/&/g, '&amp;');
 
+  return `
+<div style="display:none; max-height:0px; overflow:hidden; opacity:0; color:transparent; mso-hide:all;">
+  최종 합격 안내 및 오퍼레터 전달드립니다. 확인 후 반드시 수락 회신 부탁드립니다.
+</div>
 
 <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:0; padding:0; width:100%; background-color:#f6f7fb;">
   <tr>
@@ -756,12 +794,18 @@ function getScheduleButtonHtml(vars, key) {
             <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="width:100%;">
               <tr>
                 <td valign="top" style="padding:0;">
-                  <div style="font-size:24px; font-weight:800; line-height:1.25; letter-spacing:-0.02em; margin:0 0 10px 0;">
+                  <div style="font-size:26px; font-weight:800; line-height:1.25; letter-spacing:-0.02em; margin:0 0 10px 0;">
                     ${titleText}
                   </div>
 
                   <div style="font-size:14px; line-height:1.6; color:#4b5563;">
-                    길었던 피처링의 채용 프로세스에 적극 응해주셔서 감사합니다. <br /> 최종 인터뷰 결과 합격을 안내드리며, 오퍼레터를 전달드립니다.
+                    <span style="display:inline-block; padding:6px 10px; border-radius:999px; background-color:rgba(94,81,255,0.10); color:#3f35ff; font-weight:700;">
+                      ${positionPill || 'Offer Letter'}
+                    </span>
+                    <span style="display:inline-block; margin-left:8px;">
+                      길었던 피처링의 채용 프로세스에 적극 응해주셔서 감사합니다.<br />
+                      최종 인터뷰 결과 합격을 안내드리며, 오퍼레터를 전달드립니다.
+                    </span>
                   </div>
                 </td>
 
@@ -784,35 +828,35 @@ function getScheduleButtonHtml(vars, key) {
 
             <!-- Disclaimer (subtle) -->
             <div style="margin:18px 0 0 0; padding:10px 12px; border-radius:12px; background-color:#f3f4f6; border:1px solid #e5e7eb; color:#4b5563; font-size:12px; line-height:1.6;">
-              *아래 오퍼레터에 승낙 회신을 주셔야 입사가 최종 확정됩니다. <br />본 내용은 상호 협의 하에 변경될 수 있습니다.
+              *아래 오퍼레터에 승낙 회신을 주셔야 입사가 최종 확정됩니다.<br />
+              본 내용은 상호 협의 하에 변경될 수 있습니다.
             </div>
 
-          <!-- Section 1 -->
-          <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:18px 0 0 0;">
-          <tr>
-          <!-- ✅ 여기 수정: vertical-align + padding-top 약간 -->
-        <td valign="top" style="width:34px; padding:2px 10px 0 0; vertical-align:top;">
-        <div style="width:28px; height:28px; border-radius:999px; background-color:#5e51ff; color:#ffffff; text-align:center; line-height:28px; font-weight:800;">1</div>
-      </td>
+            <!-- Section 1 -->
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:18px 0 0 0;">
+              <tr>
+                <td valign="top" style="width:34px; padding:2px 10px 0 0; vertical-align:top;">
+                  <div style="width:28px; height:28px; border-radius:999px; background-color:#5e51ff; color:#ffffff; text-align:center; line-height:28px; font-weight:800;">1</div>
+                </td>
+                <td valign="top" style="padding:0; vertical-align:top;">
+                  <div style="font-size:16px; font-weight:800; margin:0 0 8px 0; line-height:28px;">제안 연봉</div>
+                  ${salaryBlock}
+                </td>
+              </tr>
+            </table>
 
-        <!-- ✅ 여기도 vertical-align 강제 -->
-        <td valign="top" style="padding:0; vertical-align:top;">
-        <!-- ✅ 여기 수정: line-height를 28px로 -->
-        <div style="font-size:16px; font-weight:800; margin:0 0 8px 0; line-height:28px;">제안 연봉</div>
-  
-     ${salaryBlock}
-    </td>
-  </tr>
-</table>
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:18px 0 0 0;">
+              <tr><td style="border-top:1px solid #e5e7eb; font-size:0; line-height:0;">&nbsp;</td></tr>
+            </table>
 
             <!-- Section 2 -->
             <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:18px 0 0 0;">
               <tr>
-                <td valign="top" style="width:34px; padding:0 10px 0 0;">
+                <td valign="top" style="width:34px; padding:2px 10px 0 0; vertical-align:top;">
                   <div style="width:28px; height:28px; border-radius:999px; background-color:#5e51ff; color:#ffffff; text-align:center; line-height:28px; font-weight:800;">2</div>
                 </td>
-                <td valign="top" style="padding:0;">
-                  <div style="font-size:16px; font-weight:800; margin:0 0 8px 0;">입사 일정 및 근무 형태</div>
+                <td valign="top" style="padding:0; vertical-align:top;">
+                  <div style="font-size:16px; font-weight:800; margin:0 0 8px 0; line-height:28px;">입사 일정 및 근무 형태</div>
                   <div style="font-size:14px; line-height:1.7; color:#111111;">
                     ${section2Lines}
                   </div>
@@ -827,39 +871,31 @@ function getScheduleButtonHtml(vars, key) {
             <!-- Section 3 -->
             <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:18px 0 0 0;">
               <tr>
-                <td valign="top" style="width:34px; padding:0 10px 0 0;">
+                <td valign="top" style="width:34px; padding:2px 10px 0 0; vertical-align:top;">
                   <div style="width:28px; height:28px; border-radius:999px; background-color:#5e51ff; color:#ffffff; text-align:center; line-height:28px; font-weight:800;">3</div>
                 </td>
-                <td valign="top" style="padding:0;">
-                  <div style="font-size:16px; font-weight:800; margin:0 0 8px 0;">소속 및 주요 업무</div>
+                <td valign="top" style="padding:0; vertical-align:top;">
+                  <div style="font-size:16px; font-weight:800; margin:0 0 8px 0; line-height:28px;">소속 및 주요 업무</div>
 
                   <div style="font-size:14px; line-height:1.7; color:#111111;">
-                    <div style="margin:0 0 10px 0;">
-                      ✅ <strong>소속</strong> : <span style="color:#6b7280;">{부서명}</span>
+                    <div style="margin:0 0 10px 0;">✅ <strong>소속</strong> : ${deptHtml}</div>
+
+                    <div style="font-size:13px; line-height:1.7; color:#4b5563; margin:0 0 8px 0;">
+                      아래 주요 업무 내용을 확인 부탁드립니다.
                     </div>
 
                     <ul style="margin:0; padding:0 0 0 18px; font-size:14px; line-height:1.7; color:#111111;">
-                      <li style="margin:0 0 6px 0;">① <span style="color:#6b7280;">{업무내용}</span></li>
-                      <li style="margin:0 0 6px 0;">② <span style="color:#6b7280;">{업무내용}</span></li>
-                      <li style="margin:0 0 6px 0;">③ <span style="color:#6b7280;">{업무내용}</span></li>
-                      <li style="margin:0 0 0 0;">④ <span style="color:#6b7280;">{업무내용}</span></li>
+                      ${dutiesListHtml(v.duties)}
                     </ul>
                   </div>
                 </td>
               </tr>
             </table>
 
-            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:18px 0 0 0;">
-              <tr><td style="border-top:1px solid #e5e7eb; font-size:0; line-height:0;">&nbsp;</td></tr>
-            </table>
-
-            <!-- Closing (CTA 대신 회신 유도 문구) -->
             <div style="margin:18px 0 0 0; font-size:13px; line-height:1.7; color:#111111;">
-              오퍼레터 내용 확인 후, <strong>본 메일로 수락 여부를 반드시 회신</strong> 부탁드립니다.<br />
-              궁금하신 점이 있으시면 언제든 편하게 회신 부탁드립니다.<br />
-              <br />
+              궁금하신 점이 있으시면 언제든 편하게 회신 부탁드립니다.<br /><br />
               감사합니다.<br />
-              피처링 채용팀 드림
+              피처링 채용팀 드림.
             </div>
 
           </td>
@@ -876,6 +912,7 @@ function getScheduleButtonHtml(vars, key) {
 </table>
   `;
 },
+
 
 
 reject: (v) => wrapEmail(`
