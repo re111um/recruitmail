@@ -701,9 +701,12 @@ function getScheduleButtonHtml(vars, key) {
   
   <p style="margin:0;">감사합니다.<br />피처링 채용팀 드림.</p>
 `),
+      
    finalNotice: (v) => {
   const titleText = `${nameFull(v)}님, 최종 합격을 진심으로 축하드립니다! 🎉`;
-
+  const salaryHtml = v.salary
+  ? escapeHtml(v.salary)
+  : `<span style="color:#6b7280;">{금액}</span>`;
   // 확정일자(c1): "YYYY-MM-DD (요일)"까지만 보여주고, 시간은 10시 고정 표기
   const startDateOnly = v.confirmDate
     ? escapeHtml(v.confirmDate.replace(/\s+\d{2}:\d{2}\s*$/, ''))
@@ -723,22 +726,23 @@ function getScheduleButtonHtml(vars, key) {
       <div style="margin:0 0 6px 0; color:#374151;">- 모든 임직원은 3개월 시용 계약 후 평가를 통해 정규직 전환됩니다.</div>
     `;
 
-  const salaryBlock = v.isIntern
-    ? `
-      <div style="font-size:14px; line-height:1.7; color:#111111;">
-        인턴십 보수는 프로그램 규정에 따릅니다.
+ const salaryBlock = v.isIntern
+  ? `
+    <div style="font-size:14px; line-height:1.7; color:#111111;">
+      인턴십 보수는 프로그램 규정에 따릅니다.
+    </div>
+  `
+  : `
+    <div style="font-size:14px; line-height:1.7; color:#111111;">
+      <div style="margin:0 0 6px 0;">
+        <span style="display:block; font-size:22px; font-weight:900; color:#5e51ff; letter-spacing:-0.02em;">
+          연봉 ${salaryHtml}만원
+        </span>
+        <span style="display:block; margin-top:2px; color:#4b5563;">(세전)</span>
       </div>
-    `
-    : `
-      <div style="font-size:14px; line-height:1.7; color:#111111;">
-       ‣ 연봉 {금액}만원 (세전)
-      </div>
-    `;
+    </div>
+  `;
 
-  return `
-<div style="display:none; max-height:0px; overflow:hidden; opacity:0; color:transparent; mso-hide:all;">
-  최종 합격 안내 및 오퍼레터 전달드립니다. 확인 후 수락 회신 부탁드립니다.
-</div>
 
 <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:0; padding:0; width:100%; background-color:#f6f7fb;">
   <tr>
@@ -795,16 +799,8 @@ function getScheduleButtonHtml(vars, key) {
         <td valign="top" style="padding:0; vertical-align:top;">
         <!-- ✅ 여기 수정: line-height를 28px로 -->
         <div style="font-size:16px; font-weight:800; margin:0 0 8px 0; line-height:28px;">제안 연봉</div>
-
-      <!-- 기존 salary block 그대로 -->
-     <div style="font-size:14px; line-height:1.7; color:#111111;">
-  <div style="margin:0 0 6px 0;">
-    <span style="display:block; font-size:22px; font-weight:900; color:#5e51ff; letter-spacing:-0.02em;">
-      연봉 ${salaryHtml}만원
-    </span>
-    <span style="display:block; margin-top:2px; color:#4b5563;">(세전)</span>
-  </div>
-</div>
+  
+     ${salaryBlock}
     </td>
   </tr>
 </table>
