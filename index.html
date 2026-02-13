@@ -713,12 +713,12 @@ finalNotice: (v) => {
   // 연봉(만원)
   const salaryHtml = v.salary
     ? `${escapeHtml(v.salary)}`
-    : `<span style="color:#6b7280;">{금액}</span>`;
+    : `{금액}`;
 
   // 부서
   const deptHtml = v.dept
     ? `${escapeHtml(v.dept)}`
-    : `<span style="color:#6b7280;">{부서명}</span>`;
+    : `{부서명}`;
 
 // 업무 리스트: 작은 원형 번호(1,2,3,...)로 렌더링
   function dutiesRowsHtml(raw){
@@ -766,9 +766,9 @@ finalNotice: (v) => {
     `
     : `
       <div style="margin:0 0 6px 0;">✅ <strong>입사 예정일</strong> : ${startDateOnly}</div>
-      <div style="margin:0 0 6px 0;">- 개인 상황에 따라 상호 협의 가능합니다.</div>
-      <div style="margin:0 0 6px 0;">- 시용기간 3개월 (급여 100% 지급)</div>
-      <div style="margin:0 0 6px 0;">- 모든 임직원은 3개월 시용 계약 후 평가를 통해 정규직 전환됩니다.</div>
+      <div style="margin:0 0 6px 0; color:#374151;">- 개인 상황에 따라 상호 협의 가능합니다.</div>
+      <div style="margin:0 0 6px 0; color:#374151;">- 시용기간 3개월 (급여 100% 지급)</div>
+      <div style="margin:0 0 6px 0; color:#374151;">- 모든 임직원은 3개월 시용 계약 후 평가를 통해 정규직 전환됩니다.</div>
     `;
 
   // ✅ (3) 연봉 강조색/큰 글씨 제거 → 본문(14px)과 동일하게
@@ -788,7 +788,7 @@ finalNotice: (v) => {
   const offerDisclaimerBlock = `
     <div style="margin:18px 0 0 0; padding:10px 12px; border-radius:12px; background-color:#f3f4f6; border:1px solid #e5e7eb; color:#4b5563; font-size:12px; line-height:1.6;">
       *아래 오퍼레터에 승낙 회신을 주셔야 입사가 최종 확정됩니다. <br />
-       본 내용은 상호 협의 하에 변경될 수 있습니다.
+      **본 내용은 상호 협의 하에 변경될 수 있습니다.
     </div>
   `;
 
