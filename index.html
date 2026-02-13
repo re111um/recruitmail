@@ -707,8 +707,8 @@ finalNotice: (v) => {
 
   // 확정일자: "YYYY-MM-DD (요일)"까지만 보여주고, 시간은 10시 고정 표기
   const startDateOnly = v.confirmDate
-    ? escapeHtml(v.confirmDate.replace(/\s+\d{2}:\d{2}\s*$/, ''))
-    : `<span style="color:#6b7280;">{확정일자}</span>`;
+  ? escapeHtml(v.confirmDate.replace(/\s+\d{2}:\d{2}\s*$/, ''))
+  : `<span style="color:#6b7280;">{확정 일자}</span>`;
 
   // 연봉(만원)
   const salaryHtml = v.salary
