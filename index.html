@@ -705,10 +705,10 @@ function getScheduleButtonHtml(vars, key) {
 finalNotice: (v) => {
   const titleText = `${nameFull(v)}님, 최종 합격을 진심으로 축하드립니다! 🎉`;
 
-  // 확정일자: "YYYY-MM-DD (요일)"까지만 보여주고, 시간은 10시 고정 표기
+  // 확정일자: "YYYY-MM-DD (요일)"까지만 보여주고 시간 제거
   const startDateOnly = v.confirmDate
-  ? escapeHtml(v.confirmDate.replace(/\s+\d{2}:\d{2}\s*$/, ''))
-  : `<span style="color:#6b7280;">{확정 일자}</span>`;
+    ? escapeHtml(v.confirmDate.replace(/\s+\d{2}:\d{2}\s*$/, ''))
+    : `<span style="color:#6b7280;">{확정 일자}</span>`;
 
   // 연봉(만원)
   const salaryHtml = v.salary
@@ -720,27 +720,37 @@ finalNotice: (v) => {
     ? `${escapeHtml(v.dept)}`
     : `<span style="color:#6b7280;">{부서명}</span>`;
 
-  // 업무 리스트 (줄바꿈 → <li>)
-  function dutiesListHtml(raw){
+  // 업무 리스트: 작은 원형 번호(1,2,3,...)로 렌더링
+  function dutiesRowsHtml(raw){
     const lines = String(raw || '')
       .split(/\r?\n/)
       .map(s => s.trim())
       .filter(Boolean);
 
-    if (!lines.length) {
-      return `<li style="margin:0; color:#6b7280;">{업무내용}</li>`;
-    }
+    const safeLines = lines.length ? lines : ['{업무 내용}'];
 
-    return lines.map((t, idx) => {
-      const mb = idx === lines.length - 1 ? '0' : '6px';
-      return `<li style="margin:0 0 ${mb} 0;">${escapeHtml(t)}</li>`;
+    return safeLines.map((t, idx) => {
+      const spacer = idx === safeLines.length - 1
+        ? ''
+        : `<tr><td colspan="2" style="height:6px; line-height:6px; font-size:0;">&nbsp;</td></tr>`;
+
+      return `
+        <tr>
+          <td valign="top" style="width:22px; padding:2px 8px 0 0;">
+            <div style="width:18px; height:18px; border-radius:999px; background-color:#e5e7eb; color:#374151; text-align:center; line-height:18px; font-size:11px; font-weight:700;">
+              ${idx + 1}
+            </div>
+          </td>
+          <td valign="top" style="padding:0; font-size:14px; line-height:1.7; color:#111111;">
+            ${escapeHtml(t)}
+          </td>
+        </tr>
+        ${spacer}
+      `;
     }).join('');
   }
 
-  const mailtoHref =
-    "mailto:recruit@featuring.in?subject=%EC%98%A4%ED%8D%BC%EB%A0%88%ED%84%B0%20%EC%88%98%EB%9D%BD%ED%95%A9%EB%8B%88%EB%8B%A4&body=%EB%82%B4%EC%9A%A9%EC%9D%84%20%EC%9E%85%EB%A0%A5%ED%95%B4%EC%A3%BC%EC%84%B8%EC%9A%94";
-
-  // (인턴십일 때 문구 약간 분기 - 원치 않으면 아래 분기 제거해도 됨)
+  // Section 2 (인턴/정규 분기)
   const section2Lines = v.isIntern
     ? `
       <div style="margin:0 0 6px 0;">✅ <strong>입사(시작) 예정일</strong> : ${startDateOnly}</div>
@@ -755,28 +765,26 @@ finalNotice: (v) => {
       <div style="margin:0 0 6px 0;">- 모든 임직원은 3개월 시용 계약 후 평가를 통해 정규직 전환됩니다.</div>
     `;
 
+  // ✅ (3) 연봉 강조색/큰 글씨 제거 → 본문(14px)과 동일하게
   const section1SalaryBlock = v.isIntern
     ? `
       <div style="font-size:14px; line-height:1.7; color:#111111;">
-        <div style="margin:0 0 6px 0;">
-          <span style="display:block; font-size:18px; font-weight:900; color:#5e51ff; letter-spacing:-0.02em;">
-            인턴십 보수는 프로그램 규정에 따릅니다.
-          </span>
-        </div>
+        인턴십 보수는 프로그램 규정에 따릅니다.
       </div>
     `
     : `
       <div style="font-size:14px; line-height:1.7; color:#111111;">
-        <div style="margin:0 0 6px 0;">
-          <span style="display:block; font-size:22px; font-weight:900; color:#5e51ff; letter-spacing:-0.02em;">
-            연봉 ${salaryHtml}만원
-          </span>
-          <span style="display:block; margin-top:2px; color:#4b5563;">
-            (세전)
-          </span>
-        </div>
+        연봉 ${salaryHtml}만원 (세전)
       </div>
     `;
+
+  // ✅ (1) Offer Letter 안내문(별표 문구) — 아래로 이동할 블록
+  const offerDisclaimerBlock = `
+    <div style="margin:18px 0 0 0; padding:10px 12px; border-radius:12px; background-color:#f3f4f6; border:1px solid #e5e7eb; color:#4b5563; font-size:12px; line-height:1.6;">
+      *아래 오퍼레터에 승낙 회신을 주셔야 입사가 최종 확정됩니다. <br />
+      본 내용은 상호 협의 하에 변경될 수 있습니다.
+    </div>
+  `;
 
   return `
 <div style="display:none; max-height:0px; overflow:hidden; opacity:0; color:transparent; mso-hide:all;">
@@ -795,7 +803,8 @@ finalNotice: (v) => {
             <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="width:100%;">
               <tr>
                 <td valign="top" style="padding:0;">
-                  <div style="font-size:26px; font-weight:800; line-height:1.25; letter-spacing:-0.02em; margin:0 0 10px 0;">
+                  <!-- ✅ (2) 제목 2pt 정도 축소: 26px → 24px -->
+                  <div style="font-size:24px; font-weight:800; line-height:1.25; letter-spacing:-0.02em; margin:0 0 10px 0;">
                     ${titleText}
                   </div>
 
@@ -826,30 +835,21 @@ finalNotice: (v) => {
               <tr><td style="border-top:1px solid #e5e7eb; font-size:0; line-height:0;">&nbsp;</td></tr>
             </table>
 
-            <!-- Disclaimer (subtle) -->
-            <div style="margin:18px 0 0 0; padding:10px 12px; border-radius:12px; background-color:#f3f4f6; border:1px solid #e5e7eb; color:#4b5563; font-size:12px; line-height:1.6;">
-              *아래 오퍼레터에 승낙 회신을 주셔야 입사가 최종 확정됩니다. 본 내용은 상호 협의 하에 변경될 수 있습니다.
-            </div>
+            <!-- ✅ (1) 기존 Disclaimer 위치에서 제거됨 -->
 
             <!-- Section 1 -->
-<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:18px 0 0 0;">
-  <tr>
-    <!-- ✅ 여기 수정: vertical-align + padding-top 약간 -->
-    <td valign="top" style="width:34px; padding:2px 10px 0 0; vertical-align:top;">
-      <div style="width:28px; height:28px; border-radius:999px; background-color:#5e51ff; color:#ffffff; text-align:center; line-height:28px; font-weight:800;">1</div>
-    </td>
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:18px 0 0 0;">
+              <tr>
+                <td valign="top" style="width:34px; padding:2px 10px 0 0; vertical-align:top;">
+                  <div style="width:28px; height:28px; border-radius:999px; background-color:#5e51ff; color:#ffffff; text-align:center; line-height:28px; font-weight:800;">1</div>
+                </td>
 
-    <!-- ✅ 여기도 vertical-align 강제 -->
-    <td valign="top" style="padding:0; vertical-align:top;">
-      <!-- ✅ 여기 수정: line-height를 28px로 -->
-      <div style="font-size:16px; font-weight:800; margin:0 0 8px 0; line-height:28px;">제안 연봉</div>
-
-      <!-- 기존 salary block 그대로 -->
-      ${section1SalaryBlock}
-    </td>
-  </tr>
-</table>
-
+                <td valign="top" style="padding:0; vertical-align:top;">
+                  <div style="font-size:16px; font-weight:800; margin:0 0 8px 0; line-height:28px;">제안 연봉</div>
+                  ${section1SalaryBlock}
+                </td>
+              </tr>
+            </table>
 
             <!-- Section 2 -->
             <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:18px 0 0 0;">
@@ -887,47 +887,22 @@ finalNotice: (v) => {
                       아래 주요 업무 내용을 확인 부탁드립니다.
                     </div>
 
-                    <ul style="margin:0; padding:0 0 0 18px; font-size:14px; line-height:1.7; color:#111111;">
-                      ${dutiesListHtml(v.duties)}
-                    </ul>
+                    <!-- ✅ (4) 작은 원형 1,2,3... 복원 -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:0;">
+                      ${dutiesRowsHtml(v.duties)}
+                    </table>
                   </div>
                 </td>
               </tr>
             </table>
 
-            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:18px 0 0 0;">
-              <tr><td style="border-top:1px solid #e5e7eb; font-size:0; line-height:0;">&nbsp;</td></tr>
-            </table>
+            <!-- ✅ (1) Offer Letter 별표 안내문을 여기(아래)로 이동 -->
+            ${offerDisclaimerBlock}
 
-            <!-- CTA -->
-            <div style="margin:18px 0 0 0;">
-              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="width:100%;">
-                <tr>
-                  <td align="center" style="padding:0;">
-                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="width:100%;">
-                      <tr>
-                        <td align="center" bgcolor="#5e51ff" style="border-radius:12px;">
-                          <a
-                            href="${mailtoHref.replace('&', '&amp;')}"
-                            style="display:block; padding:14px 16px; font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic','Segoe UI',Arial,sans-serif; font-size:16px; font-weight:900; color:#ffffff; text-decoration:none;"
-                          >
-                            오퍼레터 확인 및 수락 메일 보내기
-                          </a>
-                        </td>
-                      </tr>
-                    </table>
-
-                    <div style="margin:10px 0 0 0; font-size:12px; line-height:1.6; color:#6b7280;">
-                      버튼이 열리지 않으면 아래 메일 주소로 <strong>“오퍼레터 수락합니다”</strong> 제목으로 회신 부탁드립니다.<br />
-                      <span style="color:#111111;">recruit@featuring.in</span>
-                    </div>
-                  </td>
-                </tr>
-              </table>
-            </div>
+            <!-- ✅ (5) 오퍼레터 버튼(CTA) 완전 제거됨 -->
 
             <div style="margin:18px 0 0 0; font-size:13px; line-height:1.7; color:#111111;">
-              궁금하신 점이 있으시면 언제든 편하게 회신 부탁드립니다.<br />
+              궁금하신 점이 있으시면 언제든 편하게 회신 부탁드립니다.<br /> <br />
               감사합니다.<br />
               피처링 채용팀 드림
             </div>
@@ -946,9 +921,6 @@ finalNotice: (v) => {
 </table>
   `;
 },
-
-
-
 
 reject: (v) => wrapEmail(`
  <p style="margin:0 0 3px 0;"><strong>[Featuring]</strong></p>
