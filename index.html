@@ -382,16 +382,66 @@
   return PAGES_BASE + 'assets/Symbol_BG_Transparent.png?v=2';
 }
     
-  /* 과제 옵션 메타 */
-  const TASK_META = { "": { label: "과제 없음", topic: "" }, 
-                     "https://featuring-corp.atlassian.net/wiki/external/ODc0OTc2ODRlNGExNGY0YjhkZWY4ZGEzNzNiNTA0Y2Q": { label: "DE 과제", topic: "소셜 미디어 데이터 파이프라인 시스템 설계" }, 
-                     "https://featuring-corp.atlassian.net/wiki/external/M2E4MzhlMGNhYTUzNDAwNmI2MTkyZmZiOGQxZTZkYTU": { label: "BE 과제", topic: "대량 DM/메일 전송 시스템 설계" }, 
-                     "https://featuring-corp.atlassian.net/wiki/external/NTU4ODQxZTc1MTQyNDM4OWEzYTEzZTdjNTcyNWM1M2U": { label: "AI 과제", topic: "멀티모달 RAG 성능 최적화 시스템 구축" },
-                     "https://featuring-corp.atlassian.net/wiki/external/OTZmYzQ0ZWNiMWJiNDk1MDliMWI2N2YzN2IzZGQ1NTc": { label: "BE 과제", topic: "대량 DM/메일 전송 시스템 설계" }, 
-                     "https://featuring-corp.atlassian.net/wiki/external/OTFkOTQ3YmFhZGI4NGM1ZWJhYmFlOTUwZTAzMWVjM2U" : { label: "PM 과제", topic: "서비스 전략 및 로드맵 수립" },
-                     "https://featuring-corp.atlassian.net/wiki/external/OTAzZThhODIxZmM5NGIyZmE2ODc3MWU2NDQwMjAwMjQ" : { label: "FE 과제", topic: " 고도화된 리스트 테이블 시스템 설계" }                     
-                    };
-  function getTaskTopicByUrl(u){ if(!u) return ''; const k=normalizeUrl(u); return (TASK_META[k] && TASK_META[k].topic) ? TASK_META[k].topic : ''; }
+Gemini said
+가장 효율적이고 유지보수가 용이하도록 TASK_META 객체에 타입(type) 정보를 추가하고, templates.task 함수에서 이 타입에 따라 분기 처리하는 방식으로 코드를 수정했습니다.
+
+기존 코드의 **톤앤매너(스타일, 어조)**를 완벽하게 유지하면서, 요청하신 PM, FE 직군에 대한 커스텀 문구와 날짜 계산 로직을 적용했습니다.
+
+아래 코드 블록을 복사하여 기존 <script> 내부의 해당 함수들을 교체해주시면 됩니다.
+
+수정해야 할 부분
+TASK_META 객체 수정: 각 URL 별로 type 속성을 추가했습니다.
+
+getFeDeadline 함수 추가: FE 과제 마감일(+2일) 계산을 위한 유틸리티 함수입니다.
+
+buildVars 함수 수정: 템플릿에서 타입을 알 수 있도록 taskType을 리턴값에 포함했습니다.
+
+templates.task 함수 수정: 타입에 따라 제출 형식과 마감 기한이 다르게 출력되도록 변경했습니다.
+
+1. TASK_META 및 날짜 계산 함수 추가
+기존 TASK_META 정의 부분과 그 아래에 새로운 날짜 계산 함수를 붙여넣으세요.
+
+JavaScript
+    
+  /* 과제 옵션 메타 (type 속성 추가됨) */
+  const TASK_META = { 
+    "": { label: "과제 없음", topic: "", type: "DEFAULT" }, 
+    "https://featuring-corp.atlassian.net/wiki/external/ODc0OTc2ODRlNGExNGY0YjhkZWY4ZGEzNzNiNTA0Y2Q": { label: "DE 과제", topic: "소셜 미디어 데이터 파이프라인 시스템 설계", type: "DEFAULT" }, 
+    "https://featuring-corp.atlassian.net/wiki/external/M2E4MzhlMGNhYTUzNDAwNmI2MTkyZmZiOGQxZTZkYTU": { label: "BE 과제", topic: "대량 DM/메일 전송 시스템 설계", type: "DEFAULT" }, 
+    "https://featuring-corp.atlassian.net/wiki/external/OTZmYzQ0ZWNiMWJiNDk1MDliMWI2N2YzN2IzZGQ1NTc": { label: "BE 과제", topic: "대량 DM/메일 전송 시스템 설계", type: "DEFAULT" }, 
+    "https://featuring-corp.atlassian.net/wiki/external/NTU4ODQxZTc1MTQyNDM4OWEzYTEzZTdjNTcyNWM1M2U": { label: "AI 과제", topic: "멀티모달 RAG 성능 최적화 시스템 구축", type: "DEFAULT" },
+    "https://featuring-corp.atlassian.net/wiki/external/OTFkOTQ3YmFhZGI4NGM1ZWJhYmFlOTUwZTAzMWVjM2U": { label: "PM 과제", topic: "서비스 전략 및 로드맵 수립", type: "PM" },
+    "https://featuring-corp.atlassian.net/wiki/external/OTAzZThhODIxZmM5NGIyZmE2ODc3MWU2NDQwMjAwMjQ": ㅍㅍㅍㅍㅍㅍㅍ{ label: "FE 과제", topic: " 고도화된 리스트 테이블 시스템 설계", type: "FE" }                     
+  };
+
+ function getTaskTopicByUrl(u){ if(!u) return ''; const k=normalizeUrl(u); return (TASK_META[k] && TASK_META[k].topic) ? TASK_META[k].topic : ''; }
+
+ // ▼▼▼ [추가] TASK_META에서 Type을 가져오는 함수 ▼▼▼
+  function getTaskTypeByUrl(u){ if(!u) return 'DEFAULT'; const k=normalizeUrl(u); return (TASK_META[k] && TASK_META[k].type) ? TASK_META[k].type : 'DEFAULT'; }
+
+  // ▼▼▼ [추가] FE 마감일 계산 함수 (확정일 + 2일) ▼▼▼
+  function getFeDeadline(dateStr) {
+    if(!dateStr) return '<span style="color:#6b7280;">{날짜를 입력하세요}</span>';
+    
+    // "YYYY-MM-DD" 형식을 추출
+    const match = dateStr.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if(!match) return dateStr; // 포맷이 안 맞으면 원본 반환
+
+    const y = parseInt(match[1], 10);
+    const m = parseInt(match[2], 10) - 1; // JS 월은 0부터 시작
+    const d = parseInt(match[3], 10);
+
+    const date = new Date(y, m, d);
+    date.setDate(date.getDate() + 2); // 2일 더하기
+
+    const weekNames = ["일", "월", "화", "수", "목", "금", "토"];
+    const ny = date.getFullYear();
+    const nm = pad2(date.getMonth() + 1);
+    const nd = pad2(date.getDate());
+    const nw = weekNames[date.getDay()];
+
+    return `${ny}-${nm}-${nd} (${nw}) 23:59`;
+  }   
 
 // ▼▼▼ [수정] 기존 generateScheduleLink 함수를 이걸로 통째로 교체하세요 ▼▼▼
 function generateScheduleLink(vars, key) {
@@ -479,7 +529,44 @@ function getScheduleButtonHtml(vars, key) {
     
   `),
       
-      task: (v) => { const role = roleHtml(v); return wrapEmail(`
+      task: (v) => { 
+        const role = roleHtml(v);
+        
+        // 1. 제출 형식 (Submission Format) 분기 처리
+        let submissionFormatHtml = '';
+        if (v.taskType === 'PM') {
+            submissionFormatHtml = `<p style="margin:0 0 3px 18px;">모든 내용을 하나의 PDF 파일로 정리하여 제출 권장합니다.</p>`;
+        } else if (v.taskType === 'FE') {
+            submissionFormatHtml = `
+            <ul style="margin:0 0 3px 18px; padding:0;">
+                <li>GitHub Repository</li>
+                <li>또는 zip 파일 / Google Drive 링크 / 이메일 제출</li>
+            </ul>`;
+        } else {
+            // Default (DE, BE, AI, etc.)
+            submissionFormatHtml = `
+            <ul style="margin:0 0 3px 18px; padding:0;">
+                <li>구성을 한눈에 볼 수 있는 도식(Flowchart, Architecture Diagram 등)을 포함해주세요.</li>
+                <li>데이터 관리부터 비즈니스 로직 구현 단계까지, 각 과정에서 고려해야 할 요소(성능, 확장성, 보안, 비용 효율성, 모니터링 등)에 대해 파이프라인을 기술해주시기 바랍니다.</li>
+                <li>문서 형식은 PPT, PDF, Markdown 등 자유롭게 선택하시면 됩니다.</li>
+            </ul>`;
+        }
+
+// 2. 마감 기한 (Deadline) 분기 처리
+        let deadlineHtml = '';
+        if (v.taskType === 'FE') {
+            // FE: 확정일 + 2일 계산
+            const calculatedDate = getFeDeadline(v.confirmDate);
+            deadlineHtml = `<li><strong>${calculatedDate}까지</strong> 제출 바랍니다.</li>`;
+        } else {
+            // Default: 금일 자정 (날짜가 있으면 23:59로 치환, 없으면 placeholder)
+            const dateStr = v.confirmDate 
+                ? escapeHtml(v.confirmDate.replace(/\d{2}:\d{2}$/, "23:59")) 
+                : `<span style="color:#6b7280;">{날짜를 입력하세요}</span>`;
+            deadlineHtml = `<li><strong>금일 자정(${dateStr})전 까지</strong> 회신 부탁드립니다.</li>`;
+        }
+
+        return wrapEmail(`
         <p style="margin:0 0 3px 0;"><strong>[Featuring]</strong></p>
         <p style="margin:0 0 3px 0;">안녕하세요. ${nameFull(v)}님. :)</p>
         <p style="margin:0 0 14px 0;">피처링 채용팀입니다.</p>
@@ -491,23 +578,16 @@ function getScheduleButtonHtml(vars, key) {
         <div style="padding-left:8px; margin:0 0 3px 0;">
         <p style="margin:0 3px 3px 0;">✅ <strong>과제 주제</strong> : ${escapeHtml(v.taskTopic)}</p>
         ${v.taskurl ? `<p style="margin:0 3px 3px 0;">✅ <strong>과제 링크</strong> : <a href="${v.taskurl}" style="${brandLinkStyle}"><span style="color:#3d85c6">URL</span></a></p>` : ''}
+        
         <p style="margin:3px 0 3px 0;">✅ <strong>제출 형식</strong> :</p>
-        <ul style="margin:0 0 3px 18px; padding:0;">
-        <li>구성을 한눈에 볼 수 있는 도식(Flowchart, Architecture Diagram 등)을 포함해주세요.</li>
-        <li>데이터 관리부터 비즈니스 로직 구현 단계까지, 각 과정에서 고려해야 할 요소(성능, 확장성, 보안, 비용 효율성, 모니터링 등)에 대해 파이프라인을 기술해주시기 바랍니다.</li>
-        <li>문서 형식은 PPT, PDF, Markdown 등 자유롭게 선택하시면 됩니다.</li>
-  </ul>
+        ${submissionFormatHtml}
 
-<p style="margin:3px 0 3px 0;">✅ <strong>마감 기한</strong> :</p>
-    <ul style="margin:0 0 14px 18px; padding:0;">
-      <li><strong>금일 자정(${ 
-        v.confirmDate 
-        ? escapeHtml(v.confirmDate.replace(/\d{2}:\d{2}$/, "23:59")) // ★ 시간만 23:59로 치환
-        : `<span style="color:#6b7280;">{날짜를 입력하세요}</span>` 
-      })전 까지</strong> 회신 부탁드립니다.</li>
-      <li>해당 메일에 [전체 답장] 또는 recruit@featuring.in으로 제출해주시면 됩니다.</li>
-    </ul>
-</div>
+        <p style="margin:3px 0 3px 0;">✅ <strong>마감 기한</strong> :</p>
+        <ul style="margin:0 0 14px 18px; padding:0;">
+            ${deadlineHtml}
+            <li>해당 메일에 [전체 답장] 또는 recruit@featuring.in으로 제출해주시면 됩니다.</li>
+        </ul>
+        </div>
         <p style="margin:0 0 3px 0;">제출하신 과제는 내부 기술 리드 및 개발팀과 함께 검토할 예정이며, 결과는 제출일로부터 영업일 기준 3일 전까지 안내 드리겠습니다.</p>
         <p style="margin:0 0 3px 0;">과제 진행 중 궁금하신 사항이 있거나 제출 기한에 어려움이 있으실 경우, 언제든 편하게 해당 메일로 연락 부탁드립니다. :)</p>
 
@@ -515,7 +595,7 @@ function getScheduleButtonHtml(vars, key) {
         (*해당 과제는 피처링의 자산이므로 외부 및 제3자 유출 시 채용 과정이 취소되며, 별도의 조치 될 수 있음을 사전에 안내드립니다.)
         </p>
 
-  <p style="margin:0;">감사합니다.<br />피처링 채용팀 드림.</p>
+        <p style="margin:0;">감사합니다.<br />피처링 채용팀 드림.</p>
 `); },
 
       interview1: (v,k) => wrapEmail(`
@@ -1086,7 +1166,17 @@ const titleText = v.isIntern
     const normalizedUrl=(document.getElementById('taskurlSelect')?.value || '').trim();
     const propose=[readDate('p1'),readDate('p2'),readDate('p3')].filter(Boolean);
     const confirm=readDate('c1');
-    return { name:(nameEl.value||'').trim()||'지원자', position:(positionEl.value||'').trim()||'포지션', taskurl:normalizedUrl, taskTopic:getTaskTopicByUrl(normalizedUrl), proposeDates:propose, confirmDate:confirm, isIntern:!!(isInternEl && isInternEl.checked) };
+    // taskType 추가
+    return { 
+      name:(nameEl.value||'').trim()||'지원자', 
+      position:(positionEl.value||'').trim()||'포지션', 
+      taskurl:normalizedUrl, 
+      taskTopic:getTaskTopicByUrl(normalizedUrl), 
+      taskType:getTaskTypeByUrl(normalizedUrl), 
+      proposeDates:propose, 
+      confirmDate:confirm, 
+      isIntern:!!(isInternEl && isInternEl.checked) 
+    };
   }
 
   function showPreview(html){ currentHtml=html; previewEl.innerHTML=html; copyBtn.disabled=!html; }
