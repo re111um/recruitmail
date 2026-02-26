@@ -650,13 +650,14 @@ function getScheduleButtonHtml(vars, key) {
   <p style="margin:0;">감사합니다.<br />피처링 채용팀 드림.</p>
 `),
 
-     scheduleConfirm: (v) => { 
+scheduleConfirm: (v) => { 
         const role = roleHtml(v);
         const cDate = v.confirmDate 
           ? escapeHtml(v.confirmDate) 
           : `<span style="color:#6b7280;">{날짜를 입력하세요}</span>`;
           
-        return wrapEmail(`
+        // wrapEmail -> wrapEmailNoHeader 로 변경
+        return wrapEmailNoHeader(`
           <div style="line-height: 1.7; color: #111;">
             <p style="margin: 0 0 14px 0;"><strong>[Featuring]</strong><br>안녕하세요, ${nameFull(v)}님.<br>피처링 채용팀입니다.</p>
             
