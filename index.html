@@ -594,14 +594,21 @@ function getScheduleButtonHtml(vars, key) {
         <p style="margin:0;">감사합니다.<br />피처링 채용팀 드림.</p>
 `); },
 
-      interview1: (v,k) => wrapEmail(`
+ interview1: (v, k) => {
+        // 과제 선택 여부에 따라 문구 분기
+        const introHtml = v.taskurl
+          ? `<p style="margin:0 0 3px 0;">지난 과제 전형에서 귀한 시간 내주시어 일정에 맞춰 정성스레 작성된 과제물을 제출해주시어 진심으로 감사드립니다. :)</p>
+             <p style="margin:0 0 3px 0;">${nameBody(v)}님께서 제출해주신 과제물을 내부 인원들과 검토해본 결과, 1차 인터뷰를 진행하고자 합니다.</p>`
+          : `<p style="margin:0 0 3px 0;">먼저 저희 회사와 ${v.isIntern ? '인턴십 프로그램' : escapeHtml(v.position) + ' 포지션'}에 관심 가져주시고 지원해주셔서 감사합니다.</p>
+             <p style="margin:0 0 3px 0;">제출해 주신 이력서와 경력 사항을 검토한 결과,</p> 
+             <p style="margin:0 0 3px 0;">${nameBody(v)}님의 역량과 경험이 해당 포지션에 적합하다고 판단되어 1차 인터뷰를 진행하고자 합니다.</p>`;
+
+        return wrapEmail(`
   <p style="margin:0 0 3px 0;"><strong>[Featuring]</strong></p>
   <p style="margin:0 0 3px 0;">안녕하세요, ${nameFull(v)}님.</p>
   <p style="margin:0 0 14px 0;">피처링 채용팀입니다.</p>
 
-  <p style="margin:0 0 3px 0;">먼저 저희 회사와  ${ v.isIntern ? `인턴십 프로그램` : `${escapeHtml(v.position)} 포지션` }에 관심 가져주시고 지원해주셔서 감사합니다.</p>
-  <p style="margin:0 0 3px 0;">제출해 주신 이력서와 경력 사항을 검토한 결과,</p> 
-  <p style="margin:0 0 3px 0;">${nameBody(v)}님의 역량과 경험이 해당 포지션에 적합하다고 판단되어 1차 인터뷰를 진행하고자 합니다.</p>
+  ${introHtml}
   <p style="margin:0 0 14px 0;">인터뷰는 대면으로 진행되며, 가능한 일정 확인을 위해 메일로 연락드리게 되었습니다.</p>
 
   <p style="margin:0 0 3px 0;"><strong>[진행 가능 일정/장소]</strong></p>
@@ -611,13 +618,14 @@ function getScheduleButtonHtml(vars, key) {
   <p style="margin:0 0 3px 0;">- 장소 : 서울 강남구 테헤란로 129, 빗썸금융타워 8층</p>
   <p style="margin:0 0 3px 0;">- 일시 : 하단 버튼을 눌러 가능한 일정을 제출해주세요.<br />
   <span style="color: #888888; font-size: 0.9em;">(*링크가 열리지 않는다면, 시크릿 창에서 열어보세요.)</span>
-</p></div>
+  </p></div>
   ${getScheduleButtonHtml(v, k)}
   <p style="margin:0 0 3px 0;">혹시 해당 일시 및 시간대가 어려우시다면, 가능한 시간을 2~3개 일정정도 함께 공유해 주시면 조율하여 진행하도록 하겠습니다.</p>
   <p style="margin:0 0 14px 0;">추가로 인터뷰에 앞서 준비해야 할 사항이나 궁금한 점이 있으시다면 언제든지 편하게 연락 부탁 드립니다. :)</p>
   
   <p style="margin:0;">감사합니다.<br />피처링 채용팀 드림.</p>
-`),
+`);
+      },
 
       interviewFinal: (v,k) => wrapEmail(`
   <p style="margin:0 0 3px 0;"><strong>[Featuring]</strong></p>
@@ -1083,9 +1091,9 @@ const titleText = v.isIntern
                   <div style="font-size:24px; font-weight:800; line-height:1.25; letter-spacing:-0.02em; margin:0 0 10px 0;">
                     ${titleText}
                   </div>
-
-        <div style="display: flex; align-items: center; font-size: 14px; line-height: 1.6; color: #4b5563;">
-  <span style="flex-shrink: 0; padding: 6px 12px; border-radius: 999px; background-color: rgba(94,81,255,0.10); color: #3f35ff; font-weight: 700; white-space: nowrap;">
+                  
+<div style="display: flex; align-items: center; font-size: 14px; line-height: 1.6; color: #4b5563;">
+  <span title="${escapeHtml(v.position)}" style="display: inline-block; flex-shrink: 0; max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 6px 12px; border-radius: 999px; background-color: rgba(94,81,255,0.10); color: #3f35ff; font-weight: 700; box-sizing: border-box;">
     ${escapeHtml(v.position)}
   </span>
   
