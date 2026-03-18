@@ -285,7 +285,8 @@
 
 .date-picker-input {
   flex: 1;
-  padding: 12px 12px;
+  min-width: 0;
+  padding: 10px 12px;
   border: 1px solid var(--line);
   border-radius: 12px;
   outline: none;
@@ -302,9 +303,11 @@
   box-shadow: 0 0 0 4px rgba(94, 81, 255, 0.12);
 }
 
+
 .time-picker-select {
-  width: 100px;
-  padding: 12px 8px;
+  width: 90px;
+  flex-shrink: 0;
+  padding: 10px 8px;
   border: 1px solid var(--line);
   border-radius: 12px;
   outline: none;
@@ -2196,11 +2199,14 @@ for (let h = 9; h <= 21; h++) {
  * @param {string} prefix - 날짜 필드 접두사 ('p1', 'p2', 'p3', 'c1')
  */
 function initDatePicker(prefix) {
-  // 기존 필드들의 컨테이너를 찾아서 새 UI로 교체
   const container = document.getElementById(`dateGroup_${prefix}`);
   if (!container) return;
 
-  container.innerHTML = `
+  // 기존 라벨을 보존하고, 피커만 추가
+  const existingLabel = container.querySelector('.date-group-label');
+  const labelHtml = existingLabel ? existingLabel.outerHTML : '';
+
+  container.innerHTML = labelHtml + `
     <div class="date-picker-row">
       <input type="date" id="${prefix}_date" class="date-picker-input" 
              onchange="onDatePickerChange('${prefix}')" />
