@@ -961,7 +961,7 @@
 
  /* ---------- 유틸 ---------- */
   const brandLinkStyle = "color:#111111; text-decoration:underline;";
-  const PAGES_BASE = "https://re111um.github.io/recruitmail/";
+  const PAGES_BASE = "https://re111um.github.io/recruitmail/"; 
   function getHeaderImageSrc(){
   return PAGES_BASE + 'assets/process.png?v=2';
 }
@@ -2129,6 +2129,7 @@ const titleText = v.isIntern
 
   // 페이지가 처음 열릴 때 히스토리를 한번 불러옵니다.
   loadHistory();
+  </script>
  <div id="offerModal" class="offer-modal-overlay" onclick="if(event.target===this) closeOfferModal()">
   <div class="offer-modal">
     <div class="offer-modal-header">
@@ -2177,17 +2178,8 @@ const titleText = v.isIntern
     </div>
   </div>
 </div>
-// ============================================================
-// [기능 1] 날짜 입력 UX 개선 — 달력 피커 + 시간 드롭다운
-// ============================================================
 
-/**
- * 기존 6개 필드(y,m,d,w,h,i)를 날짜 피커 1개 + 시간 드롭다운 1개로 교체합니다.
- * 
- * 핵심: 기존 readDate() 함수의 출력 포맷("YYYY-MM-DD (요일) HH:MM")을 
- * 그대로 유지하여 모든 기존 템플릿과 100% 호환됩니다.
- */
-
+<script>
 const WEEKDAY_MAP = ['일', '월', '화', '수', '목', '금', '토'];
 
 // 시간 슬롯 생성 (09:00 ~ 21:00, 30분 단위)
