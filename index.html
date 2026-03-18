@@ -2687,10 +2687,10 @@ async function fetchCandidateStatus(email) {
   if (!email || !email.includes('@')) return null;
 
   const syncUrl = (typeof GAS_SYNC_URL !== 'undefined' && GAS_SYNC_URL) ? GAS_SYNC_URL : '';
-  if (!syncUrl) {
-    console.warn('[GAS Sync] WEB_APP_URL이 설정되지 않았습니다.');
-    return null;
-  }
+if (!syncUrl) {
+  console.warn('[GAS Sync] GAS_SYNC_URL이 설정되지 않았습니다.');
+  return null;
+}
 
   try {
     const url = `${syncUrl}?action=status&email=${encodeURIComponent(email)}`;
