@@ -276,6 +276,564 @@
   height:18px;
   opacity:.9;
 }
+/* 기존 6개 필드 영역을 대체하는 날짜 그룹 컨테이너 */
+.date-picker-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.date-picker-input {
+  flex: 1;
+  padding: 12px 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  outline: none;
+  background: #fff;
+  font-size: 14px;
+  color: var(--ink);
+  height: var(--control-h);
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.date-picker-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(94, 81, 255, 0.12);
+}
+
+.time-picker-select {
+  width: 100px;
+  padding: 12px 8px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  outline: none;
+  background: #fff;
+  font-size: 14px;
+  color: var(--ink);
+  height: var(--control-h);
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.time-picker-select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(94, 81, 255, 0.12);
+}
+
+.weekday-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 38px;
+  height: 28px;
+  padding: 0 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--muted);
+  border-radius: 8px;
+  background: transparent;
+  transition: all 0.2s;
+}
+
+.weekday-badge.active {
+  background: rgba(94, 81, 255, 0.1);
+  color: var(--accent);
+}
+
+/* 날짜 그룹 라벨 개선 */
+.date-group {
+  margin-bottom: 12px;
+}
+
+.date-group-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  font-size: 13px;
+  margin-bottom: 6px;
+  color: var(--ink);
+}
+
+.date-group-label .date-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+/* ============================================================
+   [기능 2] 파이프라인 트래커 스타일
+   ============================================================ */
+
+/* 기존 history-panel을 파이프라인 패널로 진화 */
+.history-panel h2 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.pipeline-clear-btn {
+  font-size: 11px;
+  color: var(--muted);
+  background: none;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 3px 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.pipeline-clear-btn:hover {
+  background: #fee2e2;
+  border-color: #fca5a5;
+  color: #b91c1c;
+}
+
+.pipeline-empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.pipeline-item {
+  display: block;
+  padding: 14px 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--line);
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.pipeline-item:hover {
+  background: #f3f4f6;
+  transform: translateX(2px);
+}
+
+.pipeline-item:active {
+  transform: translateX(0);
+}
+
+.pipeline-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.pipeline-header strong {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--ink);
+}
+
+.pipeline-position {
+  font-size: 11px;
+  color: #fff;
+  background: var(--accent);
+  padding: 1px 8px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.reject-badge {
+  font-size: 11px;
+  color: #fff;
+  background: #ef4444;
+  padding: 1px 8px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+/* 파이프라인 도트 (진행 상태 표시) */
+.pipeline-dots {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+
+.pipeline-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #e5e7eb;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.pipeline-dot.completed {
+  transform: scale(1);
+}
+
+.pipeline-dot.current {
+  transform: scale(1.3);
+  box-shadow: 0 0 0 3px rgba(94, 81, 255, 0.2);
+}
+
+/* 도트 사이 연결선 */
+.pipeline-dots {
+  position: relative;
+}
+
+.pipeline-dot + .pipeline-dot::before {
+  content: '';
+  position: absolute;
+  left: -6px;
+  top: 50%;
+  width: 6px;
+  height: 2px;
+  background: #e5e7eb;
+  transform: translateY(-50%);
+}
+
+.pipeline-dot.completed + .pipeline-dot::before,
+.pipeline-dot + .pipeline-dot.completed::before {
+  background: var(--accent);
+}
+
+.pipeline-last {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.pipeline-time {
+  color: #9ca3af;
+}
+
+.next-stage-hint {
+  font-size: 11px;
+  color: var(--accent);
+  margin-top: 4px;
+  padding: 3px 8px;
+  background: rgba(94, 81, 255, 0.06);
+  border-radius: 6px;
+  display: inline-block;
+}
+
+/* 다음 추천 단계 버튼 하이라이트 */
+.btn.next-recommended {
+  position: relative;
+  box-shadow: 0 0 0 2px var(--accent), 0 4px 12px rgba(94, 81, 255, 0.25);
+  animation: pulse-recommend 2s ease-in-out infinite;
+}
+
+.btn.next-recommended::after {
+  content: '추천';
+  position: absolute;
+  top: -8px;
+  right: -4px;
+  font-size: 9px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--accent);
+  padding: 1px 5px;
+  border-radius: 4px;
+  line-height: 1.3;
+}
+
+@keyframes pulse-recommend {
+  0%, 100% { box-shadow: 0 0 0 2px var(--accent), 0 4px 12px rgba(94, 81, 255, 0.25); }
+  50% { box-shadow: 0 0 0 3px var(--accent), 0 4px 16px rgba(94, 81, 255, 0.35); }
+}
+
+.btn.next-secondary {
+  opacity: 0.7;
+}
+
+/* ============================================================
+   [기능 3] 오퍼레터 모달 스타일
+   ============================================================ */
+
+.offer-modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.offer-modal-overlay.open {
+  display: flex;
+}
+
+.offer-modal {
+  background: #fff;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 560px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  animation: modal-slide-up 0.3s ease;
+}
+
+@keyframes modal-slide-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.offer-modal-header {
+  padding: 24px 24px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.offer-modal-header h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.offer-modal-close {
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: #f3f4f6;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: var(--muted);
+  transition: all 0.15s;
+}
+
+.offer-modal-close:hover {
+  background: #e5e7eb;
+  color: var(--ink);
+}
+
+.offer-modal-body {
+  padding: 20px 24px;
+}
+
+.offer-field {
+  margin-bottom: 18px;
+}
+
+.offer-field label {
+  display: block;
+  font-weight: 600;
+  font-size: 13px;
+  margin-bottom: 6px;
+  color: var(--ink);
+}
+
+.offer-field .hint-text {
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 400;
+  margin-left: 4px;
+}
+
+.offer-field input,
+.offer-field textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  outline: none;
+  background: #fff;
+  font-size: 14px;
+  color: var(--ink);
+  font-family: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.offer-field input:focus,
+.offer-field textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(94, 81, 255, 0.12);
+}
+
+.offer-field textarea {
+  min-height: 120px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.offer-field .salary-input-wrapper {
+  position: relative;
+}
+
+.offer-field .salary-input-wrapper input {
+  padding-right: 40px;
+}
+
+.offer-field .salary-unit {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 600;
+  pointer-events: none;
+}
+
+.offer-modal-footer {
+  padding: 0 24px 24px;
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.offer-modal-footer .btn {
+  min-width: 100px;
+}
+
+/* ============================================================
+   [기능 4] GAS 동기화 스타일
+   ============================================================ */
+
+.sync-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 14px;
+  padding: 12px 14px;
+  background: #fafafa;
+  border: 1px dashed var(--line);
+  border-radius: 12px;
+}
+
+.sync-row input[type="email"] {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  outline: none;
+  background: #fff;
+  font-size: 14px;
+  color: var(--ink);
+}
+
+.sync-row input[type="email"]:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(94, 81, 255, 0.1);
+}
+
+.sync-btn {
+  padding: 10px 16px;
+  background: #111;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+
+.sync-btn:hover {
+  background: #333;
+  transform: translateY(-1px);
+}
+
+.sync-btn:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  transform: none;
+}
+
+#syncStatus {
+  font-size: 12px;
+  line-height: 1.5;
+  margin-top: 6px;
+}
+
+.sync-found {
+  color: #059669;
+  background: #ecfdf5;
+  padding: 6px 10px;
+  border-radius: 8px;
+  display: inline-block;
+}
+
+.sync-not-found {
+  color: #d97706;
+  background: #fffbeb;
+  padding: 6px 10px;
+  border-radius: 8px;
+  display: inline-block;
+}
+
+.sync-error {
+  color: #dc2626;
+  background: #fef2f2;
+  padding: 6px 10px;
+  border-radius: 8px;
+  display: inline-block;
+}
+
+/* ============================================================
+   [개선] 반응형 날짜 영역 재배치
+   ============================================================ */
+
+.dates-grid-v2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin: 14px 0;
+}
+
+.dates-grid-v2 .date-group {
+  min-width: 0;
+}
+
+/* 확정일자는 전체 폭 */
+.dates-grid-v2 .date-group.confirm-date {
+  grid-column: 1 / -1;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+}
+
+@media (max-width: 768px) {
+  .dates-grid-v2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================================
+   [개선] 전체 레이아웃 미세 조정
+   ============================================================ */
+
+/* 섹션 구분 */
+.section-divider {
+  height: 1px;
+  background: var(--line);
+  margin: 18px 0;
+}
+
+/* 섹션 타이틀 */
+.section-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 10px;
+}
 
   </style>
 </head>
@@ -286,6 +844,12 @@
       <h1>Featuring Recruit 메일 서식</h1>
       <p class="sub">아래 3가지만 입력한 뒤, 원하는 단계 버튼을 누르세요. 하단 미리보기에서 <strong>서식 복사</strong>를 클릭하면 Gmail 본문(HTML)으로 그대로 붙여넣을 수 있습니다.</p>
 
+      <div class="sync-row">
+  <span style="font-weight:600; font-size:13px; white-space:nowrap;">📡 시트 연동</span>
+  <input type="email" id="candidateEmail" placeholder="후보자 이메일 입력 (예: hong@gmail.com)" />
+  <button type="button" id="syncBtn" class="sync-btn" onclick="syncCandidateStatus()">시트 조회</button>
+</div>
+<div id="syncStatus"></div>
       <div class="grid">
         <div class="field">
           <label for="name">지원자명</label>
@@ -314,22 +878,36 @@
         </div>
       </div>
 
-      <div class="grid dates">
-        <div class="field">
-          <label>제안일자</label>
-          <div class="datebox">
-            <div class="date-row"> <input id="p1y" class="y" placeholder="yyyy" /> <span class="sep">-</span> <input id="p1m" class="m" placeholder="mm" /> <span class="sep">-</span> <input id="p1d" class="d" placeholder="dd" /> <select id="p1w" class="w"> <option value="">(요일)</option><option>월</option><option>화</option><option>수</option> <option>목</option><option>금</option><option>토</option><option>일</option> </select> <input id="p1h" class="h" placeholder="24" /> <span class="colon">:</span> <input id="p1i" class="i" placeholder="00" /> </div>
-            <div class="date-row"> <input id="p2y" class="y" placeholder="yyyy" /> <span class="sep">-</span> <input id="p2m" class="m" placeholder="mm" /> <span class="sep">-</span> <input id="p2d" class="d" placeholder="dd" /> <select id="p2w" class="w"> <option value="">(요일)</option><option>월</option><option>화</option><option>수</option> <option>목</option><option>금</option><option>토</option><option>일</option> </select> <input id="p2h" class="h" placeholder="24" /> <span class="colon">:</span> <input id="p2i" class="i" placeholder="00" /> </div>
-            <div class="date-row"> <input id="p3y" class="y" placeholder="yyyy" /> <span class="sep">-</span> <input id="p3m" class="m" placeholder="mm" /> <span class="sep">-</span> <input id="p3d" class="d" placeholder="dd" /> <select id="p3w" class="w"> <option value="">(요일)</option><option>월</option><option>화</option><option>수</option> <option>목</option><option>금</option><option>토</option><option>일</option> </select> <input id="p3h" class="h" placeholder="24" /> <span class="colon">:</span> <input id="p3i" class="i" placeholder="00" /> </div>
-          </div>
-        </div>
-        <div class="field field-confirm">
-          <label>확정일자</label>
-          <div class="datebox">
-            <div class="date-row"> <input id="c1y" class="y" placeholder="yyyy" /> <span class="sep">-</span> <input id="c1m" class="m" placeholder="mm" /> <span class="sep">-</span> <input id="c1d" class="d" placeholder="dd" /> <select id="c1w" class="w"> <option value="">(요일)</option><option>월</option><option>화</option><option>수</option> <option>목</option><option>금</option><option>토</option><option>일</option> </select> <input id="c1h" class="h" placeholder="24" /> <span class="colon">:</span> <input id="c1i" class="i" placeholder="00" /> </div>
-          </div>
-        </div>
-      </div>
+      <div class="dates-grid-v2">
+  <!-- 제안 일정 1 -->
+  <div class="date-group" id="dateGroup_p1">
+    <div class="date-group-label">
+      <span class="date-badge">1</span> 제안 일정 1
+    </div>
+    <!-- JS가 initDatePicker('p1')로 자동 생성 -->
+  </div>
+
+  <!-- 제안 일정 2 -->
+  <div class="date-group" id="dateGroup_p2">
+    <div class="date-group-label">
+      <span class="date-badge">2</span> 제안 일정 2
+    </div>
+  </div>
+
+  <!-- 제안 일정 3 -->
+  <div class="date-group" id="dateGroup_p3">
+    <div class="date-group-label">
+      <span class="date-badge">3</span> 제안 일정 3
+    </div>
+  </div>
+
+  <!-- 확정 일자 (전체 폭) -->
+  <div class="date-group confirm-date" id="dateGroup_c1">
+    <div class="date-group-label">
+      <span class="date-badge" style="background:#059669;">✓</span> 확정 일자
+    </div>
+  </div>
+</div>
 
       <div class="dates-after">
         <div class="intern-inline">
@@ -363,10 +941,14 @@
     </div>
 
     <aside class="history-panel">
-      <h2>최근 내역 불러오기</h2>
-      <ul id="historyList">
-        </ul>
-    </aside>
+  <h2>
+    후보자 파이프라인
+    <button type="button" class="pipeline-clear-btn" onclick="clearPipeline()">초기화</button>
+  </h2>
+  <ul id="pipelineList">
+    <!-- renderPipelinePanel()이 자동으로 채움 -->
+  </ul>
+</aside>
 
   </div> <div id="toast" class="toast" role="status" aria-live="polite">클립보드에 복사했습니다.</div>
   <script>
@@ -1515,7 +2097,8 @@ const titleText = v.isIntern
   document.querySelectorAll('.js-template').forEach(btn=>{ btn.addEventListener('click', ()=> renderTemplateByKey(btn.dataset.key)); });
   copyBtn.addEventListener('click', copyHtml);
   copySubjectBtn.addEventListener('click', copySubject);
-  if(resetBtn) resetBtn.addEventListener('click', resetAllFields);  
+  if(resetBtn) resetBtn.addEventListener('click', resetAllFields);
+    
   if(historyListEl) {
     historyListEl.addEventListener('click', (e) => {
       const item = e.target.closest('.history-item');
@@ -1525,8 +2108,763 @@ const titleText = v.isIntern
     });
   }
 
+    
+
   // 페이지가 처음 열릴 때 히스토리를 한번 불러옵니다.
   loadHistory();
+ <div id="offerModal" class="offer-modal-overlay" onclick="if(event.target===this) closeOfferModal()">
+  <div class="offer-modal">
+    <div class="offer-modal-header">
+      <h2>💼 오퍼레터(처우협의) 정보 입력</h2>
+      <button type="button" class="offer-modal-close" onclick="closeOfferModal()">&times;</button>
+    </div>
+
+    <div class="offer-modal-body">
+      <p style="font-size:13px; color:#6b7280; margin:0 0 18px;">
+        아래 정보를 입력하면 오퍼레터 메일 서식에 자동으로 반영됩니다.
+      </p>
+
+      <!-- 연봉 -->
+      <div class="offer-field">
+        <label>연봉 (세전) <span class="hint-text">* 필수</span></label>
+        <div class="salary-input-wrapper">
+          <input type="text" id="offer_salary" placeholder="예: 5,000" 
+                 oninput="formatSalaryInput(this)" />
+          <span class="salary-unit">만원</span>
+        </div>
+      </div>
+
+      <!-- 소속 부서 -->
+      <div class="offer-field">
+        <label>소속 부서 <span class="hint-text">* 필수</span></label>
+        <input type="text" id="offer_department" placeholder="예: Product팀 / Tech 그룹" />
+      </div>
+
+      <!-- 주요 업무 -->
+      <div class="offer-field">
+        <label>주요 업무 <span class="hint-text">* 필수 (한 줄에 하나씩)</span></label>
+        <textarea id="offer_duties" 
+                  placeholder="예:&#10;인플루언서 마케팅 플랫폼 백엔드 아키텍처 설계 및 개발&#10;대용량 소셜 데이터 파이프라인 운영 및 최적화&#10;신규 AI 기능 API 설계 및 구현"></textarea>
+      </div>
+
+      <!-- 시용기간 -->
+      <div class="offer-field">
+        <label>시용(수습) 기간</label>
+        <input type="text" id="offer_probation" placeholder="기본 3개월" value="3개월" />
+      </div>
+    </div>
+
+    <div class="offer-modal-footer">
+      <button type="button" class="btn" onclick="closeOfferModal()">취소</button>
+      <button type="button" class="btn primary" onclick="submitOfferModal()">서식 생성</button>
+    </div>
+  </div>
+</div>
+// ============================================================
+// [기능 1] 날짜 입력 UX 개선 — 달력 피커 + 시간 드롭다운
+// ============================================================
+
+/**
+ * 기존 6개 필드(y,m,d,w,h,i)를 날짜 피커 1개 + 시간 드롭다운 1개로 교체합니다.
+ * 
+ * 핵심: 기존 readDate() 함수의 출력 포맷("YYYY-MM-DD (요일) HH:MM")을 
+ * 그대로 유지하여 모든 기존 템플릿과 100% 호환됩니다.
+ */
+
+const WEEKDAY_MAP = ['일', '월', '화', '수', '목', '금', '토'];
+
+// 시간 슬롯 생성 (09:00 ~ 21:00, 30분 단위)
+const TIME_SLOTS = [];
+for (let h = 9; h <= 21; h++) {
+  TIME_SLOTS.push(`${String(h).padStart(2, '0')}:00`);
+  if (h < 21) TIME_SLOTS.push(`${String(h).padStart(2, '0')}:30`);
+}
+
+/**
+ * 날짜 피커 초기화 — 기존 6개 필드를 새 UI로 교체
+ * 
+ * @param {string} prefix - 날짜 필드 접두사 ('p1', 'p2', 'p3', 'c1')
+ */
+function initDatePicker(prefix) {
+  // 기존 필드들의 컨테이너를 찾아서 새 UI로 교체
+  const container = document.getElementById(`dateGroup_${prefix}`);
+  if (!container) return;
+
+  container.innerHTML = `
+    <div class="date-picker-row">
+      <input type="date" id="${prefix}_date" class="date-picker-input" 
+             onchange="onDatePickerChange('${prefix}')" />
+      <select id="${prefix}_time" class="time-picker-select" onchange="onDatePickerChange('${prefix}')">
+        <option value="">시간</option>
+        ${TIME_SLOTS.map(t => `<option value="${t}">${t}</option>`).join('')}
+      </select>
+      <span id="${prefix}_weekday" class="weekday-badge"></span>
+    </div>
+  `;
+}
+
+/**
+ * 날짜 선택 시 요일 자동 계산 + 기존 hidden 필드 동기화
+ */
+function onDatePickerChange(prefix) {
+  const dateInput = document.getElementById(`${prefix}_date`);
+  const timeSelect = document.getElementById(`${prefix}_time`);
+  const weekdayBadge = document.getElementById(`${prefix}_weekday`);
+
+  if (dateInput && dateInput.value) {
+    const d = new Date(dateInput.value + 'T00:00:00');
+    const dayName = WEEKDAY_MAP[d.getDay()];
+    weekdayBadge.textContent = `(${dayName})`;
+    weekdayBadge.classList.add('active');
+  } else {
+    weekdayBadge.textContent = '';
+    weekdayBadge.classList.remove('active');
+  }
+
+  // 미리보기가 열려있으면 자동으로 갱신
+  if (currentKey) {
+    renderTemplateByKey(currentKey);
+  }
+}
+
+/**
+ * 기존 readDate() 함수를 대체하는 새 버전
+ * 출력 포맷: "YYYY-MM-DD (요일) HH:MM" — 기존과 100% 동일
+ */
+function readDateV2(prefix) {
+  const dateInput = document.getElementById(`${prefix}_date`);
+  const timeSelect = document.getElementById(`${prefix}_time`);
+
+  if (!dateInput || !dateInput.value) return '';
+  if (!timeSelect || !timeSelect.value) return '';
+
+  const d = new Date(dateInput.value + 'T00:00:00');
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  const w = WEEKDAY_MAP[d.getDay()];
+  const time = timeSelect.value;
+
+  return `${y}-${m}-${day} (${w}) ${time}`;
+}
+
+/**
+ * 기존 buildVars()의 날짜 부분을 새 피커로 대체
+ * 
+ * 통합 방법: 기존 buildVars() 내에서 readDate → readDateV2로 교체
+ */
+function buildVarsV2() {
+  const normalizedUrl = (document.getElementById('taskurlSelect')?.value || '').trim();
+  const propose = [readDateV2('p1'), readDateV2('p2'), readDateV2('p3')].filter(Boolean);
+  const confirm = readDateV2('c1');
+
+  return {
+    name: (nameEl.value || '').trim() || '지원자',
+    position: (positionEl.value || '').trim() || '포지션',
+    taskurl: normalizedUrl,
+    taskTopic: getTaskTopicByUrl(normalizedUrl),
+    taskType: getTaskTypeByUrl(normalizedUrl),
+    proposeDates: propose,
+    confirmDate: confirm,
+    isIntern: !!(isInternEl && isInternEl.checked)
+  };
+}
+
+/**
+ * 모든 날짜 피커 초기화 실행
+ */
+function initAllDatePickers() {
+  ['p1', 'p2', 'p3', 'c1'].forEach(prefix => {
+    initDatePicker(prefix);
+  });
+}
+
+/**
+ * 날짜 피커 초기화 (리셋 기능 확장)
+ */
+function resetDatePickers() {
+  ['p1', 'p2', 'p3', 'c1'].forEach(prefix => {
+    const dateInput = document.getElementById(`${prefix}_date`);
+    const timeSelect = document.getElementById(`${prefix}_time`);
+    const weekdayBadge = document.getElementById(`${prefix}_weekday`);
+    if (dateInput) dateInput.value = '';
+    if (timeSelect) timeSelect.value = '';
+    if (weekdayBadge) { weekdayBadge.textContent = ''; weekdayBadge.classList.remove('active'); }
+  });
+}
+
+
+// ============================================================
+// [기능 2] 후보자 파이프라인 트래커
+// ============================================================
+
+/**
+ * 기존 히스토리(단순 리스트)를 후보자 단위 파이프라인으로 업그레이드합니다.
+ * 
+ * 데이터 구조:
+ * {
+ *   "홍길동|BE Developer": {
+ *     name: "홍길동",
+ *     position: "BE Developer",
+ *     stages: [
+ *       { key: "assignment_schedule", timestamp: "2025-06-10 14:30" },
+ *       { key: "task", timestamp: "2025-06-12 09:00" },
+ *       { key: "interview1", timestamp: "2025-06-15 11:00" }
+ *     ]
+ *   }
+ * }
+ */
+
+const PIPELINE_KEY = 'featuringRecruitPipeline';
+
+// 채용 파이프라인 단계 정의 (순서 중요!)
+const PIPELINE_STAGES = [
+  { key: 'assignment_schedule', label: '과제 일정', color: '#818cf8', icon: '📋' },
+  { key: 'task',                label: '과제전형',   color: '#6366f1', icon: '📝' },
+  { key: 'interview1',         label: '1차 면접',   color: '#5E51FF', icon: '🗣️' },
+  { key: 'interviewFinal',     label: '최종 면접',  color: '#4f46e5', icon: '👔' },
+  { key: 'scheduleConfirm',    label: '일정 확정',  color: '#4338ca', icon: '✅' },
+  { key: 'reference',          label: '레퍼런스',   color: '#3730a3', icon: '🔍' },
+  { key: 'finalNotice',        label: '처우협의',   color: '#312e81', icon: '💼' },
+  { key: 'onboarding',         label: '입사 안내',  color: '#1e1b4b', icon: '🎉' },
+  { key: 'reject',             label: '불합격',     color: '#ef4444', icon: '❌' }
+];
+
+function getStageIndex(key) {
+  return PIPELINE_STAGES.findIndex(s => s.key === key);
+}
+
+function getStageInfo(key) {
+  return PIPELINE_STAGES.find(s => s.key === key) || { label: key, color: '#9ca3af', icon: '❓' };
+}
+
+/**
+ * 파이프라인 데이터 로드
+ */
+function loadPipeline() {
+  try {
+    return JSON.parse(localStorage.getItem(PIPELINE_KEY) || '{}');
+  } catch {
+    return {};
+  }
+}
+
+/**
+ * 파이프라인에 단계 추가 (서식 복사 시 호출)
+ */
+function saveToPipeline(name, position, key) {
+  if (!name || name === '지원자') return;
+
+  const pipeline = loadPipeline();
+  const candidateKey = `${name}|${position}`;
+
+  if (!pipeline[candidateKey]) {
+    pipeline[candidateKey] = {
+      name: name,
+      position: position,
+      stages: []
+    };
+  }
+
+  const now = new Date();
+  const timestamp = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+  // 같은 단계가 이미 있으면 타임스탬프 업데이트
+  const existingIdx = pipeline[candidateKey].stages.findIndex(s => s.key === key);
+  if (existingIdx >= 0) {
+    pipeline[candidateKey].stages[existingIdx].timestamp = timestamp;
+  } else {
+    pipeline[candidateKey].stages.push({ key, timestamp });
+  }
+
+  // 최신 활동 시간 기록
+  pipeline[candidateKey].lastActivity = timestamp;
+
+  localStorage.setItem(PIPELINE_KEY, JSON.stringify(pipeline));
+  renderPipelinePanel();
+}
+
+/**
+ * 다음 추천 단계 계산
+ */
+function getNextStage(stages) {
+  if (!stages || stages.length === 0) return PIPELINE_STAGES[0];
+
+  // 불합격이 있으면 추천 없음
+  if (stages.some(s => s.key === 'reject')) return null;
+
+  // 가장 마지막 단계의 인덱스를 찾고, 그 다음 단계 추천
+  let maxIdx = -1;
+  stages.forEach(s => {
+    const idx = getStageIndex(s.key);
+    if (idx > maxIdx) maxIdx = idx;
+  });
+
+  // reject를 제외한 다음 단계
+  const nextIdx = maxIdx + 1;
+  if (nextIdx >= PIPELINE_STAGES.length - 1) return null; // onboarding 이후 없음
+  return PIPELINE_STAGES[nextIdx];
+}
+
+/**
+ * 파이프라인 패널 렌더링
+ */
+function renderPipelinePanel() {
+  const panel = document.getElementById('pipelineList');
+  if (!panel) return;
+
+  const pipeline = loadPipeline();
+  const entries = Object.entries(pipeline);
+
+  if (entries.length === 0) {
+    panel.innerHTML = '<li class="pipeline-empty">아직 발송 이력이 없습니다.</li>';
+    return;
+  }
+
+  // 최신 활동 순 정렬
+  entries.sort((a, b) => (b[1].lastActivity || '').localeCompare(a[1].lastActivity || ''));
+
+  panel.innerHTML = entries.map(([candidateKey, data]) => {
+    const nextStage = getNextStage(data.stages);
+    const isRejected = data.stages.some(s => s.key === 'reject');
+
+    // 파이프라인 도트 생성
+    const dotsHtml = PIPELINE_STAGES.filter(s => s.key !== 'reject').map(stage => {
+      const completed = data.stages.find(s => s.key === stage.key);
+      const isCurrent = completed && !data.stages.find(s => getStageIndex(s.key) > getStageIndex(stage.key) && s.key !== 'reject');
+      return `<span class="pipeline-dot ${completed ? 'completed' : ''} ${isCurrent ? 'current' : ''}" 
+                    style="${completed ? `background:${stage.color}` : ''}"
+                    title="${stage.label}${completed ? ' (' + completed.timestamp + ')' : ''}"></span>`;
+    }).join('');
+
+    // 불합격 표시
+    const rejectBadge = isRejected ? '<span class="reject-badge">불합격</span>' : '';
+
+    // 다음 추천 단계
+    const nextHtml = nextStage && !isRejected
+      ? `<div class="next-stage-hint">다음 추천: <strong>${nextStage.icon} ${nextStage.label}</strong></div>`
+      : '';
+
+    // 마지막 단계 정보
+    const lastStage = data.stages.length > 0
+      ? data.stages.reduce((a, b) => (a.timestamp > b.timestamp ? a : b))
+      : null;
+    const lastInfo = lastStage ? getStageInfo(lastStage.key) : null;
+
+    return `
+      <li>
+        <div class="pipeline-item" onclick="loadCandidateFromPipeline('${candidateKey.replace(/'/g, "\\'")}')">
+          <div class="pipeline-header">
+            <strong>${escapeHtml(data.name)}</strong> ${rejectBadge}
+            <span class="pipeline-position">${escapeHtml(data.position)}</span>
+          </div>
+          <div class="pipeline-dots">${dotsHtml}</div>
+          ${lastInfo ? `<div class="pipeline-last">최근: ${lastInfo.icon} ${lastInfo.label} <span class="pipeline-time">${lastStage.timestamp}</span></div>` : ''}
+          ${nextHtml}
+        </div>
+      </li>`;
+  }).join('');
+}
+
+/**
+ * 파이프라인에서 후보자 클릭 시 → 입력 필드 자동 채우기 + 다음 단계 하이라이트
+ */
+function loadCandidateFromPipeline(candidateKey) {
+  const pipeline = loadPipeline();
+  const data = pipeline[candidateKey];
+  if (!data) return;
+
+  // 입력 필드 채우기
+  if (nameEl) nameEl.value = data.name;
+  if (positionEl) positionEl.value = data.position;
+
+  // 다음 추천 단계 하이라이트
+  highlightNextStage(data.stages);
+
+  showToast(`${data.name}님 정보를 불러왔습니다.`);
+}
+
+/**
+ * 다음 추천 단계 버튼 하이라이트
+ */
+function highlightNextStage(stages) {
+  // 기존 하이라이트 제거
+  document.querySelectorAll('.js-template').forEach(btn => {
+    btn.classList.remove('next-recommended');
+  });
+
+  const nextStage = getNextStage(stages);
+  if (!nextStage) return;
+
+  // 해당 버튼 하이라이트
+  const btn = document.querySelector(`.js-template[data-key="${nextStage.key}"]`);
+  if (btn) {
+    btn.classList.add('next-recommended');
+  }
+
+  // 불합격 버튼은 항상 보조 하이라이트
+  const rejectBtn = document.querySelector('.js-template[data-key="reject"]');
+  if (rejectBtn && nextStage.key !== 'reject') {
+    rejectBtn.classList.add('next-secondary');
+  }
+}
+
+/**
+ * 파이프라인 데이터 전체 초기화
+ */
+function clearPipeline() {
+  if (confirm('모든 후보자 파이프라인 데이터를 삭제하시겠습니까?')) {
+    localStorage.removeItem(PIPELINE_KEY);
+    renderPipelinePanel();
+    showToast('파이프라인이 초기화되었습니다.');
+  }
+}
+
+
+// ============================================================
+// [기능 3] 오퍼레터 전용 입력 패널
+// ============================================================
+
+/**
+ * 처우협의(finalNotice) 템플릿에는 연봉, 소속, 주요 업무 등
+ * 기존 공통 필드에 없는 고유 데이터가 필요합니다.
+ * 
+ * "처우협의" 버튼 클릭 시 전용 모달을 띄워 입력받고,
+ * 입력된 값을 vars에 주입하여 템플릿을 렌더링합니다.
+ */
+
+// 오퍼레터 입력 상태
+let offerLetterData = {
+  salary: '',         // 연봉 (만원 단위 숫자)
+  department: '',     // 소속 부서
+  duties: [],         // 주요 업무 (배열)
+  startDate: '',      // 입사 예정일
+  probation: '3개월', // 시용 기간
+};
+
+/**
+ * 오퍼레터 모달 열기
+ */
+function openOfferModal() {
+  const modal = document.getElementById('offerModal');
+  if (!modal) return;
+
+  // 기존 입력값 복원
+  const salaryInput = document.getElementById('offer_salary');
+  const deptInput = document.getElementById('offer_department');
+  const dutiesInput = document.getElementById('offer_duties');
+
+  if (salaryInput) salaryInput.value = offerLetterData.salary;
+  if (deptInput) deptInput.value = offerLetterData.department;
+  if (dutiesInput) dutiesInput.value = offerLetterData.duties.join('\n');
+
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  // 첫 번째 입력 필드에 포커스
+  setTimeout(() => { if (salaryInput) salaryInput.focus(); }, 200);
+}
+
+/**
+ * 오퍼레터 모달 닫기
+ */
+function closeOfferModal() {
+  const modal = document.getElementById('offerModal');
+  if (modal) modal.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/**
+ * 오퍼레터 모달 제출 → 템플릿 렌더링
+ */
+function submitOfferModal() {
+  const salaryInput = document.getElementById('offer_salary');
+  const deptInput = document.getElementById('offer_department');
+  const dutiesInput = document.getElementById('offer_duties');
+
+  // 입력값 저장
+  offerLetterData.salary = (salaryInput?.value || '').trim();
+  offerLetterData.department = (deptInput?.value || '').trim();
+  offerLetterData.duties = (dutiesInput?.value || '')
+    .split('\n')
+    .map(line => line.trim())
+    .filter(Boolean);
+
+  // 유효성 검증
+  const errors = [];
+  if (!offerLetterData.salary) errors.push('연봉');
+  if (!offerLetterData.department) errors.push('소속 부서');
+  if (offerLetterData.duties.length === 0) errors.push('주요 업무');
+
+  if (errors.length > 0) {
+    showToast(`다음 항목을 입력해주세요: ${errors.join(', ')}`);
+    return;
+  }
+
+  closeOfferModal();
+
+  // 오퍼레터 데이터를 vars에 주입하여 렌더링
+  renderFinalNoticeWithOffer();
+}
+
+/**
+ * 오퍼레터 데이터가 주입된 finalNotice 템플릿 렌더링
+ */
+function renderFinalNoticeWithOffer() {
+  currentKey = 'finalNotice';
+  const builder = templates['finalNotice'];
+  if (!builder) return;
+
+  try {
+    const vars = (typeof buildVarsV2 === 'function') ? buildVarsV2() : buildVars();
+
+    // 오퍼레터 전용 데이터 주입
+    vars.salary = offerLetterData.salary;
+    vars.department = offerLetterData.department;
+    vars.duties = offerLetterData.duties;
+
+    const html = builder(vars, 'finalNotice');
+    showPreview(html);
+
+    const sb = subjectTemplates['finalNotice'];
+    currentSubject = sb ? sb(vars) : '[Featuring] ' + (vars.position || '');
+    subjectPreviewEl.textContent = currentSubject;
+    copySubjectBtn.disabled = !currentSubject;
+  } catch (err) {
+    console.error('[오퍼레터 렌더 오류]', err);
+    showPreview('<p style="margin:0;color:#b91c1c">오퍼레터를 표시하는 중 오류가 발생했습니다.</p>');
+  }
+}
+
+/**
+ * 연봉 입력 시 콤마 자동 포맷
+ */
+function formatSalaryInput(input) {
+  let value = input.value.replace(/[^\d]/g, '');
+  if (value) {
+    value = parseInt(value, 10).toLocaleString('ko-KR');
+  }
+  input.value = value;
+}
+
+
+// ============================================================
+// [기능 4] GAS 스크립트 상태 동기화
+// ============================================================
+
+/**
+ * GAS WebApp에 후보자 이메일로 현재 상태를 조회합니다.
+ * 
+ * 사용 전제: ks_gs.txt의 GAS 프로젝트에 아래 doGet 핸들러가 추가되어야 합니다.
+ * (별도 파일 gas-sync-endpoint.gs 참고)
+ */
+
+// GAS WebApp URL (기존 WEB_APP_URL과 동일하거나 별도 배포)
+// const GAS_SYNC_URL = WEB_APP_URL; // 기존 변수 재활용 가능
+
+/**
+ * 후보자 상태 조회
+ * @param {string} email - 후보자 이메일
+ * @returns {Promise<Object>} - { found, stage, dates, confirmed, position }
+ */
+async function fetchCandidateStatus(email) {
+  if (!email || !email.includes('@')) return null;
+
+  const syncUrl = typeof WEB_APP_URL !== 'undefined' ? WEB_APP_URL : '';
+  if (!syncUrl) {
+    console.warn('[GAS Sync] WEB_APP_URL이 설정되지 않았습니다.');
+    return null;
+  }
+
+  try {
+    const url = `${syncUrl}?action=status&email=${encodeURIComponent(email)}`;
+    const res = await fetch(url);
+    const data = await res.json();
+    return data;
+  } catch (err) {
+    console.error('[GAS Sync Error]', err);
+    return null;
+  }
+}
+
+/**
+ * 이메일 입력 후 상태 조회 → 자동 채우기
+ */
+async function syncCandidateStatus() {
+  const emailInput = document.getElementById('candidateEmail');
+  const syncBtn = document.getElementById('syncBtn');
+  const syncStatus = document.getElementById('syncStatus');
+
+  if (!emailInput || !emailInput.value) {
+    showToast('이메일을 입력해주세요.');
+    return;
+  }
+
+  // 로딩 상태
+  if (syncBtn) {
+    syncBtn.disabled = true;
+    syncBtn.textContent = '조회중...';
+  }
+
+  try {
+    const data = await fetchCandidateStatus(emailInput.value.trim());
+
+    if (!data || !data.found) {
+      if (syncStatus) {
+        syncStatus.innerHTML = '<span class="sync-not-found">해당 이메일의 후보자를 찾을 수 없습니다.</span>';
+      }
+      return;
+    }
+
+    // 필드 자동 채우기
+    if (data.name && nameEl) nameEl.value = data.name;
+    if (data.position && positionEl) positionEl.value = data.position;
+
+    // 확정 일정이 있으면 날짜 필드에 자동 입력
+    if (data.confirmed) {
+      autoFillDateFromString(data.confirmed, 'c1');
+    }
+
+    // 상태 표시
+    if (syncStatus) {
+      const stageInfo = getStageInfo(data.stage || '');
+      syncStatus.innerHTML = `
+        <span class="sync-found">
+          ✅ ${escapeHtml(data.name)} | ${escapeHtml(data.position)} | 
+          현재 단계: <strong>${stageInfo.icon} ${stageInfo.label}</strong>
+          ${data.confirmed ? ` | 확정일: ${escapeHtml(data.confirmed)}` : ''}
+        </span>`;
+    }
+
+    showToast(`${data.name}님의 정보를 시트에서 불러왔습니다.`);
+  } catch (err) {
+    if (syncStatus) {
+      syncStatus.innerHTML = '<span class="sync-error">조회 중 오류가 발생했습니다.</span>';
+    }
+  } finally {
+    if (syncBtn) {
+      syncBtn.disabled = false;
+      syncBtn.textContent = '시트 조회';
+    }
+  }
+}
+
+/**
+ * "YYYY-MM-DD (요일) HH:MM" 형식의 문자열을 날짜 피커에 자동 입력
+ */
+function autoFillDateFromString(dateStr, prefix) {
+  if (!dateStr) return;
+  
+  // "2025-06-15 (일) 14:00" 형태 파싱
+  const match = dateStr.match(/^(\d{4}-\d{2}-\d{2})\s*\([^)]*\)\s*(\d{2}:\d{2})$/);
+  if (!match) return;
+
+  const dateInput = document.getElementById(`${prefix}_date`);
+  const timeSelect = document.getElementById(`${prefix}_time`);
+
+  if (dateInput) dateInput.value = match[1];
+  if (timeSelect) timeSelect.value = match[2];
+
+  onDatePickerChange(prefix);
+}
+
+
+// ============================================================
+// [통합] 기존 함수 오버라이드 및 초기화
+// ============================================================
+
+/**
+ * 기존 buildVars를 v2로 교체 (날짜 피커 호환)
+ */
+function patchBuildVars() {
+  // 기존 buildVars를 백업하고 새 버전으로 교체
+  if (typeof window.buildVars === 'function') {
+    window._originalBuildVars = window.buildVars;
+    window.buildVars = buildVarsV2;
+  }
+}
+
+/**
+ * 기존 saveHistory를 확장하여 파이프라인에도 저장
+ */
+function patchSaveHistory() {
+  if (typeof window.saveHistory === 'function') {
+    const _originalSaveHistory = window.saveHistory;
+    window.saveHistory = function () {
+      _originalSaveHistory(); // 기존 히스토리 저장
+
+      // 파이프라인에도 저장
+      const vars = (typeof buildVarsV2 === 'function') ? buildVarsV2() : buildVars();
+      saveToPipeline(vars.name, vars.position, currentKey);
+    };
+  }
+}
+
+/**
+ * 처우협의 버튼 클릭 인터셉트
+ * — "처우협의" 버튼 클릭 시 바로 템플릿을 렌더링하지 않고 모달을 띄움
+ */
+function patchFinalNoticeButton() {
+  const finalBtn = document.querySelector('.js-template[data-key="finalNotice"]');
+  if (!finalBtn) return;
+
+  // 기존 이벤트 제거 후 새 이벤트 등록
+  const newBtn = finalBtn.cloneNode(true);
+  finalBtn.parentNode.replaceChild(newBtn, finalBtn);
+
+  newBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    openOfferModal();
+  });
+}
+
+/**
+ * 기존 resetAllFields를 확장
+ */
+function patchResetAllFields() {
+  if (typeof window.resetAllFields === 'function') {
+    const _originalReset = window.resetAllFields;
+    window.resetAllFields = function () {
+      _originalReset();
+      resetDatePickers();
+      offerLetterData = { salary: '', department: '', duties: [], startDate: '', probation: '3개월' };
+
+      // 하이라이트 제거
+      document.querySelectorAll('.js-template').forEach(btn => {
+        btn.classList.remove('next-recommended', 'next-secondary');
+      });
+    };
+  }
+}
+
+/**
+ * 전체 초기화 — DOM이 준비된 후 실행
+ */
+function initUpgradeModule() {
+  // 1. 날짜 피커 초기화
+  initAllDatePickers();
+
+  // 2. 기존 함수 패치
+  patchBuildVars();
+  patchSaveHistory();
+  patchFinalNoticeButton();
+  patchResetAllFields();
+
+  // 3. 파이프라인 패널 렌더링
+  renderPipelinePanel();
+
+  console.log('[Upgrade Module] 고도화 모듈 v2.0 초기화 완료');
+}
+
+// DOM 로드 후 실행
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initUpgradeModule);
+} else {
+  // 이미 로드된 경우 (스크립트가 body 하단에 있을 때)
+  setTimeout(initUpgradeModule, 0);
+}
+               
 </script>
 </body>
 </html>
