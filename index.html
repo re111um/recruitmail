@@ -2686,18 +2686,20 @@ function formatSalaryInput(input) {
 async function fetchCandidateStatus(email) {
   if (!email || !email.includes('@')) return null;
 
-  const syncUrl = (typeof GAS_SYNC_URL !== 'undefined' && GAS_SYNC_URL) ? GAS_SYNC_URL : '';
-if (!syncUrl) {
-  console.warn('[GAS Sync] GAS_SYNC_URL이 설정되지 않았습니다.');
-  return null;
-}
+  var syncUrl = (typeof GAS_SYNC_URL !== 'undefined' && GAS_SYNC_URL) ? GAS_SYNC_URL : '';
+  if (!syncUrl) {
+    console.warn('[GAS Sync] GAS_SYNC_URL이 설정되지 않았습니다.');
+    return null;
+  }
 
   try {
-    const res = await fetch(syncUrl, {
-  method: 'POST',
-  body: JSON.stringify({ action: 'status', email: email })
-});
-    const data = await res.json();
+    var res = await fetch(syncUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: 'status', email: email }),
+      redirect: 'follow'
+    });
+    var data = await res.json();
     return data;
   } catch (err) {
     console.error('[GAS Sync Error]', err);
