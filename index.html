@@ -953,6 +953,7 @@
   </div> <div id="toast" class="toast" role="status" aria-live="polite">클립보드에 복사했습니다.</div>
   <script>
   const WEB_APP_URL = "https://re111um.github.io/interviewsc/";
+    const GAS_SYNC_URL = "https://script.google.com/macros/s/AKfycbylOKDdRrTbTwtn0g_9TtpBo3gBywCJeRYBWp7EE3p8lM5_52VkzZ59p9COATwjiwIn/exec"; // ← ks.gs 배포 후 GAS WebApp URL 입력
   const ONBOARDING_FORM_URL_INTERN = "https://tally.so/r/eqRpbQ";
   const ONBOARDING_FORM_URL_REGULAR = "https://tally.so/r/jaPpr6";
   const CULTURE_GUIDE_URL = "https://teamfeaturing.notion.site/Featuring-Culture-Guide-df09fd30889a42e3845c7802d316b184?source=copy_link"; // 문화 소개서 링크 (원하면 실제 링크로 교체)
@@ -2679,7 +2680,7 @@ function formatSalaryInput(input) {
 async function fetchCandidateStatus(email) {
   if (!email || !email.includes('@')) return null;
 
-  const syncUrl = typeof WEB_APP_URL !== 'undefined' ? WEB_APP_URL : '';
+  const syncUrl = (typeof GAS_SYNC_URL !== 'undefined' && GAS_SYNC_URL) ? GAS_SYNC_URL : '';
   if (!syncUrl) {
     console.warn('[GAS Sync] WEB_APP_URL이 설정되지 않았습니다.');
     return null;
