@@ -2693,8 +2693,10 @@ if (!syncUrl) {
 }
 
   try {
-    const url = `${syncUrl}?action=status&email=${encodeURIComponent(email)}`;
-    const res = await fetch(url);
+    const res = await fetch(syncUrl, {
+  method: 'POST',
+  body: JSON.stringify({ action: 'status', email: email })
+});
     const data = await res.json();
     return data;
   } catch (err) {
