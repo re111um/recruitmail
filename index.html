@@ -893,11 +893,7 @@
   </div>
         </div>
       </div>
-<div class="suggest-row">
-  <button type="button" class="btn suggest-btn" onclick="suggestSchedule()">🗓 면접관 일정 추천</button>
-  <span id="suggestStatus" class="hint"></span>
-</div>
-<div id="suggestResults"></div>
+
       
       <div class="dates-grid-v2">
   <!-- 제안 일정 1 -->
@@ -921,6 +917,13 @@
       <span class="date-badge">3</span> 제안 일정 3
     </div>
   </div>
+
+  <!-- ★ 여기에 추가 -->
+<div class="date-group" style="display:flex; flex-direction:column; justify-content:flex-end;">
+  <button type="button" class="btn suggest-btn" onclick="suggestSchedule()" style="width:100%; margin-bottom:0;">🤖 면접관 일정 추천</button>
+  <span id="suggestStatus" class="hint" style="margin-top:6px; font-size:11px;"></span>
+  <div id="suggestResults" style="margin-top:8px;"></div>
+</div>      
 
   <!-- 확정 일자 (전체 폭) -->
   <div class="date-group confirm-date" id="dateGroup_c1">
