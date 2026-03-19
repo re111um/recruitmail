@@ -3144,31 +3144,63 @@ async function suggestSchedule() {
   }
 }
 
-/** 추천 슬롯 클릭 → 피커 자동 입력 */
-var suggestFillIndex = 0;
+  /** 선택된 슬롯 저장소 */
+var selectedSlots = [];
+
 
 function selectSuggestedSlot(date, time, chipIndex) {
-  var prefixes = ['p1', 'p2', 'p3'];
-  var targetPrefix = null;
+  var key = date + ' ' + time;
+  var chips = document.querySelectorAll('.suggest-chip');
+  var chip = chips[chipIndex];
 
+  // 이미 선택된 슬롯이면 → 토글 해제
+  var existIdx = selectedSlots.findIndex(function(s) { return s.key === key; });
+  if (existIdx !== -1) {
+    selectedSlots.splice(existIdx, 1);
+    if (chip) chip.classList.remove('selected');
+    applySelectedSlots();
+    return;
+  }
+
+  // 3개 초과 선택 방지
+  if (selectedSlots.length >= 3) {
+    alert('제안 일정은 최대 3개까지 선택할 수 있습니다.');
+    return;
+  }
+
+  // 선택 추가
+  selectedSlots.push({ key: key, date: date, time: time });
+  if (chip) chip.classList.add('selected');
+
+  applySelectedSlots();
+}
+
+/** 선택된 슬롯을 날짜순 정렬 → p1, p2, p3에 반영 */
+function applySelectedSlots() {
+  // 날짜+시간 오름차순 정렬
+  selectedSlots.sort(function(a, b) {
+    return (a.date + a.time).localeCompare(b.date + b.time);
+  });
+
+  var prefixes = ['p1', 'p2', 'p3'];
+
+  // 3칸 모두 초기화
   for (var i = 0; i < prefixes.length; i++) {
     var dateInput = document.getElementById(prefixes[i] + '_date');
-    if (dateInput && !dateInput.value) { targetPrefix = prefixes[i]; break; }
+    var timeSelect = document.getElementById(prefixes[i] + '_time');
+    if (dateInput) dateInput.value = '';
+    if (timeSelect) timeSelect.value = '';
+    if (typeof onDatePickerChange === 'function') onDatePickerChange(prefixes[i]);
   }
 
-  if (!targetPrefix) {
-    suggestFillIndex = (suggestFillIndex + 1) % 3;
-    targetPrefix = prefixes[suggestFillIndex];
+  // 정렬된 순서대로 채우기
+  for (var j = 0; j < selectedSlots.length && j < 3; j++) {
+    var dateInput = document.getElementById(prefixes[j] + '_date');
+    var timeSelect = document.getElementById(prefixes[j] + '_time');
+    if (dateInput) dateInput.value = selectedSlots[j].date;
+    if (timeSelect) timeSelect.value = selectedSlots[j].time;
+    if (typeof onDatePickerChange === 'function') onDatePickerChange(prefixes[j]);
   }
-
-  var dateInput = document.getElementById(targetPrefix + '_date');
-  var timeSelect = document.getElementById(targetPrefix + '_time');
-  if (dateInput) dateInput.value = date;
-  if (timeSelect) timeSelect.value = time;
-  if (typeof onDatePickerChange === 'function') onDatePickerChange(targetPrefix);
-
-  var chips = document.querySelectorAll('.suggest-chip');
-  if (chips[chipIndex]) chips[chipIndex].classList.add('selected');
 }
 
 
