@@ -805,7 +805,9 @@
 }
 
 .dates-grid-v2 .date-group.confirm-date {
+  grid-column: 1 / -1;
   padding-top: 10px;
+  border-top: 1px solid var(--line);
 }
 
 .dates-grid-v2 .change-date-check {
@@ -823,37 +825,27 @@
 }
     
 
-.change-date-check label {
+.change-date-inline {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: 13px;
+  margin-left: 12px;
+  font-size: 12px;
   font-weight: 600;
-  color: var(--ink);
   cursor: pointer;
-  padding: 10px 14px;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  transition: all 0.15s;
   user-select: none;
+  padding: 4px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  transition: all 0.15s;
+  vertical-align: middle;
 }
-
-.change-date-check label:hover {
+.change-date-inline:hover {
   border-color: var(--accent);
   background: rgba(94,81,255,0.04);
 }
-
-.change-date-check input:checked + span {
-  color: var(--accent);
-}
-
-.change-date-check .hint-sub {
-  display: block;
-  font-size: 11px;
-  color: var(--muted);
-  font-weight: 400;
-  margin-top: 6px;
-}
+.change-date-inline input { width: 14px; height: 14px; margin: 0; }
+.change-date-inline input:checked + span { color: var(--accent); }
 
 @media (max-width: 768px) {
   .dates-grid-v2 {
@@ -968,31 +960,24 @@
     </div>
   </div>
 
-  <!-- ★ 여기에 추가 -->
-<div class="date-group" style="display:flex; flex-direction:column; justify-content:flex-end;">
-  <button type="button" class="btn suggest-btn" onclick="suggestSchedule()">🤖 면접관 일정 추천</button>
-  <span id="suggestStatus" class="hint" style="margin-top:6px; font-size:11px;"></span>
-  <div id="suggestResults" style="margin-top:8px;"></div>
-</div>      
-        
-<!-- ★ 구분선 (전체 폭) -->
-<div class="dates-divider"></div>
-        
- <!-- 확정 일자 (1열 크기) -->
-<div class="date-group confirm-date" id="dateGroup_c1">
-  <div class="date-group-label">
-    <span class="date-badge" style="background:#059669;">✓</span> 확정 일자
+<!-- 면접관 일정 추천 -->
+  <div class="date-group" style="display:flex; align-items:flex-end; padding-bottom:4px;">
+    <button type="button" class="btn suggest-btn" onclick="suggestSchedule()">🤖 면접관 일정 추천</button>
+    <span id="suggestStatus" class="hint" style="margin-left:8px; font-size:11px;"></span>
   </div>
-</div>
 
-<!-- 변경일자 체크박스 -->
-<div class="change-date-check">
-  <div>
-    <label for="isScheduleChange">
-      <input id="isScheduleChange" type="checkbox" />
-      <span>🔄 일정 변경</span>
-    </label>
-    <span class="hint-sub">체크 시 [일정 확정] → 변경 안내 서식으로 전환</span>
+  <!-- 추천 결과 (전체 폭) -->
+  <div id="suggestResults" style="grid-column: 1 / -1;"></div>
+
+  <!-- 확정 일자 (전체 폭) -->
+  <div class="date-group confirm-date" id="dateGroup_c1">
+    <div class="date-group-label">
+      <span class="date-badge" style="background:#059669;">✓</span> 확정 일자
+      <label class="change-date-inline" for="isScheduleChange">
+        <input id="isScheduleChange" type="checkbox" />
+        <span>🔄 일정 변경</span>
+      </label>
+    </div>
   </div>
 </div>
 
