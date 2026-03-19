@@ -806,16 +806,22 @@
 
 .dates-grid-v2 .date-group.confirm-date {
   padding-top: 10px;
-  border-top: 1px solid var(--line);
 }
 
 .dates-grid-v2 .change-date-check {
   padding-top: 10px;
-  border-top: 1px solid var(--line);
   display: flex;
   align-items: flex-end;
   padding-bottom: 4px;
 }
+    
+.dates-grid-v2 .dates-divider {
+  grid-column: 1 / -1;
+  height: 1px;
+  background: var(--line);
+  margin: 4px 0 0;
+}
+    
 
 .change-date-check label {
   display: inline-flex;
@@ -968,7 +974,10 @@
   <span id="suggestStatus" class="hint" style="margin-top:6px; font-size:11px;"></span>
   <div id="suggestResults" style="margin-top:8px;"></div>
 </div>      
-
+        
+<!-- ★ 구분선 (전체 폭) -->
+<div class="dates-divider"></div>
+        
  <!-- 확정 일자 (1열 크기) -->
 <div class="date-group confirm-date" id="dateGroup_c1">
   <div class="date-group-label">
