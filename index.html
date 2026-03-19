@@ -804,11 +804,49 @@
   min-width: 0;
 }
 
-/* 확정일자는 전체 폭 */
 .dates-grid-v2 .date-group.confirm-date {
-  grid-column: 1 / -1;
   padding-top: 10px;
   border-top: 1px solid var(--line);
+}
+
+.dates-grid-v2 .change-date-check {
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  align-items: flex-end;
+  padding-bottom: 4px;
+}
+
+.change-date-check label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  cursor: pointer;
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  transition: all 0.15s;
+  user-select: none;
+}
+
+.change-date-check label:hover {
+  border-color: var(--accent);
+  background: rgba(94,81,255,0.04);
+}
+
+.change-date-check input:checked + span {
+  color: var(--accent);
+}
+
+.change-date-check .hint-sub {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 400;
+  margin-top: 6px;
 }
 
 @media (max-width: 768px) {
@@ -841,7 +879,13 @@
 .send-btn:hover { background: #047857; }
 .send-btn:disabled { background: #9ca3af; color: #fff; cursor: not-allowed; }
 .suggest-row { display: flex; align-items: center; gap: 10px; margin: 14px 0 8px; }
-.suggest-btn { background: #111; color: #fff; font-size: 13px; padding: 10px 16px; }
+.suggest-btn {
+  background: #111;
+  color: #fff;
+  font-size: 11px;
+  padding: 6px 12px;
+  white-space: nowrap;
+}
 .suggest-btn:hover { background: #333; }
 .suggest-results { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
 .suggest-chip { padding: 8px 14px; border: 1px solid var(--line); border-radius: 10px;
@@ -925,11 +969,21 @@
   <div id="suggestResults" style="margin-top:8px;"></div>
 </div>      
 
-  <!-- 확정 일자 (전체 폭) -->
-  <div class="date-group confirm-date" id="dateGroup_c1">
-    <div class="date-group-label">
-      <span class="date-badge" style="background:#059669;">✓</span> 확정 일자
-    </div>
+ <!-- 확정 일자 (1열 크기) -->
+<div class="date-group confirm-date" id="dateGroup_c1">
+  <div class="date-group-label">
+    <span class="date-badge" style="background:#059669;">✓</span> 확정 일자
+  </div>
+</div>
+
+<!-- 변경일자 체크박스 -->
+<div class="change-date-check">
+  <div>
+    <label for="isScheduleChange">
+      <input id="isScheduleChange" type="checkbox" />
+      <span>🔄 일정 변경</span>
+    </label>
+    <span class="hint-sub">체크 시 [일정 확정] → 변경 안내 서식으로 전환</span>
   </div>
 </div>
 
@@ -1258,14 +1312,42 @@ function getScheduleButtonHtml(vars, key) {
   <p style="margin:0;">감사합니다.<br />피처링 채용팀 드림.</p>
 `),
 
-scheduleConfirm: (v) => { 
-        const role = roleHtml(v);
-        const cDate = v.confirmDate 
-          ? escapeHtml(v.confirmDate) 
-          : `<span style="color:#6b7280;">{날짜를 입력하세요}</span>`;
-          
-        // wrapEmail -> wrapEmailNoHeader 로 변경
-        return wrapEmailNoHeader(`
+scheduleConfirm: (v) => {
+  const role = roleHtml(v);
+  const cDate = v.confirmDate
+    ? escapeHtml(v.confirmDate)
+    : `<span style="color:#6b7280;">{날짜를 입력하세요}</span>`;
+  const isChange = document.getElementById('isScheduleChange')?.checked;
+
+  if (isChange) {
+    return wrapEmailNoHeader(`
+      <div style="line-height: 1.7; color: #111;">
+        <p style="margin: 0 0 14px 0;"><strong>[Featuring]</strong><br>안녕하세요, ${nameFull(v)}님.<br>피처링 채용팀입니다.</p>
+        
+        <p style="margin: 0 0 14px 0;">안내드렸던 인터뷰 일정에 변경 사항에 양해주셔서 진심으로 감사드립니다.<br>변경된 일정을 아래와 같이 안내드립니다.</p>
+
+        <div style="background-color: #fff7ed; padding: 20px; border-radius: 12px; margin: 20px 0; border: 1px solid #fed7aa;">
+          <p style="margin: 0 0 8px 0; font-weight: bold; color: #c2410c;">[변경 일정 안내]</p>
+          <p style="margin: 0 0 4px 0;">• 포지션 : ${role}</p>
+          <p style="margin: 0 0 4px 0;">• 장소 : 서울 강남구 테헤란로 129, 빗썸금융타워 8층</p>
+          <p style="margin: 0; font-weight: bold;">• 변경 일시 : ${cDate} (약 1시간 ~ 소요)</p>
+        </div>
+
+        <div style="padding: 15px; border-left: 4px solid #5E51FF; background: #f9fafb; margin-bottom: 20px;">
+          <p style="margin: 0 0 5px 0;"><strong>[방문 안내]</strong></p>
+          <p style="margin: 0 0 5px 0;">&#9989; L(로비)층에 도착하시어 아래 연락처로 연락 주시면 담당자가 직접 안내 도와드리겠습니다.</p>
+          <p style="margin: 0 0 5px 0;">&#129692; L층은 정문 방문 시 에스컬레이터를 타고 한 층 올라오셔야 합니다.</p>
+          <p style="margin: 0;">&#128222; 담당자 연락처 : 010-7376-0490</p>
+        </div>
+
+        <p style="margin: 0;">일정 변경으로 불편을 드려 죄송합니다.<br>변경된 일정에 뵙겠습니다. :)<br>감사합니다.<br>피처링 채용팀 드림.</p>
+      </div>
+    `);
+  }
+
+  // 기존 일정 확정 템플릿 (아래 그대로 유지)
+  return wrapEmailNoHeader(`
+    
           <div style="line-height: 1.7; color: #111;">
             <p style="margin: 0 0 14px 0;"><strong>[Featuring]</strong><br>안녕하세요, ${nameFull(v)}님.<br>피처링 채용팀입니다.</p>
             
@@ -1947,7 +2029,12 @@ const titleText = v.isIntern
       task: (v) => `[Featuring] ${subjectRole(v)} 과제 전형 진행 안내드립니다.`,
       interview1: (v) => `[Featuring] ${subjectRole(v)} 1차 인터뷰 제안드립니다.`,
       interviewFinal: (v) => `[Featuring] ${subjectRole(v)} 1차 인터뷰 결과 안내드립니다.`,
-      scheduleConfirm: (v) => `[Featuring] ${subjectRole(v)} 일정 확정 안내드립니다.`,
+      scheduleConfirm: (v) => {
+  const isChange = document.getElementById('isScheduleChange')?.checked;
+  return isChange
+    ? `[Featuring] ${subjectRole(v)} 인터뷰 일정 변경 안내드립니다.`
+    : `[Featuring] ${subjectRole(v)} 일정 확정 안내드립니다.`;
+},
       reference: (v) => `[Featuring] 레퍼런스 체크 전형 안내드립니다.`,
       finalNotice: (v) => `[Featuring] ${nameFull(v)}님, 최종 합격 및 오퍼레터 안내드립니다.`,
       onboarding: (v) => `[Featuring] ${nameFull(v)}님, ${subjectRole(v)} 입사 안내드립니다.`,
