@@ -805,9 +805,15 @@
 }
 
 .dates-grid-v2 .date-group.confirm-date {
-  grid-column: 1 / -1;
   padding-top: 10px;
-  border-top: 1px solid var(--line);
+  /* grid-column: 1 / -1 없음 → 1열 크기 */
+}
+
+.dates-grid-v2 .dates-divider {
+  grid-column: 1 / -1;
+  height: 1px;
+  background: var(--line);
+  margin: 4px 0 0;
 }
 
 .dates-grid-v2 .change-date-check {
@@ -817,12 +823,7 @@
   padding-bottom: 4px;
 }
     
-.dates-grid-v2 .dates-divider {
-  grid-column: 1 / -1;
-  height: 1px;
-  background: var(--line);
-  margin: 4px 0 0;
-}
+
     
 
 .change-date-inline {
@@ -964,21 +965,28 @@
 <!-- 면접관 일정 추천 -->
   <div class="date-group" style="display:flex; align-items:flex-end; padding-bottom:4px;">
     <button type="button" class="btn suggest-btn" onclick="suggestSchedule()">🤖 면접관 일정 추천</button>
-    <span id="suggestStatus" class="hint" style="margin-left:8px; font-size:11px;"></span>
+    <span id="suggestStatus" class="hint" style="margin-left:8px; font-size:14px;"></span>
   </div>
 
-  <!-- 추천 결과 (전체 폭) -->
+ <!-- 추천 결과 (전체 폭) -->
   <div id="suggestResults" style="grid-column: 1 / -1;"></div>
 
-  <!-- 확정 일자 (전체 폭) -->
+  <!-- 구분선 (전체 폭) -->
+  <div class="dates-divider"></div>
+
+  <!-- 확정 일자 (1열 — 제안일정과 동일 크기) -->
   <div class="date-group confirm-date" id="dateGroup_c1">
     <div class="date-group-label">
       <span class="date-badge" style="background:#059669;">✓</span> 확정 일자
-      <label class="change-date-inline" for="isScheduleChange">
-        <input id="isScheduleChange" type="checkbox" />
-        <span>🔄 일정 변경</span>
-      </label>
     </div>
+  </div>
+
+  <!-- 변경 체크박스 (옆 1열) -->
+  <div style="display:flex; align-items:flex-end; padding-top:10px;">
+    <label class="change-date-inline" for="isScheduleChange">
+      <input id="isScheduleChange" type="checkbox" />
+      <span>🔄 일정 변경</span>
+    </label>
   </div>
 </div>
 
