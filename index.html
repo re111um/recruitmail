@@ -909,6 +909,99 @@
   font-weight: 600; color: var(--accent); }
 .suggest-chip.low-priority { opacity: 0.6; border-style: dashed; } 
 
+.suggest-date-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+.suggest-date-chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  background: #fff;
+  color: var(--ink);
+  transition: all 0.15s;
+  user-select: none;
+}
+.suggest-date-chip:hover {
+  border-color: var(--accent);
+  background: rgba(94,81,255,0.04);
+}
+.suggest-date-chip.active {
+  border-color: var(--accent);
+  background: rgba(94,81,255,0.08);
+  color: var(--accent);
+}
+.suggest-date-chip .arrow {
+  font-size: 9px;
+  transition: transform 0.2s;
+}
+.suggest-date-chip.active .arrow {
+  transform: rotate(180deg);
+}
+.suggest-time-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  z-index: 100;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  padding: 6px;
+  display: none;
+  min-width: 100px;
+}
+.suggest-date-chip.active .suggest-time-dropdown {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.suggest-time-option {
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.1s;
+  white-space: nowrap;
+  border: none;
+  background: none;
+  text-align: left;
+  color: var(--ink);
+}
+.suggest-time-option:hover {
+  background: rgba(94,81,255,0.08);
+  color: var(--accent);
+}
+.suggest-time-option.selected {
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+}
+.suggest-time-option.low-priority {
+  opacity: 0.5;
+}
+.suggest-date-chip .slot-count {
+  font-size: 10px;
+  color: var(--muted);
+  font-weight: 400;
+}
+.suggest-date-chip.has-selection::after {
+  content: '✓';
+  font-size: 10px;
+  color: var(--accent);
+  margin-left: 2px;
+}
+    
   </style>
 </head>
 <body>
@@ -976,11 +1069,11 @@
     </div>
   </div>
 
-<!-- 면접관 일정 추천 -->
-  <div class="date-group" style="display:flex; align-items:flex-end; padding-bottom:4px;">
-    <button type="button" class="btn suggest-btn" onclick="suggestSchedule()">🤖 면접관 일정 추천</button>
-    <span id="suggestStatus" class="hint" style="margin-left:8px; font-size:14px;"></span>
-  </div>
+<div class="date-group" style="display:flex; align-items:flex-end; gap:6px; padding-bottom:4px; flex-wrap:wrap;">
+  <button type="button" class="btn suggest-btn" onclick="suggestSchedule()">🤖 면접관 일정 추천</button>
+  <button type="button" class="btn suggest-btn" onclick="suggestTaskSchedule()">📋 과제 일정 추천</button>
+  <span id="suggestStatus" class="hint" style="margin-left:4px; font-size:11px;"></span>
+</div>
 
  <!-- 추천 결과 (전체 폭) -->
   <div id="suggestResults" style="grid-column: 1 / -1;"></div>
@@ -3122,23 +3215,14 @@ async function suggestSchedule() {
       return;
     }
 
-    if (suggestStatus) {
-      suggestStatus.textContent = '면접관: ' + (data.interviewers || []).join(', ') +
-        ' — 슬롯을 클릭하면 제안일정에 자동 입력됩니다.';
+if (suggestStatus) {
+      suggestStatus.textContent = '면접관: ' + (data.interviewers || []).join(', ');
     }
 
     if (suggestResults) {
-      suggestResults.innerHTML = '<div class="suggest-results">' +
-        data.slots.map(function(slot, idx) {
-          var cls = 'suggest-chip' + (slot.priority > 0 ? ' low-priority' : '');
-          return '<button type="button" class="' + cls + '" ' +
-            'onclick="selectSuggestedSlot(\'' + slot.date + '\',\'' + slot.time + '\',' + idx + ')" ' +
-            'title="' + (slot.priority > 0 ? '직전/직후 일정 있음 (후순위)' : '최적 시간대') + '">' +
-            slot.display +
-            '</button>';
-        }).join('') +
-        '</div>';
+      renderDateGroupedSlots(data.slots, suggestResults);
     }
+    
   } catch (err) {
     if (suggestStatus) suggestStatus.textContent = '조회 중 오류: ' + err.message;
   }
@@ -3201,6 +3285,127 @@ function applySelectedSlots() {
     if (timeSelect) timeSelect.value = selectedSlots[j].time;
     if (typeof onDatePickerChange === 'function') onDatePickerChange(prefixes[j]);
   }
+}
+
+  // ============================================================
+// 날짜별 그룹 렌더링 (A안: 날짜 칩 + 시간 드롭다운)
+// ============================================================
+
+function renderDateGroupedSlots(slots, container) {
+  var dateMap = {};
+  var dateOrder = [];
+  slots.forEach(function(slot) {
+    if (!dateMap[slot.date]) {
+      dateMap[slot.date] = { weekday: slot.weekday, times: [] };
+      dateOrder.push(slot.date);
+    }
+    dateMap[slot.date].times.push({
+      time: slot.time, endTime: slot.endTime,
+      display: slot.display, priority: slot.priority
+    });
+  });
+
+  if (dateOrder.length === 0) { container.innerHTML = ''; return; }
+
+  var html = '<div class="suggest-date-group">';
+  dateOrder.forEach(function(date) {
+    var group = dateMap[date];
+    var shortDate = date.substring(5);
+    var isSelected = selectedSlots.some(function(s) { return s.date === date; });
+
+    html += '<div class="suggest-date-chip' + (isSelected ? ' has-selection' : '') + '" ' +
+            'onclick="toggleDateDropdown(this, event)" data-date="' + date + '">' +
+            shortDate + ' (' + group.weekday + ') ' +
+            '<span class="slot-count">' + group.times.length + '건</span>' +
+            '<span class="arrow">▼</span>' +
+            '<div class="suggest-time-dropdown">';
+
+    group.times.forEach(function(t) {
+      var timeKey = date + ' ' + t.time;
+      var isTimeSelected = selectedSlots.some(function(s) { return s.key === timeKey; });
+      html += '<button type="button" class="suggest-time-option' +
+              (isTimeSelected ? ' selected' : '') +
+              (t.priority > 0 ? ' low-priority' : '') + '" ' +
+              'onclick="selectTimeFromDropdown(\'' + date + '\',\'' + t.time + '\', this, event)">' +
+              t.time + '~' + t.endTime + '</button>';
+    });
+
+    html += '</div></div>';
+  });
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+function toggleDateDropdown(chip, event) {
+  if (event.target.classList.contains('suggest-time-option')) return;
+  var wasActive = chip.classList.contains('active');
+  document.querySelectorAll('.suggest-date-chip.active').forEach(function(c) { c.classList.remove('active'); });
+  if (!wasActive) chip.classList.add('active');
+}
+
+function selectTimeFromDropdown(date, time, btn, event) {
+  event.stopPropagation();
+  var key = date + ' ' + time;
+  var existIdx = selectedSlots.findIndex(function(s) { return s.key === key; });
+
+  if (existIdx !== -1) {
+    selectedSlots.splice(existIdx, 1);
+    btn.classList.remove('selected');
+  } else {
+    var sameDateIdx = selectedSlots.findIndex(function(s) { return s.date === date; });
+    if (sameDateIdx !== -1) selectedSlots.splice(sameDateIdx, 1);
+    if (selectedSlots.length >= 3) { alert('제안 일정은 최대 3개까지 선택할 수 있습니다.'); return; }
+    selectedSlots.push({ key: key, date: date, time: time });
+    btn.closest('.suggest-time-dropdown').querySelectorAll('.suggest-time-option').forEach(function(o) { o.classList.remove('selected'); });
+    btn.classList.add('selected');
+  }
+  applySelectedSlots();
+  updateDateChipStates();
+}
+
+function updateDateChipStates() {
+  document.querySelectorAll('.suggest-date-chip').forEach(function(chip) {
+    var date = chip.getAttribute('data-date');
+    var isSelected = selectedSlots.some(function(s) { return s.date === date; });
+    chip.classList.toggle('has-selection', isSelected);
+  });
+}
+
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.suggest-date-chip')) {
+    document.querySelectorAll('.suggest-date-chip.active').forEach(function(c) { c.classList.remove('active'); });
+  }
+});
+
+// ============================================================
+// 과제 일정 자동 추천 (금, 토, 일 09:00)
+// ============================================================
+
+function suggestTaskSchedule() {
+  var now = new Date();
+  var currentDay = now.getDay();
+  var daysUntilFri = (5 - currentDay + 7) % 7;
+  if (daysUntilFri === 0 && now.getHours() >= 9) daysUntilFri = 7;
+
+  var fri = new Date(now.getFullYear(), now.getMonth(), now.getDate() + daysUntilFri);
+  var sat = new Date(fri.getTime() + 1 * 24 * 60 * 60 * 1000);
+  var sun = new Date(fri.getTime() + 2 * 24 * 60 * 60 * 1000);
+
+  var dates = [fri, sat, sun];
+  var prefixes = ['p1', 'p2', 'p3'];
+  selectedSlots = [];
+
+  for (var i = 0; i < 3; i++) {
+    var d = dates[i];
+    var dateStr = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    var dateInput = document.getElementById(prefixes[i] + '_date');
+    var timeSelect = document.getElementById(prefixes[i] + '_time');
+    if (dateInput) dateInput.value = dateStr;
+    if (timeSelect) timeSelect.value = '09:00';
+    if (typeof onDatePickerChange === 'function') onDatePickerChange(prefixes[i]);
+  }
+
+  if (typeof showToast === 'function') showToast('이번 주 금/토/일 09:00으로 제안 일정을 설정했습니다.');
 }
 
 
