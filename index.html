@@ -2553,17 +2553,16 @@ function resetDatePickers() {
 
 const PIPELINE_KEY = 'featuringRecruitPipeline';
 
-// 채용 파이프라인 단계 정의 (순서 중요!)
 const PIPELINE_STAGES = [
-  { key: 'assignment_schedule', label: '과제 일정', color: '#818cf8', icon: '📋' },
-  { key: 'task',                label: '과제전형',   color: '#6366f1', icon: '📝' },
-  { key: 'interview1',         label: '1차 면접',   color: '#5E51FF', icon: '🗣️' },
-  { key: 'interviewFinal',     label: '최종 면접',  color: '#4f46e5', icon: '👔' },
-  { key: 'scheduleConfirm',    label: '일정 확정',  color: '#4338ca', icon: '✅' },
-  { key: 'reference',          label: '레퍼런스',   color: '#3730a3', icon: '🔍' },
-  { key: 'finalNotice',        label: '처우협의',   color: '#312e81', icon: '💼' },
-  { key: 'onboarding',         label: '입사 안내',  color: '#1e1b4b', icon: '🎉' },
-  { key: 'reject',             label: '불합격',     color: '#ef4444', icon: '❌' }
+  { key: 'assignment_schedule', label: '과제 일정',       color: '#818cf8', icon: '📋' },
+  { key: 'task',                label: '과제전형',         color: '#6366f1', icon: '📝' },
+  { key: 'interview1',         label: '1차 인터뷰',       color: '#5E51FF', icon: '🗣️' },
+  { key: 'interviewFinal',     label: '최종 인터뷰',      color: '#4f46e5', icon: '👔' },
+  { key: 'scheduleConfirm',    label: '일정 확정',        color: '#4338ca', icon: '✅' },
+  { key: 'reference',          label: '레퍼런스 체크',    color: '#3730a3', icon: '🔍' },
+  { key: 'finalNotice',        label: '처우협의 및 오퍼레터', color: '#312e81', icon: '💼' },
+  { key: 'onboarding',         label: '입사 안내',        color: '#1e1b4b', icon: '🎉' },
+  { key: 'reject',             label: '불합격',           color: '#ef4444', icon: '❌' }
 ];
 
 function getStageIndex(key) {
