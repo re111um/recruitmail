@@ -1047,6 +1047,22 @@
   color: var(--accent);
   font-weight: 500;
 }
+    .pending-bar.pending-loading {
+  background: #f3f4f6;
+  border-color: var(--line);
+  animation: pending-pulse 1.5s ease-in-out infinite;
+}
+@keyframes pending-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+.pending-bar.pending-empty {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+}
+.pending-bar.pending-empty .pending-label {
+  color: #166534;
+}
     
   </style>
 </head>
@@ -3477,16 +3493,17 @@ if (document.readyState === 'loading') {
   setTimeout(patchSendButton, 100);
 }
 
-// ============================================================
-// 일정 미확정 후보자 자동 표시
-// ============================================================
-
 async function loadPendingCandidates() {
   var area = document.getElementById('pendingArea');
   if (!area) return;
 
   var syncUrl = (typeof GAS_SYNC_URL !== 'undefined' && GAS_SYNC_URL) ? GAS_SYNC_URL : '';
   if (!syncUrl) return;
+
+  // 로딩 상태 표시
+  area.innerHTML = '<div class="pending-bar pending-loading">' +
+    '<span class="pending-label">📌 일정 미확정 후보자 조회 중...</span>' +
+    '</div>';
 
   try {
     var res = await fetch(syncUrl, {
@@ -3498,7 +3515,9 @@ async function loadPendingCandidates() {
     var data = await res.json();
 
     if (data.result !== 'success' || !data.candidates || data.candidates.length === 0) {
-      area.innerHTML = '';
+      area.innerHTML = '<div class="pending-bar pending-empty">' +
+        '<span class="pending-label">✅ 일정 미확정 후보자가 없습니다</span>' +
+        '</div>';
       return;
     }
 
@@ -3519,8 +3538,9 @@ async function loadPendingCandidates() {
     area.innerHTML = html;
 
   } catch (err) {
-    // 로드 실패 시 조용히 무시 (페이지 사용에 지장 없음)
-    area.innerHTML = '';
+    area.innerHTML = '<div class="pending-bar pending-empty">' +
+      '<span class="pending-label">⚠️ 후보자 목록을 불러올 수 없습니다</span>' +
+      '</div>';
   }
 }
 
