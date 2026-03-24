@@ -1001,6 +1001,52 @@
   color: var(--accent);
   margin-left: 2px;
 }
+
+    .pending-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+.pending-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #92400e;
+  white-space: nowrap;
+}
+.pending-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border: 1px solid #fde68a;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  background: #fff;
+  color: var(--ink);
+  transition: all 0.15s;
+}
+.pending-chip:hover {
+  border-color: var(--accent);
+  background: rgba(94,81,255,0.04);
+}
+.pending-chip .pending-stage {
+  font-size: 10px;
+  color: var(--muted);
+  font-weight: 400;
+}
+.pending-chip .pending-pos {
+  font-size: 10px;
+  color: var(--accent);
+  font-weight: 500;
+}
     
   </style>
 </head>
@@ -1011,6 +1057,7 @@
       <h1>Featuring Recruit 메일 서식</h1>
       <p class="sub">아래 내용을 입력한 뒤, 원하는 단계 버튼을 누르세요. 하단 미리보기에서 <strong>서식 복사</strong>를 클릭하면 Gmail 본문(HTML)으로 그대로 붙여넣을 수 있습니다.</p>
 
+      <div id="pendingArea"></div>
       <div class="sync-row">
   <span style="font-weight:600; font-size:13px; white-space:nowrap;">📡 시트 연동</span>
   <input type="email" id="candidateEmail" placeholder="후보자 이메일 입력 (예: hong@gmail.com)" />
@@ -2558,7 +2605,6 @@ const PIPELINE_STAGES = [
   { key: 'task',                label: '과제전형',         color: '#6366f1', icon: '📝' },
   { key: 'interview1',         label: '1차 인터뷰',       color: '#5E51FF', icon: '🗣️' },
   { key: 'interviewFinal',     label: '최종 인터뷰',      color: '#4f46e5', icon: '👔' },
-  { key: 'scheduleConfirm',    label: '일정 확정',        color: '#4338ca', icon: '✅' },
   { key: 'reference',          label: '레퍼런스 체크',    color: '#3730a3', icon: '🔍' },
   { key: 'finalNotice',        label: '처우협의 및 오퍼레터', color: '#312e81', icon: '💼' },
   { key: 'onboarding',         label: '입사 안내',        color: '#1e1b4b', icon: '🎉' },
@@ -3431,7 +3477,69 @@ if (document.readyState === 'loading') {
   setTimeout(patchSendButton, 100);
 }
 
-  
+// ============================================================
+// 일정 미확정 후보자 자동 표시
+// ============================================================
+
+async function loadPendingCandidates() {
+  var area = document.getElementById('pendingArea');
+  if (!area) return;
+
+  var syncUrl = (typeof GAS_SYNC_URL !== 'undefined' && GAS_SYNC_URL) ? GAS_SYNC_URL : '';
+  if (!syncUrl) return;
+
+  try {
+    var res = await fetch(syncUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: 'pendingCandidates' }),
+      redirect: 'follow'
+    });
+    var data = await res.json();
+
+    if (data.result !== 'success' || !data.candidates || data.candidates.length === 0) {
+      area.innerHTML = '';
+      return;
+    }
+
+    var html = '<div class="pending-bar">' +
+      '<span class="pending-label">📌 일정 미확정 (' + data.candidates.length + ')</span>';
+
+    data.candidates.forEach(function(c) {
+      var emailAttr = c.email ? c.email.replace(/'/g, "\\'") : '';
+      html += '<button type="button" class="pending-chip" ' +
+        'onclick="selectPendingCandidate(\'' + emailAttr + '\')">' +
+        escapeHtml(c.name) +
+        ' <span class="pending-pos">' + escapeHtml(c.position) + '</span>' +
+        ' <span class="pending-stage">' + escapeHtml(c.stage) + '</span>' +
+        '</button>';
+    });
+
+    html += '</div>';
+    area.innerHTML = html;
+
+  } catch (err) {
+    // 로드 실패 시 조용히 무시 (페이지 사용에 지장 없음)
+    area.innerHTML = '';
+  }
+}
+
+function selectPendingCandidate(email) {
+  if (!email) {
+    alert('해당 후보자의 이메일이 시트에 등록되어 있지 않습니다.');
+    return;
+  }
+
+  // 이메일 필드에 입력
+  var emailInput = document.getElementById('candidateEmail');
+  if (emailInput) emailInput.value = email;
+
+  // 시트 조회 자동 실행
+  if (typeof syncCandidateStatus === 'function') {
+    syncCandidateStatus();
+  }
+}
+
   
 /**
  * 전체 초기화 — DOM이 준비된 후 실행
@@ -3448,6 +3556,8 @@ function initUpgradeModule() {
 
   // 3. 파이프라인 패널 렌더링
   renderPipelinePanel();
+  // 4. 일정 미확정 후보자 로드
+  loadPendingCandidates();
 
   console.log('[Upgrade Module] 고도화 모듈 v2.0 초기화 완료');
 }
