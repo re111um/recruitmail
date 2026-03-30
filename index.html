@@ -3222,9 +3222,8 @@ async function sendEmailDirect() {
     } else {
       alert('발송 실패: ' + (data.message || '알 수 없는 오류'));
     }
-  } catch (err) {
+ } catch (err) {
     alert('발송 중 오류: ' + err.message);
-  } finally {
     if (sendBtn) { sendBtn.disabled = false; sendBtn.textContent = '바로 발송'; }
   }
 }
