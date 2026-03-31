@@ -2646,11 +2646,10 @@ function loadPipeline() {
   }
 }
 
-/**
- * 파이프라인에 단계 추가 (서식 복사 시 호출)
- */
 function saveToPipeline(name, position, key) {
   if (!name || name === '지원자') return;
+  var emailInput = document.getElementById('candidateEmail');
+  var email = (emailInput && emailInput.value) ? emailInput.value.trim() : '';
 
   const pipeline = loadPipeline();
   const candidateKey = `${name}|${position}`;
@@ -2659,6 +2658,7 @@ function saveToPipeline(name, position, key) {
     pipeline[candidateKey] = {
       name: name,
       position: position,
+      email: email,
       stages: []
     };
   }
@@ -2774,6 +2774,8 @@ function loadCandidateFromPipeline(candidateKey) {
   // 입력 필드 채우기
   if (nameEl) nameEl.value = data.name;
   if (positionEl) positionEl.value = data.position;
+  var emailInput = document.getElementById('candidateEmail');
+  if (emailInput && data.email) emailInput.value = data.email;
 
   // 다음 추천 단계 하이라이트
   highlightNextStage(data.stages);
