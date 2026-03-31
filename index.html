@@ -3199,6 +3199,9 @@ async function sendEmailDirect() {
     var syncUrl = (typeof GAS_SYNC_URL !== 'undefined' && GAS_SYNC_URL) ? GAS_SYNC_URL : '';
     if (!syncUrl) { alert('GAS_SYNC_URL이 설정되지 않았습니다.'); return; }
 
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000); // 15초 타임아웃
+
     var res = await fetch(syncUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -3208,10 +3211,19 @@ async function sendEmailDirect() {
         subject: currentSubject,
         htmlBody: currentHtml
       }),
-      redirect: 'follow'
+      redirect: 'follow',
+      signal: controller.signal
     });
+    clearTimeout(timeoutId);
 
-    var data = await res.json();
+    var data;
+    try {
+      data = await res.json();
+    } catch (e) {
+      // 응답은 왔지만 JSON 파싱 실패 → 발송은 됐을 가능성 높음
+      if (typeof showToast === 'function') showToast('발송되었을 수 있습니다. 받은편지함을 확인해주세요.');
+      return;
+    }
 
     if (data.result === 'success') {
       if (typeof showToast === 'function') showToast(recipientEmail + '에게 발송 완료!');
@@ -3225,10 +3237,14 @@ async function sendEmailDirect() {
       alert('발송 실패: ' + (data.message || '알 수 없는 오류'));
     }
  } catch (err) {
-    alert('발송 중 오류: ' + err.message);
+    if (err.name === 'AbortError') {
+      // 타임아웃 → 실제로는 발송됐을 가능성 높음
+      if (typeof showToast === 'function') showToast('응답 시간이 초과되었습니다. 발송 여부를 받은편지함에서 확인해주세요.');
+    } else {
+      alert('발송 중 오류: ' + err.message);
+    }
     if (sendBtn) { sendBtn.disabled = false; sendBtn.textContent = '바로 발송'; }
   }
-}
 
 
 // ============================================================
