@@ -3225,9 +3225,10 @@ async function sendEmailDirect() {
       return;
     }
 
-    if (data.result === 'success') {
+   if (data.result === 'success') {
+      if (sendBtn) { sendBtn.disabled = true; sendBtn.textContent = '발송 완료'; }
       if (typeof showToast === 'function') showToast(recipientEmail + '에게 발송 완료!');
-      else alert('발송 완료!');
+      else alert('발송 완료');
 
       if (typeof saveToPipeline === 'function') {
         var vars = (typeof buildVarsV2 === 'function') ? buildVarsV2() : buildVars();
@@ -3500,6 +3501,7 @@ function patchSendButton() {
     window.showPreview = function(html) {
       origShowPreview(html);
       sendBtn.disabled = !html;
+      if (html) { sendBtn.textContent = '바로 발송'; }
     };
   }
 }
