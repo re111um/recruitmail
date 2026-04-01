@@ -2962,6 +2962,7 @@ function formatSalaryInput(input) {
 // const GAS_SYNC_URL = WEB_APP_URL; // 기존 변수 재활용 가능
 
   var syncedInterviewerNames = [];  // 시트 조회 후 면접관 이름 저장
+  var pendingCandidatesCache = [];  // ★ 추가: 미확정 후보자 캐시
   
 /**
  * 후보자 상태 조회
@@ -3543,10 +3544,11 @@ async function loadPendingCandidates() {
     var html = '<div class="pending-bar">' +
       '<span class="pending-label">📌 일정 미확정 (' + data.candidates.length + ')</span>';
 
-    data.candidates.forEach(function(c) {
-      var emailAttr = c.email ? c.email.replace(/'/g, "\\'") : '';
+    pendingCandidatesCache = data.candidates;  // ★ 캐시 저장
+
+    data.candidates.forEach(function(c, idx) {
       html += '<button type="button" class="pending-chip" ' +
-        'onclick="selectPendingCandidate(\'' + emailAttr + '\')">' +
+        'onclick="selectPendingCandidate(' + idx + ')">' +
         escapeHtml(c.name) +
         ' <span class="pending-pos">' + escapeHtml(c.position) + '</span>' +
         ' <span class="pending-stage">' + escapeHtml(c.stage) + '</span>' +
@@ -3563,20 +3565,37 @@ async function loadPendingCandidates() {
   }
 }
 
-function selectPendingCandidate(email) {
-  if (!email) {
-    alert('해당 후보자의 이메일이 시트에 등록되어 있지 않습니다.');
-    return;
-  }
+function selectPendingCandidate(idx) {
+  var c = pendingCandidatesCache[idx];
+  if (!c) return;
 
-  // 이메일 필드에 입력
+  // 필드 즉시 채우기
+  if (nameEl) nameEl.value = c.name;
+  if (positionEl) positionEl.value = c.position;
   var emailInput = document.getElementById('candidateEmail');
-  if (emailInput) emailInput.value = email;
+  if (emailInput) emailInput.value = c.email || '';
 
-  // 시트 조회 자동 실행
-  if (typeof syncCandidateStatus === 'function') {
-    syncCandidateStatus();
+  // 면접관 정보 세팅 (일정 추천에 필요)
+  syncedInterviewerNames = c.interviewerNames || [];
+
+  // 상태 표시
+  var syncStatus = document.getElementById('syncStatus');
+  if (syncStatus) {
+    var stageInfo = (typeof getStageInfo === 'function')
+      ? getStageInfo(c.stage || '')
+      : { icon: '📋', label: c.stage || '' };
+    var interviewerText = syncedInterviewerNames.length > 0
+      ? ' | 면접관: ' + syncedInterviewerNames.join(', ')
+      : '';
+    syncStatus.innerHTML =
+      '<span class="sync-found">' +
+        '✅ ' + escapeHtml(c.name) + ' | ' + escapeHtml(c.position) +
+        ' | 현재 단계: <strong>' + stageInfo.icon + ' ' + stageInfo.label + '</strong>' +
+        interviewerText +
+      '</span>';
   }
+
+  showToast(c.name + '님의 정보를 불러왔습니다.');
 }
 
   
